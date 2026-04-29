@@ -1,3 +1,3 @@
 # MSE26_hotel-mario
 
-Projekt Kurs Advanced Webtechnologies
+Master Softwareengineering Sommersemester 2026, Projekt Kurs Advanced Webtechnologies
