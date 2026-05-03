@@ -1,0 +1,506 @@
+openapi: 3.0.3
+info:
+  title: Boutique Hotel Technikum API - AWT 2026, Group AE
+  description: REST API for the Boutique Hotel Technikum booking application.
+  version: 1.0.0
+  contact:
+    name: MSE, AWT Group A E
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/privat-c6a/HotelMario/1.0.0
+  - url: http://localhost:8080/api/v1
+    description: Local development server
+
+tags:
+  - name: Rooms
+    description: Hotel room browsing and details
+  - name: Availability
+    description: Room availability checks
+  - name: Bookings
+    description: Room booking operations
+
+paths:
+  /rooms:
+    get:
+      tags:
+        - Rooms
+      summary: List hotel rooms (paginated)
+      description: |
+        Returns a paginated list of hotel rooms with their details and extras.
+        Default page size is 5 rooms per page.
+      operationId: getRooms
+      parameters:
+        - name: page
+          in: query
+          description: Page number (0-indexed)
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: size
+          in: query
+          description: Number of rooms per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+      responses:
+        '200':
+          description: Paginated list of hotel rooms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomPage'
+
+  /rooms/{roomId}:
+    get:
+      tags:
+        - Rooms
+      summary: Get room details
+      description: Returns full details of a specific hotel room including extras.
+      operationId: getRoomById
+      parameters:
+        - $ref: '#/components/parameters/RoomId'
+      responses:
+        '200':
+          description: Room details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /rooms/{roomId}/availability:
+    get:
+      tags:
+        - Availability
+      summary: Check room availability
+      description: |
+        Checks whether a specific room is available for the given date range.
+        Both checkIn and checkOut dates are required.
+        checkIn must be today or later, checkOut must be after checkIn.
+      operationId: checkRoomAvailability
+      parameters:
+        - $ref: '#/components/parameters/RoomId'
+        - name: checkIn
+          in: query
+          description: Check-in date (inclusive)
+          required: true
+          schema:
+            type: string
+            format: date
+            example: '2026-07-01'
+        - name: checkOut
+          in: query
+          description: Check-out date (exclusive)
+          required: true
+          schema:
+            type: string
+            format: date
+            example: '2026-07-05'
+      responses:
+        '200':
+          description: Availability result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityResponse'
+        '400':
+          description: Invalid date range (e.g. checkOut before checkIn, dates in the past)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /bookings:
+    post:
+      tags:
+        - Bookings
+      summary: Create a booking
+      description: |
+        Books a specific room for a given period. The room must be available
+        for the requested dates. Guest details including name, email, and
+        breakfast preference are required.
+      operationId: createBooking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '201':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingConfirmation'
+        '400':
+          description: Validation error (invalid data, email mismatch, invalid dates)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Room not available for the requested period
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  parameters:
+    RoomId:
+      name: roomId
+      in: path
+      description: Unique identifier of the hotel room
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 1
+
+  schemas:
+    Room:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - extras
+        - pricePerNight
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: 'Deluxe Suite'
+        description:
+          type: string
+          example: 'Spacious suite with a king-size bed and city view.'
+        imageUrl:
+          type: string
+          description: Relative path to the room image
+          example: '/images/rooms/1.jpg'
+        pricePerNight:
+          type: number
+          format: double
+          example: 149.99
+        extras:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extra'
+
+    Extra:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 'Wi-Fi'
+        icon:
+          type: string
+          description: Bootstrap Icon name for this extra
+          example: 'wifi'
+        description:
+          type: string
+          example: 'Free high-speed wireless internet'
+
+    RoomPage:
+      type: object
+      required:
+        - content
+        - page
+        - size
+        - totalElements
+        - totalPages
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+        page:
+          type: integer
+          description: Current page number (0-indexed)
+          example: 0
+        size:
+          type: integer
+          description: Number of items per page
+          example: 5
+        totalElements:
+          type: integer
+          format: int64
+          description: Total number of rooms
+          example: 12
+        totalPages:
+          type: integer
+          description: Total number of pages
+          example: 3
+
+    AvailabilityResponse:
+      type: object
+      required:
+        - roomId
+        - checkIn
+        - checkOut
+        - available
+      properties:
+        roomId:
+          type: integer
+          format: int64
+          example: 1
+        checkIn:
+          type: string
+          format: date
+          example: '2026-07-01'
+        checkOut:
+          type: string
+          format: date
+          example: '2026-07-05'
+        available:
+          type: boolean
+          example: true
+
+    BookingRequest:
+      type: object
+      required:
+        - roomId
+        - checkIn
+        - checkOut
+        - firstName
+        - lastName
+        - email
+        - emailConfirmation
+        - breakfast
+      properties:
+        roomId:
+          type: integer
+          format: int64
+          example: 1
+        checkIn:
+          type: string
+          format: date
+          example: '2026-07-01'
+        checkOut:
+          type: string
+          format: date
+          example: '2026-07-05'
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: 'Maria'
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: 'Musterfrau'
+        email:
+          type: string
+          format: email
+          example: 'maria.musterfrau@example.com'
+        emailConfirmation:
+          type: string
+          format: email
+          description: Must match the email field
+          example: 'maria.musterfrau@example.com'
+        breakfast:
+          type: boolean
+          description: Whether breakfast is included
+          example: true
+
+    BookingConfirmation:
+      type: object
+      required:
+        - id
+        - room
+        - checkIn
+        - checkOut
+        - firstName
+        - lastName
+        - email
+        - breakfast
+        - createdAt
+        - hotel
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique booking reference
+          example: 'a3bb189e-8bf9-4c89-9f7e-5884ba091b2e'
+        room:
+          $ref: '#/components/schemas/Room'
+        checkIn:
+          type: string
+          format: date
+          example: '2026-07-01'
+        checkOut:
+          type: string
+          format: date
+          example: '2026-07-05'
+        firstName:
+          type: string
+          example: 'Maria'
+        lastName:
+          type: string
+          example: 'Musterfrau'
+        email:
+          type: string
+          format: email
+          example: 'maria.musterfrau@example.com'
+        breakfast:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          example: '2026-06-15T14:30:00Z'
+        hotel:
+          $ref: '#/components/schemas/Hotel'
+
+    ErrorResponse:
+      type: object
+      required:
+        - status
+        - message
+        - timestamp
+      properties:
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: 'Room not found'
+        timestamp:
+          type: string
+          format: date-time
+          example: '2026-06-15T14:30:00Z'
+
+    ValidationErrorResponse:
+      type: object
+      required:
+        - status
+        - message
+        - timestamp
+        - errors
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: 'Validation failed'
+        timestamp:
+          type: string
+          format: date-time
+          example: '2026-06-15T14:30:00Z'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldError'
+
+    Hotel:
+      type: object
+      required:
+        - name
+        - address
+        - contact
+        - directions
+      properties:
+        name:
+          type: string
+          example: 'Boutique Hotel Technikum'
+        address:
+          $ref: '#/components/schemas/Address'
+        contact:
+          $ref: '#/components/schemas/ContactOptions'
+        directions:
+          type: string
+          example: 'Take the U4 to Friedensbrücke, then walk 5 minutes north. By car, use the A22 and exit at Floridsdorf.'
+
+    Address:
+      type: object
+      required:
+        - street
+        - city
+        - postalCode
+        - country
+        - latitude
+        - longitude
+      properties:
+        street:
+          type: string
+          example: 'Höchstädtplatz 6'
+        city:
+          type: string
+          example: 'Vienna'
+        postalCode:
+          type: string
+          example: '1200'
+        country:
+          type: string
+          example: 'Austria'
+        latitude:
+          type: number
+          format: double
+          example: 48.2349
+        longitude:
+          type: number
+          format: double
+          example: 16.3746
+
+    ContactOptions:
+      type: object
+      required:
+        - phone
+        - email
+      properties:
+        phone:
+          type: string
+          example: '+43 1 333 40 77'
+        email:
+          type: string
+          format: email
+          example: 'info@hotel-technikum.at'
+    FieldError:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
+          type: string
+          example: 'email'
+        message:
+          type: string
+          example: 'Must be a valid email address'
