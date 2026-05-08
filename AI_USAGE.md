@@ -128,6 +128,20 @@ This file documents all meaningful uses of AI tools during the development of th
 
 ---
 
+### 8. Generate Backlog Items
+
+**Task:** Create Backlog items for User Stories in Project Specification
+
+**Prompt:**   
+Attachement: ProjektSpezifikation2026.pdf
+> Create User Stories out of the attached specification. Don't use emojis.
+
+**What was generated:**
+- GitHub Issue ID 3-7 were created with AI usage.
+- Subtasks were created manually without AI usage.
+
+**Accepted:** After review of the recommended items, we created them in GitHub.
+
 ## Summary
 
 | # | Task | Accepted | Modified | Rejected |
@@ -139,7 +153,7 @@ This file documents all meaningful uses of AI tools during the development of th
 | 5 | Simplify directions, remove website | ✓ | | |
 | 6 | Add icon to Extra | ✓ | | |
 | 7 | Generate ER diagram | ✓ | | |
-
+| 8 | Generate Backlog Items | ✓ | | |
 ---
 
 ## Artefacts Produced by AI
@@ -147,3 +161,4 @@ This file documents all meaningful uses of AI tools during the development of th
 - [`openapi.yaml`](openapi.yaml) — REST API specification (OpenAPI 3.0)
 - [`er-diagram.md`](er-diagram.md) — ER diagram (Mermaid)
 - [`AI_USAGE.md`](AI_USAGE.md) — this file
+- GitHub Issues ID 3-7 — https://github.com/Lammer-FH/semester-project-2026-hotel-mario/issues
