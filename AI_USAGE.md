@@ -126,9 +126,47 @@ This file documents all meaningful uses of AI tools during the development of th
 
 **Accepted:** Fully accepted. The decision to not include a `HOTEL` table (static data, single instance) was reviewed and confirmed as correct.
 
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Generate OpenAPI spec | ✓ | | |
+| 2 | Add Hotel endpoint + Room link | | | ✓ |
+| 3 | Undo hotel changes | ✓ | | |
+| 4 | Hotel as static object in BookingConfirmation | ✓ | | |
+| 5 | Simplify directions, remove website | ✓ | | |
+| 6 | Add icon to Extra | ✓ | | |
+| 7 | Generate ER diagram | ✓ | | |
 ---
 
-### 8. Generate Backlog Items
+## Artefacts Produced by AI
+
+- [`openapi.yaml`](openapi.yaml) — REST API specification (OpenAPI 3.0)
+- [`er-diagram.md`](er-diagram.md) — ER diagram (Mermaid)
+- [`AI_USAGE.md`](AI_USAGE.md) — this file
+
+---
+
+# Assignment: Backlog 08.05.2026
+
+
+## Tool
+
+**Claude Code** (Anthropic)
+- Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
+- Interface: Claude Code CLI (interactive agent)
+- Date: 2026-05-08
+
+**ChatGPT**
+- Model: **GPT-5.5**
+- Date: 2026-05-08
+
+---
+
+## Usage Log
+
+
+### 1. Generate Backlog Items
 
 **Task:** Create Backlog items for User Stories in Project Specification
 
@@ -142,23 +180,126 @@ Attachement: ProjektSpezifikation2026.pdf
 
 **Accepted:** After review of the recommended items, we created them in GitHub.
 
+---
+
+### 2. Anfrage an KI + bereitgestellte Dokumente
+
+**Task:** Bereitstellung der Projektdokumente und Erklärung der gewünschten Prüfung.
+
+**Prompt:**
+API_specification.pdf; DB_Design.pdf; Paperprototype.pdf; ProjektSpezifikation2026.pdf
+folgend werde ich user stories schicken und du wirst mir bitte sagen auf grundlage der eigenen projekt-dokumente und der projektspezifikation, ob etwas fehlt/unvollständig ist/nicht passt an inhalt, kriterien, user stories, usw.
+
+**What was generated:**
+
+KI erklärt, dass sie User Stories anhand von drei Bereichen prüft:
+
+  - Form der User Story
+    - korrektes Format, 
+    - Verständlichkeit.
+
+- Abgleich mit Projektspezifikation U1–U5 Abdeckung
+
+  - Details, Recommended Approach, Definition of Done
+
+- Qualität der Acceptance Criteria
+
+  - Testbarkeit
+
+  - Vollständigkeit
+
+  - Konkretheit (API, Felder, Verhalten)
+
+**Accepted**  
+
+---
+
+### 3. KI-Analyse der User Stories (Story-für-Story)
+**Task:** Bereitstellung der User Stories für Landing Page, Room Selection, Availability, Booking, Confirmation. Bewertung der User Stories gegen Projektspezifikation + eigene Dokumente.
+
+**Prompt:** 
+
+- Bisherige User Stories aus Github Kanban-Board
+
+- Diese features (user stories) teilen wir jeweils in einzelne sub-Tasks (thematlich eingeteilt) auf mit einzelnen großen unter-Aufgaben-Themen als Aufzählungen.
+
+**What was generated:**
+
+*U1 – Landing Page*
+Gut: Story passt, responsive, statische Seiten, Content.
+
+Fehlt / Risiko:
+
+- Mindestseiten nicht in AC (Landing, About, Imprint)
+
+- Navigation nicht definiert
+
+Verbesserung: AC für Navigation ergänzen.
+
+*U2 – Room Selection*
+Gut: Pagination, Icons, 5 Rooms, API‑Bezug.
+
+Kritisch:
+
+- API liefert alle Rooms, nicht nur „available“ → Story falsch formuliert
+
+- Fehlerhandling fehlt
+
+Verbesserung: Story korrigieren + AC für API‑Fehler ergänzen.
+
+*U3 – Check Availability*
+Gut: Date Picker, API, Feedback.
+
+Kritisch:
+
+- Validierungsregeln unvollständig (checkIn ≥ today, checkOut > checkIn)
+
+Verbesserung: AC für Validierung + Fehlerfälle ergänzen.
+
+*U4 – Booking*
+Gut: Review Step, Felder, Validation.
+
+Kritisch:
+
+- API‑Regeln fehlen (email == confirmation, room availability, 400/409)
+
+- Erfolg unklar (Booking ID? Details?)
+
+Verbesserung: AC für API‑Regeln + Erfolgsdetails ergänzen.
+
+*U5 – Confirmation*
+Gut: Inhalte, Print, Map, Failure.
+
+Kritisch:
+
+- API‑Daten nicht als verpflichtend testbar formuliert
+
+- Print‑Kriterium zu vage
+
+Verbesserung: AC für Hotel‑Daten + präzises Print‑Verhalten ergänzen.
+
+Globaler Kritischer Punkt:
+
+Definition of Done fehlt bei ALLEN User Stories
+
+Spezifikation verlangt DoD explizit
+
+**Modified:** Result of AI was used partially. Some points were used, some deleted, most of the new content adapted to existing project before using.
+
+---
+
 ## Summary
 
 | # | Task | Accepted | Modified | Rejected |
 |---|------|----------|----------|----------|
-| 1 | Generate OpenAPI spec | ✓ | | |
-| 2 | Add Hotel endpoint + Room link | | | ✓ |
-| 3 | Undo hotel changes | ✓ | | |
-| 4 | Hotel as static object in BookingConfirmation | ✓ | | |
-| 5 | Simplify directions, remove website | ✓ | | |
-| 6 | Add icon to Extra | ✓ | | |
-| 7 | Generate ER diagram | ✓ | | |
-| 8 | Generate Backlog Items | ✓ | | |
+| 1 | Generate Backlog Items | ✓ | | |
+| 2 | Anfrage an KI + bereitgestellte Dokumente | ✓ |  | |
+| 3 | KI-Analyse der User Stories (Story-für-Story) |  | ✓ | |
 ---
 
 ## Artefacts Produced by AI
 
-- [`openapi.yaml`](openapi.yaml) — REST API specification (OpenAPI 3.0)
-- [`er-diagram.md`](er-diagram.md) — ER diagram (Mermaid)
-- [`AI_USAGE.md`](AI_USAGE.md) — this file
 - GitHub Issues ID 3-7 — https://github.com/Lammer-FH/semester-project-2026-hotel-mario/issues
+
+---
+
