@@ -303,3 +303,35 @@ Spezifikation verlangt DoD explizit
 
 ---
 
+# Assignment Milestone 2
+
+## Tool
+
+**ChatGPT**
+- Model: **GPT-5.5**
+- Date: 2026-05-08
+
+---
+
+## Usage Log
+
+### 1. Subtask: #11 CI configuration
+**Task:** Erstellung eines CI Scripts
+
+**Prompt:** GitHub Actions, if i want to build my backend, fronented and docker, how would i do this? My approach would be to create build scripts for each and then call via GitHubActions
+
+**What was generated:**
+> .github/workflows/ci.yml
+
+**Modified:** Commented out installation of Node dependency for now. Added 
+> pull_request:   
+  branches: [ "main" ]
+
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 |  Subtask: #11 CI configuration | | ✓| |
+
+---
