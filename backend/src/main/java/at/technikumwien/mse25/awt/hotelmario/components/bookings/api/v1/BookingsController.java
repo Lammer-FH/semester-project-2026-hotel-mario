@@ -6,20 +6,15 @@ import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.mapper.v1.B
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.service.BookingsService;
 import at.technikumwien.mse25.awt.hotelmario.common.api.dtos.v1.FieldErrorDto;
 import at.technikumwien.mse25.awt.hotelmario.common.api.dtos.v1.ValidationErrorResponseDto;
-import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/bookings")
-public class BookingsController {
+public class BookingsController implements BookingsApi {
 
     private final BookingsService bookingsService;
     private final BookingMapper bookingMapper;
@@ -29,8 +24,8 @@ public class BookingsController {
         this.bookingMapper = bookingMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequestDto body) {
+    @Override
+    public ResponseEntity<?> createBooking(BookingRequestDto body) {
         if (!body.getEmail().equals(body.getEmailConfirmation())) {
             return validationError("emailConfirmation", "Must match the email field");
         }

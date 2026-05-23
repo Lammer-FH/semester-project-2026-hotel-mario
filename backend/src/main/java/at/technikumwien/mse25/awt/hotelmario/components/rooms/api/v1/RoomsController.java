@@ -5,21 +5,13 @@ import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDt
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomPageDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.mapper.v1.RoomMapper;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomsService;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/rooms")
-public class RoomsController {
+public class RoomsController implements RoomsApi {
 
     private final RoomsService roomsService;
     private final RoomMapper roomMapper;
@@ -29,10 +21,8 @@ public class RoomsController {
         this.roomMapper = roomMapper;
     }
 
-    @GetMapping
-    public ResponseEntity<RoomPageDto> getRooms(
-            @Min(0) @RequestParam(defaultValue = "0") int page,
-            @Min(1) @Max(20) @RequestParam(defaultValue = "5") int size) {
+    @Override
+    public ResponseEntity<RoomPageDto> getRooms(int page, int size) {
         Page<RoomDto> result = roomsService.findAll(page, size).map(roomMapper::toDto);
         return ResponseEntity.ok(RoomPageDto.builder()
                 .content(result.getContent())
@@ -43,19 +33,17 @@ public class RoomsController {
                 .build());
     }
 
-    @GetMapping("/{roomId}")
-    public ResponseEntity<RoomDto> getRoomById(@PathVariable Long roomId) {
+    @Override
+    public ResponseEntity<RoomDto> getRoomById(Long roomId) {
         return roomsService.findById(roomId)
                 .map(roomMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{roomId}/availability")
+    @Override
     public ResponseEntity<AvailabilityResponseDto> checkAvailability(
-            @PathVariable Long roomId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
+            Long roomId, LocalDate checkIn, LocalDate checkOut) {
         return ResponseEntity.ok(AvailabilityResponseDto.builder()
                 .roomId(roomId)
                 .checkIn(checkIn)
