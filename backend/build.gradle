@@ -20,8 +20,28 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// SpringDoc OpenAPI (replaces springdoc-openapi-ui which is Spring Boot 2.x only)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+
+	// OpenAPI nullable wrapper
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+
+	// Bean Validation API (Jakarta namespace for Spring Boot 3+)
+	implementation 'jakarta.validation:jakarta.validation-api'
+
+	// JAXB annotations used by ApiResponseMessage (@XmlRootElement, @XmlTransient)
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+
+	// Spring Plugin Core
+	implementation 'org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+springBoot {
+	mainClass = 'at.technikumwien.mse25.awt.hotelmario.HotelmarioApplication'
 }
 
 tasks.named('test') {
