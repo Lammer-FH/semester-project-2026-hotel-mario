@@ -1,95 +1,41 @@
-# GitHub Actions Workflows
+# GitHub Actions CI/CD Pipeline
 
-This directory contains automated CI/CD workflows for the Hotel Mario project.
+This directory contains the CI/CD pipeline for the Hotel Mario project.
 
-## Workflows Overview
+## Main Pipeline: `ci.yml`
 
-### 1. Backend Build & Test (`backend-build.yml`)
-
-**Purpose:** Build and test the Spring Boot backend application.
+**Purpose:** Complete continuous integration pipeline with backend build and Docker image build.
 
 **Triggers:**
-- Push to `main`, `feature/**`, `bugfix/**` branches
+- Push to `main`, `feature/**`, `bugfix/**` branches  
 - Pull requests to `main`
-- Changes to: `backend/`, `Dockerfile`, `docker-compose.yml`
 
-**What it does:**
-- ✅ Checks out code
-- ✅ Sets up JDK 25 (Amazon Corretto - stable, production-ready)
-- ✅ Validates Gradle wrapper integrity
-- ✅ Runs `gradle clean build` (without tests first for faster feedback)
+### Pipeline Jobs
+
+#### 1. Backend Build & Test
+- ✅ Sets up JDK 25 (Amazon Corretto)
+- ✅ Runs `gradle clean build` (excluding tests first for speed)
 - ✅ Executes `gradle test` for unit tests
-- ✅ Uploads test reports as artifacts (30 days retention)
-- ✅ Fails the workflow if tests fail
-- ✅ Shows build artifact sizes
-
-**Duration:** ~15-20 minutes
+- ✅ Uploads test reports (30-day retention)
+- ✅ Shows build artifact summary
+- **Duration:** ~15-20 minutes
 
 **Outputs:**
-- Test reports: `backend/build/reports/tests/test/`
-- Built JAR: `backend/build/libs/hotelmario-0.0.1-SNAPSHOT.jar`
+- JAR: `backend/build/libs/hotelmario-0.0.1-SNAPSHOT.jar`
+- Test Reports: `backend/build/reports/tests/test/`
 
-**JDK Distribution:** Amazon Corretto (production-grade, free, no licensing issues)
-
----
-
-### 2. Docker Build & Test (`docker-build.yml`)
-
-**Purpose:** Build Docker image and verify it works with Docker Compose.
-
-**Note:** This is a GitHub Classroom environment. Docker images are built locally and not pushed to a registry.
-
-**Triggers:**
-- Push to `main`, `feature/**`, `release/**` branches
-- Pull requests to `main`
-- Manual trigger (`workflow_dispatch`)
-- Changes to: `backend/`, `Dockerfile`, `docker-compose.yml`
-
-**What it does:**
+#### 2. Docker Build & Test (depends on: backend)
 - ✅ Sets up Docker Buildx
-- ✅ Builds Docker image locally
-- ✅ Tests image with Docker Compose
+- ✅ Builds Docker image locally (`hotelmario:latest`)
+- ✅ Tests with Docker Compose
 - ✅ Verifies MySQL connectivity
-- ✅ Uses GitHub Actions cache for faster builds
-- ✅ Generates build summary
+- ✅ Uses GitHub Actions caching
+- ✅ Cleans up test environment
+- **Duration:** ~15-25 minutes
 
-**Image Tags (local):**
+**Image Tags:**
 - `hotelmario:latest` - Latest build
-- `hotelmario:<commit-sha>` - Specific commit
-
-**Duration:** ~15-25 minutes
-
-**Pull Request Behavior:**
-- Builds image locally (no registry push)
-
----
-
-### 3. Docker Compose Test (`docker-compose-test.yml`)
-
-**Purpose:** Verify the complete Docker Compose setup works end-to-end.
-
-**Triggers:**
-- Push to `main`, `feature/**` branches
-- Pull requests to `main`
-- Changes to: `backend/`, `Dockerfile`, `docker-compose.yml`
-
-**What it does:**
-- ✅ Builds Docker images
-- ✅ Starts services with `docker compose up -d`
-- ✅ Waits for services to be ready (10 seconds)
-- ✅ Tests MySQL connectivity
-- ✅ Checks Spring Boot service status
-- ✅ Tests application health endpoint
-- ✅ Verifies network communication between containers
-- ✅ Collects logs for debugging
-- ✅ Cleans up all resources
-
-**Duration:** ~10-15 minutes
-
-**Health Checks:**
-- MySQL: `mysqladmin ping`
-- Network: `docker compose ps`, inter-container ping
-- Application: Health check endpoint (if available)
+- `hotelmario:${commit-sha}` - Specific commit
 
 ---
 
@@ -97,215 +43,109 @@ This directory contains automated CI/CD workflows for the Hotel Mario project.
 
 ### Automatic Triggers
 
-Workflows run automatically when you:
-- Push to `main` or feature branches
-- Create/update pull requests
-- Commit changes to monitored paths
+Workflows run automatically:
+- On push to monitored branches
+- On pull requests to `main`
 
-### Manual Trigger
+### View Pipeline Status
 
-Trigger Docker Build manually:
+**GitHub Web UI:**
+- Repository → Actions tab
+- Select "CI Pipeline"
 
+**Command Line:**
 ```bash
-gh workflow run docker-build.yml --ref main
-```
-
-Or use GitHub Web UI:
-1. Go to Actions tab
-2. Select workflow
-3. Click "Run workflow"
-
-### View Workflow Status
-
-**Web UI:**
-- GitHub Repository → Actions tab
-- Select workflow → View runs
-
-**CLI:**
-```bash
+# List workflows
 gh workflow list
-gh workflow view backend-build.yml
-gh run list --workflow=backend-build.yml
+
+# View specific run
 gh run view <run-id> --log
+
+# View latest run
+gh run list --workflow=ci.yml
 ```
 
----
-
-## Configuration
-
-### Secrets & Permissions
-
-**Permissions Used:**
-- `contents: read` - Read repository code
-- `packages: write` - Push to GitHub Container Registry
-- `GITHUB_TOKEN` - Auto-provided by GitHub Actions
-
-**Note:** No manual secrets configuration needed. GitHub provides `GITHUB_TOKEN` automatically.
-
-### Push to Registry (GitHub Classroom)
-
-This is a **GitHub Classroom environment** where container registry access is not available.
-
-To push images to a registry later, you would need:
-1. Docker Hub account + credentials
-2. Or GitHub Container Registry (GHCR) in a non-classroom environment
-
-**Example for Docker Hub:**
-```yaml
-- name: Log in to Docker Hub
-  uses: docker/login-action@v3
-  with:
-    username: ${{ secrets.DOCKERHUB_USERNAME }}
-    password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-- name: Push to Docker Hub
-  uses: docker/build-push-action@v5
-  with:
-    push: true
-    tags: |
-      yourusername/hotelmario:latest
-      yourusername/hotelmario:${{ github.sha }}
-```
-
-Then add the secrets to your repository:
-1. Go to Settings → Secrets and variables → Actions
-2. Add `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`
-
----
-
-## Workflow Customization
-```yaml
-- name: Set up JDK 25
-  uses: actions/setup-java@v4
-  with:
-    java-version: '21'  # Change version here
-    distribution: 'temurin'
-```
-
-**Add Docker Hub push:**
-```yaml
-- name: Log in to Docker Hub
-  uses: docker/login-action@v3
-  with:
-    username: ${{ secrets.DOCKERHUB_USERNAME }}
-    password: ${{ secrets.DOCKERHUB_TOKEN }}
-```
-
-Then add Docker Hub to `images` in metadata step.
-
-**Change artifact retention:**
-```yaml
-- name: Upload test results
-  uses: actions/upload-artifact@v4
-  with:
-    name: test-results
-    retention-days: 30  # Default is 90
-```
-
----
-
-## Artifact Management
-
-### Uploaded Artifacts
-
-**Backend Build Test Results:**
-- Path: `backend/build/reports/tests/test/`
-- Retention: 90 days (default)
-- Usage: View test reports in GitHub UI
-
-**Download Artifacts:**
+### Download Test Results
 
 ```bash
 gh run download <run-id> --name test-results
 ```
 
-### Cleanup Old Artifacts
+Open `index.html` to view detailed test report.
 
-GitHub automatically deletes artifacts after retention period expires.
+---
+
+## Configuration
+
+### JDK Distribution
+- **Current:** Amazon Corretto 25
+- **Why:** Production-ready, free, stable in GitHub Actions
+
+### Build Caching
+- **Gradle:** Dependency cache (auto-managed)
+- **Docker:** Layer cache (auto-managed)
+
+### Artifact Retention
+- **Test Results:** 30 days
+
+---
+
+## Environment
+
+- **Runtime:** ubuntu-latest
+- **Java:** JDK 25 (Amazon Corretto)
+- **Build Tool:** Gradle 9.4.1
+- **Container:** Docker + Docker Compose
+- **Timeout:** 30 min (backend) + 45 min (docker)
 
 ---
 
 ## Troubleshooting
 
-### Workflow Fails
+### Build Fails
 
-1. **Check workflow logs:**
-   ```bash
-   gh run view <run-id> --log
-   ```
+1. **Check logs:**
+```bash
+gh run view <run-id> --log
+```
 
 2. **Common issues:**
 
-   | Issue | Solution |
-   |-------|----------|
-   | Build timeout | Increase `timeout-minutes` in workflow |
-   | OOM errors | Gradle may need more memory |
-   | Network errors | Check internet connectivity |
-   | Docker build fails | Check Dockerfile syntax |
-   | MySQL health check fails | Verify MySQL configuration in docker-compose.yml |
+| Issue | Solution |
+|-------|----------|
+| Gradle timeout | Backend timeout is 30min - check for hanging processes |
+| Docker test fails | Verify docker-compose.yml is valid |
+| MySQL fails | Check MySQL credentials in compose file |
+| OOM errors | Increase `timeout-minutes` |
 
-3. **Rerun failed workflow:**
-   ```bash
-   gh run rerun <run-id>
-   ```
+3. **Rerun workflow:**
+```bash
+gh run rerun <run-id>
+```
 
-### Push to GHCR Fails
+### Debugging Locally
 
-1. Verify repository is public or PAT has `write:packages` scope
-2. Check `GITHUB_TOKEN` permissions in repository settings
-3. Ensure branch is `main` for image push
+```bash
+# Build backend
+cd backend
+./gradlew clean build
 
-### Docker Compose Test Fails
-
-1. Check Docker is available on runner: `docker --version`
-2. View service logs: `docker compose logs`
-3. Verify port 8080 and 3306 aren't in use
-
----
-
-## Performance Optimization
-
-### Build Cache
-
-Both workflows use GitHub Actions cache:
-- **Gradle cache:** Speeds up dependency resolution
-- **Docker cache:** Reduces image build time
-
-Cache is automatically managed; no configuration needed.
-
-### Parallel Jobs
-
-Workflows run sequentially to avoid resource contention. To run in parallel, modify `needs:` or create separate workflow files.
+# Test Docker Compose
+docker compose up -d
+docker compose down -v
+```
 
 ---
 
-## Monitoring & Alerts
+## Future Enhancements
 
-### GitHub Status
-
-Check workflow status in repository homepage:
-- Green checkmark ✅ = Success
-- Red X ❌ = Failed
-- Yellow circle ⏳ = In progress
-
-### Email Notifications
-
-GitHub sends email notifications for:
-- Workflow failures
-- Pull request check failures
-
-Configure in GitHub Settings → Notifications.
-
----
-
-## Related Documentation
-
-- [GitHub Actions Docs](https://docs.github.com/en/actions)
-- [Docker Build Push Action](https://github.com/docker/build-push-action)
-- [Setup Java Action](https://github.com/actions/setup-java)
-- [Docker Compose Docs](https://docs.docker.com/compose/)
+- Add frontend build (when frontend exists)
+- Push Docker images to registry (when not classroom environment)
+- Add integration tests
+- Add code coverage reporting
+- Add security scanning
 
 ---
 
 **Last Updated:** 2026-05-23  
-**Workflows Version:** 1.0
+**Pipeline Version:** 1.0
