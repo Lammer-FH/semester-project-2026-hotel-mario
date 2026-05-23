@@ -1,4 +1,4 @@
-package io.swagger.configuration;
+package at.technikumwien.mse25.awt.hotelmario.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
