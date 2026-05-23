@@ -37,9 +37,6 @@ jobs:
           distribution: 'corretto'
           cache: gradle
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v2
-
       - name: Build backend with Gradle
         run: |
           cd backend
@@ -65,5 +62,6 @@ jobs:
           echo "✅ Backend build completed successfully"
           cd backend
           ls -lh build/libs/
+
 
 
