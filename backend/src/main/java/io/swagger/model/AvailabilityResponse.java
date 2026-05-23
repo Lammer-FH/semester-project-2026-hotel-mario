@@ -4,7 +4,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.LocalDate;
+import java.time.LocalDate;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
 import io.swagger.configuration.NotUndefined;

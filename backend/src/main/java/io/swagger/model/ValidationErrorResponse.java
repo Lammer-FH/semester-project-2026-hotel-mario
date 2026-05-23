@@ -7,7 +7,7 @@ import io.swagger.model.FieldError;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import org.threeten.bp.OffsetDateTime;
+import java.time.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
 import io.swagger.configuration.NotUndefined;

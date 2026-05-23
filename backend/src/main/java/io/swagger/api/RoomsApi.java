@@ -7,7 +7,7 @@ package io.swagger.api;
 
 import io.swagger.model.AvailabilityResponse;
 import io.swagger.model.ErrorResponse;
-import org.threeten.bp.LocalDate;
+import java.time.LocalDate;
 import io.swagger.model.Room;
 import io.swagger.model.RoomPage;
 import io.swagger.v3.oas.annotations.Operation;
