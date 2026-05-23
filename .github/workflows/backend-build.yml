@@ -34,34 +34,36 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'temurin'
+          distribution: 'corretto'
           cache: gradle
 
-      - name: Build backend
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Build backend with Gradle
         run: |
           cd backend
           chmod +x gradlew
-          ./gradlew clean build --info
+          ./gradlew clean build --warning-mode all -x test
 
-      - name: Run tests
+      - name: Run unit tests
         run: |
           cd backend
-          ./gradlew test
+          ./gradlew test --warning-mode all
 
-      - name: Generate test report
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: backend/build/reports/tests/test/
+          retention-days: 30
+          if-no-files-found: ignore
 
-      - name: Check for build failures
-        if: failure()
+      - name: Build summary
         run: |
-          echo "❌ Build or tests failed!"
-          exit 1
+          echo "✅ Backend build completed successfully"
+          cd backend
+          ls -lh build/libs/
 
-      - name: Success message
-        if: success()
-        run: |
-          echo "✅ Backend build and tests passed successfully!"
+
