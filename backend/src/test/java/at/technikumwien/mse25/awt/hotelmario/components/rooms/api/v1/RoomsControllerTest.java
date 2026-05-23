@@ -1,0 +1,141 @@
+package at.technikumwien.mse25.awt.hotelmario.components.rooms.api.v1;
+
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.AvailabilityResponseDto;
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.ExtraDto;
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDto;
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.mapper.v1.RoomMapper;
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.model.RoomEntity;
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomsService;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(RoomsController.class)
+class RoomsControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
+    private RoomsService roomsService;
+
+    @MockitoBean
+    private RoomMapper roomMapper;
+
+    @Test
+    void getRooms_returnsPagedResult() throws Exception {
+        RoomEntity entity = new RoomEntity();
+        RoomDto dto = sampleRoomDto(1L);
+        var page = new PageImpl<>(List.of(entity), PageRequest.of(0, 5), 1);
+
+        when(roomsService.findAll(0, 5)).thenReturn(page);
+        when(roomMapper.toDto(entity)).thenReturn(dto);
+
+        mockMvc.perform(get("/v1/rooms"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("Deluxe Suite"))
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(5))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
+    }
+
+    @Test
+    void getRooms_customPageAndSize_passesParamsToService() throws Exception {
+        RoomEntity entity = new RoomEntity();
+        RoomDto dto = sampleRoomDto(2L);
+        var page = new PageImpl<>(List.of(entity), PageRequest.of(1, 3), 4);
+
+        when(roomsService.findAll(1, 3)).thenReturn(page);
+        when(roomMapper.toDto(entity)).thenReturn(dto);
+
+        mockMvc.perform(get("/v1/rooms").param("page", "1").param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.size").value(3))
+                .andExpect(jsonPath("$.totalElements").value(4));
+    }
+
+    @Test
+    void getRoomById_exists_returnsRoom() throws Exception {
+        RoomEntity entity = new RoomEntity();
+        RoomDto dto = sampleRoomDto(1L);
+
+        when(roomsService.findById(1L)).thenReturn(Optional.of(entity));
+        when(roomMapper.toDto(entity)).thenReturn(dto);
+
+        mockMvc.perform(get("/v1/rooms/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").value("Deluxe Suite"))
+                .andExpect(jsonPath("$.pricePerNight").value(149.99));
+    }
+
+    @Test
+    void getRoomById_notFound_returns404() throws Exception {
+        when(roomsService.findById(99L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/v1/rooms/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void checkAvailability_available_returnsTrue() throws Exception {
+        LocalDate checkIn = LocalDate.of(2026, 6, 1);
+        LocalDate checkOut = LocalDate.of(2026, 6, 5);
+
+        when(roomsService.isAvailable(1L, checkIn, checkOut)).thenReturn(true);
+
+        mockMvc.perform(get("/v1/rooms/1/availability")
+                .param("checkIn", "2026-06-01")
+                .param("checkOut", "2026-06-05"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.roomId").value(1))
+                .andExpect(jsonPath("$.checkIn").value("2026-06-01"))
+                .andExpect(jsonPath("$.checkOut").value("2026-06-05"))
+                .andExpect(jsonPath("$.available").value(true));
+    }
+
+    @Test
+    void checkAvailability_notAvailable_returnsFalse() throws Exception {
+        LocalDate checkIn = LocalDate.of(2026, 6, 1);
+        LocalDate checkOut = LocalDate.of(2026, 6, 5);
+
+        when(roomsService.isAvailable(1L, checkIn, checkOut)).thenReturn(false);
+
+        mockMvc.perform(get("/v1/rooms/1/availability")
+                .param("checkIn", "2026-06-01")
+                .param("checkOut", "2026-06-05"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.available").value(false));
+    }
+
+    private RoomDto sampleRoomDto(Long id) {
+        return RoomDto.builder()
+                .id(id)
+                .title("Deluxe Suite")
+                .description("Spacious suite with a king-size bed and city view.")
+                .imageUrl("/images/rooms/" + id + ".jpg")
+                .pricePerNight(149.99)
+                .extras(List.of(
+                        ExtraDto.builder().id(1L).name("Wi-Fi").icon("wifi")
+                                .description("Free high-speed wireless internet").build(),
+                        ExtraDto.builder().id(2L).name("Parking").icon("p-square")
+                                .description("Underground parking spot included").build()))
+                .build();
+    }
+}
