@@ -9,12 +9,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "rooms")
+@Table(name = "room")
 @Getter
 @Setter
 public class RoomEntity {
@@ -26,11 +27,11 @@ public class RoomEntity {
     private String title;
     private String description;
     private String imageUrl;
-    private Double pricePerNight;
+    private BigDecimal pricePerNight;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "room_extras",
+            name = "room_extra",
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "extra_id"))
     private List<ExtraEntity> extras;

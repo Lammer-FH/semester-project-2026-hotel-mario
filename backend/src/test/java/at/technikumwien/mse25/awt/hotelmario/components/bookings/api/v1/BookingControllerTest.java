@@ -6,8 +6,9 @@ import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.Con
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.HotelDto;
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.mapper.v1.BookingMapper;
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.model.BookingEntity;
-import at.technikumwien.mse25.awt.hotelmario.components.bookings.service.BookingsService;
+import at.technikumwien.mse25.awt.hotelmario.components.bookings.service.BookingService;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDto;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -26,14 +27,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BookingsController.class)
-class BookingsControllerTest {
+@WebMvcTest(BookingController.class)
+class BookingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private BookingsService bookingsService;
+    private BookingService bookingService;
 
     @MockitoBean
     private BookingMapper bookingMapper;
@@ -46,7 +47,7 @@ class BookingsControllerTest {
         BookingConfirmationDto confirmation = sampleConfirmation(checkIn, checkOut);
 
         when(bookingMapper.toEntity(any())).thenReturn(entity);
-        when(bookingsService.create(entity)).thenReturn(Optional.of(entity));
+        when(bookingService.create(entity)).thenReturn(Optional.of(entity));
         when(bookingMapper.toDto(entity)).thenReturn(confirmation);
 
         mockMvc.perform(post("/v1/bookings")
@@ -150,7 +151,7 @@ class BookingsControllerTest {
         BookingEntity entity = new BookingEntity();
 
         when(bookingMapper.toEntity(any())).thenReturn(entity);
-        when(bookingsService.create(entity)).thenReturn(Optional.empty());
+        when(bookingService.create(entity)).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/v1/bookings")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -185,7 +186,7 @@ class BookingsControllerTest {
                 .createdAt(OffsetDateTime.now())
                 .room(RoomDto.builder()
                         .id(1L).title("Deluxe Suite").description("Spacious suite.")
-                        .imageUrl("/images/rooms/1.jpg").pricePerNight(149.99).extras(List.of())
+                        .imageUrl("/images/rooms/1.jpg").pricePerNight(BigDecimal.valueOf(149.99)).extras(List.of())
                         .build())
                 .hotel(HotelDto.builder()
                         .name("Boutique Hotel Technikum")

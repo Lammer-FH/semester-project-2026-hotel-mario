@@ -1,19 +1,19 @@
 package at.technikumwien.mse25.awt.hotelmario.components.rooms.api.v1;
 
+import at.technikumwien.mse25.awt.hotelmario.common.PageResult;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.AvailabilityResponseDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.ExtraDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.mapper.v1.RoomMapper;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.model.RoomEntity;
-import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomsService;
+import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomService;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,14 +22,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RoomsController.class)
-class RoomsControllerTest {
+@WebMvcTest(RoomController.class)
+class RoomControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private RoomsService roomsService;
+    private RoomService roomService;
 
     @MockitoBean
     private RoomMapper roomMapper;
@@ -38,9 +38,9 @@ class RoomsControllerTest {
     void getRooms_returnsPagedResult() throws Exception {
         RoomEntity entity = new RoomEntity();
         RoomDto dto = sampleRoomDto(1L);
-        var page = new PageImpl<>(List.of(entity), PageRequest.of(0, 5), 1);
+        var pageResult = new PageResult<>(List.of(entity), 0, 5, 1L, 1);
 
-        when(roomsService.findAll(0, 5)).thenReturn(page);
+        when(roomService.findAll(0, 5)).thenReturn(pageResult);
         when(roomMapper.toDto(entity)).thenReturn(dto);
 
         mockMvc.perform(get("/v1/rooms"))
@@ -58,9 +58,9 @@ class RoomsControllerTest {
     void getRooms_customPageAndSize_passesParamsToService() throws Exception {
         RoomEntity entity = new RoomEntity();
         RoomDto dto = sampleRoomDto(2L);
-        var page = new PageImpl<>(List.of(entity), PageRequest.of(1, 3), 4);
+        var pageResult = new PageResult<>(List.of(entity), 1, 3, 4L, 2);
 
-        when(roomsService.findAll(1, 3)).thenReturn(page);
+        when(roomService.findAll(1, 3)).thenReturn(pageResult);
         when(roomMapper.toDto(entity)).thenReturn(dto);
 
         mockMvc.perform(get("/v1/rooms").param("page", "1").param("size", "3"))
@@ -75,7 +75,7 @@ class RoomsControllerTest {
         RoomEntity entity = new RoomEntity();
         RoomDto dto = sampleRoomDto(1L);
 
-        when(roomsService.findById(1L)).thenReturn(Optional.of(entity));
+        when(roomService.findById(1L)).thenReturn(Optional.of(entity));
         when(roomMapper.toDto(entity)).thenReturn(dto);
 
         mockMvc.perform(get("/v1/rooms/1"))
@@ -87,7 +87,7 @@ class RoomsControllerTest {
 
     @Test
     void getRoomById_notFound_returns404() throws Exception {
-        when(roomsService.findById(99L)).thenReturn(Optional.empty());
+        when(roomService.findById(99L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/v1/rooms/99"))
                 .andExpect(status().isNotFound());
@@ -98,7 +98,7 @@ class RoomsControllerTest {
         LocalDate checkIn = LocalDate.of(2026, 6, 1);
         LocalDate checkOut = LocalDate.of(2026, 6, 5);
 
-        when(roomsService.isAvailable(1L, checkIn, checkOut)).thenReturn(true);
+        when(roomService.isAvailable(1L, checkIn, checkOut)).thenReturn(true);
 
         mockMvc.perform(get("/v1/rooms/1/availability")
                 .param("checkIn", "2026-06-01")
@@ -115,7 +115,7 @@ class RoomsControllerTest {
         LocalDate checkIn = LocalDate.of(2026, 6, 1);
         LocalDate checkOut = LocalDate.of(2026, 6, 5);
 
-        when(roomsService.isAvailable(1L, checkIn, checkOut)).thenReturn(false);
+        when(roomService.isAvailable(1L, checkIn, checkOut)).thenReturn(false);
 
         mockMvc.perform(get("/v1/rooms/1/availability")
                 .param("checkIn", "2026-06-01")
@@ -130,7 +130,7 @@ class RoomsControllerTest {
                 .title("Deluxe Suite")
                 .description("Spacious suite with a king-size bed and city view.")
                 .imageUrl("/images/rooms/" + id + ".jpg")
-                .pricePerNight(149.99)
+                .pricePerNight(BigDecimal.valueOf(149.99))
                 .extras(List.of(
                         ExtraDto.builder().id(1L).name("Wi-Fi").icon("wifi")
                                 .description("Free high-speed wireless internet").build(),

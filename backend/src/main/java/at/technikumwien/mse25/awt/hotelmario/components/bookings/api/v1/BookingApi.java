@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/v1/bookings")
-public interface BookingsApi {
+public interface BookingApi {
 
     @PostMapping
     ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequestDto body);

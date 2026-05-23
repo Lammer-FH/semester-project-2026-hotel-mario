@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/v1/rooms")
-public interface RoomsApi {
+public interface RoomApi {
 
     @GetMapping
     ResponseEntity<RoomPageDto> getRooms(

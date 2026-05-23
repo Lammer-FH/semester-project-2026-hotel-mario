@@ -1,5 +1,6 @@
 package at.technikumwien.mse25.awt.hotelmario.components.rooms.service;
 
+import at.technikumwien.mse25.awt.hotelmario.common.PageResult;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.model.RoomEntity;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.repository.RoomRepository;
 import java.time.LocalDate;
@@ -9,17 +10,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoomsServiceImpl implements RoomsService {
+public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
 
-    public RoomsServiceImpl(RoomRepository roomRepository) {
+    public RoomServiceImpl(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
 
     @Override
-    public Page<RoomEntity> findAll(int page, int size) {
-        return roomRepository.findAll(PageRequest.of(page, size));
+    public PageResult<RoomEntity> findAll(int page, int size) {
+        Page<RoomEntity> p = roomRepository.findAll(PageRequest.of(page, size));
+        return new PageResult<>(p.getContent(), p.getNumber(), p.getSize(), p.getTotalElements(), p.getTotalPages());
     }
 
     @Override
