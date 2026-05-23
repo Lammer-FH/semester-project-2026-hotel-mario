@@ -15,16 +15,21 @@ This directory contains automated CI/CD workflows for the Hotel Mario project.
 
 **What it does:**
 - ✅ Checks out code
-- ✅ Sets up JDK 25 (Eclipse Temurin)
-- ✅ Runs `gradle clean build`
-- ✅ Executes unit tests (`gradle test`)
-- ✅ Uploads test reports as artifacts
+- ✅ Sets up JDK 25 (Amazon Corretto - stable, production-ready)
+- ✅ Validates Gradle wrapper integrity
+- ✅ Runs `gradle clean build` (without tests first for faster feedback)
+- ✅ Executes `gradle test` for unit tests
+- ✅ Uploads test reports as artifacts (30 days retention)
 - ✅ Fails the workflow if tests fail
+- ✅ Shows build artifact sizes
 
-**Duration:** ~10-15 minutes
+**Duration:** ~15-20 minutes
 
 **Outputs:**
 - Test reports: `backend/build/reports/tests/test/`
+- Built JAR: `backend/build/libs/hotelmario-0.0.1-SNAPSHOT.jar`
+
+**JDK Distribution:** Amazon Corretto (production-grade, free, no licensing issues)
 
 ---
 
