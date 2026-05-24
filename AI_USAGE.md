@@ -1029,3 +1029,75 @@ Fixed path in file to `frontend/` instead of `.`
 5. **U3 backend** — real overlap query in `RoomServiceImpl.isAvailable()` against `BookingRepository`
 
 ---
+# Assignment Frontend Prototype
+
+## Tool
+
+**ChatGPT**
+- Model: **GPT-5.5**
+- Date: 2026-05-24
+
+---
+
+## Usage Log
+
+### 1. Creation of frontend HTML/CSS/JS files following the paperprototype
+**Task:** Creation of frontend HTML/CSS/JS files following the paperprototype
+
+**Prompt:** Create code for .html files and pages. Only HTML, CSS, and JS should be used for design. Create the individual pages for me. [Paperprototype PDF uploaded]
+
+**What was generated:**
+- Projectstrukture overview:
+  - hotel-booking-app/
+    - index.html
+    - rooms.html
+    - room-details.html
+    - booking.html
+    - review.html
+    - confirmation.html
+    - about.html
+    - imprint.html
+    - css/
+      - style.css
+    - js/
+      - app.js
+    - images/
+      - room1.jpg
+      - room2.jpg
+      - room3.jpg
+      - hotel.jpg
+- style.css Stylesheet with styling for all HTML files
+- app.js JavaScript code for booking.html page: checking if all fields are filled (not containing check if content is correct format)
+- index.html
+- rooms.html
+- room-details.html
+- booking.html
+- review.html
+- confirmation.html
+- about.html
+
+**Modified:** All generated html pages needed to be modified, because pages are not equivalent in content, layout, fields to the requirement given, the paperprototype. Therefore manual overhaul of all pages fixing inconsistent layout, missing content, incorrect content, missing fields. In total were the generated pages useful because of the generated basic structure. style.css modified to create consistency between pages and a better looking layout. Alled html and js code for slideshows on index.html, about.html, room-details.html, confirmation.html. No images were generated, therefore I created five placeholder images myself (size: 1920x1080) and a smaller image (44x44) as icon placeholder for the room extras. Imprint page not generated. Inconsistent appearance of the footer on the pages; settle with one footer design and applied this design to all other pages.
+
+
+### 2. Creation of imprint HTML page following the paperprototype
+
+**Task:** Create the legal notice page. Supplement any missing information with relevant and appropriate data, as in the following example.
+
+**Prompt:** Create the legal notice page. Supplement any missing information with relevant and appropriate data, as in the following example. [attached the example imprint page for a sole proprietorship company not registered in the commercial register from the WKO page]
+
+**What was generated:**
+- imprint.html
+
+**Modified:** The basic structure of the imprint.html was acceptable. The contents of the page were generated in german, therefore manually translated into english. The data of the imprint were not these from the paperprototype, therefore manually replaced with the correct imprint data from the paperprototype. 
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Creation of frontend HTML/CSS/JS files following the paperprototype | | ✓ | |
+| 2 | Creation of imprint HTML page following the paperprototype | | ✓ | |
+
+---
+
