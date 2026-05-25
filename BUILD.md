@@ -9,6 +9,7 @@ This document provides comprehensive instructions for building, deploying, and r
 - [Project Structure](#project-structure)
 - [Build Instructions](#build-instructions)
 - [Docker Compose Setup](#docker-compose-setup)
+- [Remote Debugging](#remote-debugging)
 - [Configuration](#configuration)
 - [Development](#development)
 - [Troubleshooting](#troubleshooting)
@@ -199,6 +200,53 @@ docker compose build
 - **mysql_data:** Persistent storage for MySQL database
 - **Location:** Docker-managed volume (auto-created)
 - **Retention:** Survives `docker compose down` (use `docker volume rm` to delete)
+
+---
+
+## Remote Debugging
+
+Use `docker-compose.debug.yml` to start the stack with the JVM remote debug port (5005) exposed. This lets you attach any JDWP-compatible debugger (IntelliJ IDEA, VS Code, Eclipse) to the running container.
+
+### Start the debug stack
+
+```bash
+docker compose -f docker-compose.debug.yml up -d --build
+```
+
+The Spring Boot container will start immediately (`suspend=n`) and listen for a debugger on port **5005**. The application is available on port **8080** as usual.
+
+### Attach a debugger
+
+#### IntelliJ IDEA
+1. **Run → Edit Configurations → + → Remote JVM Debug**
+2. Set **Host:** `localhost`, **Port:** `5005`
+3. Click **Debug** — IntelliJ connects to the running container
+
+#### VS Code
+Add a launch configuration to `.vscode/launch.json`:
+```json
+{
+  "type": "java",
+  "name": "Attach to Docker (5005)",
+  "request": "attach",
+  "hostName": "localhost",
+  "port": 5005
+}
+```
+Then run **Run → Start Debugging**.
+
+### Stop the debug stack
+
+```bash
+docker compose -f docker-compose.debug.yml down
+```
+
+To also remove the debug volume:
+```bash
+docker compose -f docker-compose.debug.yml down -v
+```
+
+> **Note:** Never use `docker-compose.debug.yml` in production. The JDWP socket has no authentication and allows arbitrary bytecode injection into the running JVM.
 
 ---
 
