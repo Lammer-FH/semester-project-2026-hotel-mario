@@ -649,3 +649,43 @@ Spezifikation verlangt DoD explizit
 - [`backend/build.gradle`](backend/build.gradle) — updated dependencies
 
 ---
+
+# Issue #9 & #10 — Set up Vue.js + Frontend build config
+
+## Tool
+
+**Lumo** (Proton)
+- Model: **Lumo(multiple specialized models)** (`version: 2026-05-22`)
+- Interface: Browser
+- Date: 2026-05-25
+
+---
+
+## Usage Log
+
+### 1. Create Dockerfile for vue.js
+
+**Task:** Setup a Dockerfile to be used in docker-compose.yml for running vue.js & ionic in a container
+
+**Prompt:**
+> can you help me setup a build script so that vue js with inoic is built in docker?
+
+**What was generated:**
+- `Dockerfile-Frontend`
+
+**Accepted:** Accepted Dockerfile, after some manual changes.
+
+**Modified:** Fixed path in Dockerfile from `/app/www` to `app/dist`.   
+Fixed path in file to `frontend/` instead of `.`
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Create Dockerfile for vue.js |  | ✓ (path and port modification) | |
+
+---
+
+## Artefacts Produced by AI
+
+- `./Dockerfile-Frontend`
