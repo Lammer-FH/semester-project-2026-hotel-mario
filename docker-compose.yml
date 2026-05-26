@@ -39,6 +39,17 @@ services:
       - hotelmario-network
     restart: unless-stopped
 
+  vue-js:
+    build:
+      context: .
+      dockerfile: Dockerfile-Frontend
+    container_name: hotelmario-frontend
+    ports:
+    - "8081:80"
+    networks:
+      - hotelmario-network
+    restart: unless-stopped
+
 volumes:
   mysql_data:
 
