@@ -44,6 +44,8 @@ This document provides comprehensive instructions for building, deploying, and r
 - **Node package manager (npm)** 
   - npm install & ionic quickstart: https://ionicframework.com/docs/vue/quickstart
 
+- **Node.js (v18 or higher recommended)**
+
 ### Supported Platforms
 
 - Linux (Ubuntu, Debian, CentOS, etc.)
@@ -180,9 +182,9 @@ docker compose build
 cd frontend
 
 # Start vue.js in development mode
-npm run dev
+ionic serve
 ```
-**Access Frontend build in Browser via:** `http://localhost:5173/` 
+**Access Frontend build in Browser via:** `http://localhost:8100` 
 
 ---
 
