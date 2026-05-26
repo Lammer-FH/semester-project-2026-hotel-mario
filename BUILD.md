@@ -182,6 +182,7 @@ cd frontend
 # Start vue.js in development mode
 npm run dev
 ```
+**Access Frontend build in Browser via:** `http://localhost:5173/` 
 
 ---
 
@@ -565,8 +566,9 @@ This project is compatible with multiple Java distributions. Here's a comparison
 - **Docker Docs:** https://docs.docker.com/
 - **Gradle Docs:** https://docs.gradle.org/
 - **MySQL Docs:** https://dev.mysql.com/doc/
+- **Ionic Docs:** https://ionicframework.com/docs/
 
 ---
 
-**Last Updated:** 2026-05-23  
+**Last Updated:** 2026-05-26  
 **Version:** 1.0
