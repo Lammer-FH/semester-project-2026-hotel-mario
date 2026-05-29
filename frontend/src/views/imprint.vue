@@ -113,6 +113,10 @@
           <p>© 2026 Boutique Hotel Technikum</p>
 
           <div>
+            <router-link to="/home" class="btn">
+              Home
+            </router-link>
+            
             <router-link to="/about" class="btn">
               About Us
             </router-link>
