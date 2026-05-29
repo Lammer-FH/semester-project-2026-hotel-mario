@@ -721,6 +721,17 @@ Fixed path in file to `frontend/` instead of `.`
 
 ## Artefacts Produced by AI
 
+- `./Dockerfile-Frontend`
+
+
+# Issues #17, #18 #19 — Hotel Room Selection
+
+## Tool
+
+**Copilot** (Microsoftn)
+- Model: **Lumo(multiple specialized models)** (`version: 2026-05-22`)
+- Interface: Browser
+- Date: 2026-05-26 - 2026-05-29
 - [`Dockerfile.debug`](Dockerfile.debug) — debug image with remote JVM debugging on port 5005
 - [`docker-compose.debug.yml`](docker-compose.debug.yml) — compose stack wiring MySQL and the debug Spring Boot image together
 - [`BUILD.md`](BUILD.md) — Remote Debugging section with IDE attach instructions
@@ -741,6 +752,53 @@ Fixed path in file to `frontend/` instead of `.`
 
 ## Usage Log
 
+### 1. Create RoomSelectionView.vue
+
+**Task:** Create a RoomSelectionView.vue with mocked API calls to start development.
+
+**Prompt:**
+> Can you code a view for this image? At the top there is a booking selection, in the second half of the screen there is a scrollable overview of rooms inlcuding images. For needed api calls code a placeholder including a comment that this should be an api call
+- Attachment: Paperprotoype
+
+**What was generated:**
+- `RoomSelectionView`
+
+**Accepted:** Accepted RoomSelectionView.vue, after some manual changes and some prompts.
+
+**Modified**
+- Implemented date filter UI (check-in / check-out) using ion-datetime
+- Refactored datepicker to modal-based interaction (hidden until click)
+- Fixed Ionic component registration issues (ion-page, ion-select, etc.)
+- Debugged reactivity issues (ref vs unwrapped state)
+- Replaced unreliable v-model with @ionChange / @ionInput handling
+- Implemented persons selection with ion-select
+- Added date validation logic (check-out ≥ check-in)
+- Added price validation (min ≤ max)
+- Implemented reactive validation with computed properties
+- Improved UX with error messages instead of auto-correction
+- Added popup error handling using ion-alert
+- Converted API helper to TypeScript with generics
+
+### 2. Split View into components
+
+**Task:** Split RoomSelectionView.vue into components
+
+**Prompt:**
+> Can we split RoomSelectionView into components?
+
+**What was generated:**
+- `RoomSelectionView`
+- `DatePickerModal`
+- `FilterBar`
+- `RoomList`
+
+**Accepted:** Accepted components, after some manual changes and some prompts.
+
+**Modified**
+- Split View into components
+- Added addtional validation logic
+- Added pagination
+- Small adjustments that broke during split
 ### 1. Fix CI — HotelmarioApplicationTests Fails Without MySQL
 
 **Task:** `HotelmarioApplicationTests` failed in GitHub Actions because no MySQL was available. Fix without requiring a container in CI.
@@ -899,6 +957,8 @@ Fixed path in file to `frontend/` instead of `.`
 
 | # | Task | Accepted | Modified | Rejected |
 |---|------|----------|----------|----------|
+| 1 | Create RoomSelectionView.vue |  | ✓ (added validation, etc.) | |
+| 2 | Split View into components |  | ✓ (added validation, added pagination, small fixes) | |
 | 1 | Fix CI (H2 for application test) | ✓ | | |
 | 2 | Interface–implementation pattern | ✓ | | |
 | 3 | Schema creation tests (H2 + MySQL) | ✓ | | |
@@ -912,6 +972,10 @@ Fixed path in file to `frontend/` instead of `.`
 
 ## Artefacts Produced by AI
 
+- `./frontend/src/views/RoomSelectionView.vue`
+- `./frontend/src/components/FilterBar.vue`
+- `./frontend/src/components/DatePickerModal.vue`
+- `./frontend/src/components/RoomList.vue`
 - [`backend/src/main/java/.../config/DataSeeder.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/config/DataSeeder.java) — startup fixture seeder
 - [`backend/src/main/java/.../common/PageResult.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/common/PageResult.java) — framework-agnostic pagination wrapper
 - [`backend/src/test/.../SchemaCreationTest.java`](backend/src/test/java/at/technikumwien/mse25/awt/hotelmario/SchemaCreationTest.java) — H2 DDL verification

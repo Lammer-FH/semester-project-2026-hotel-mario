@@ -4,6 +4,9 @@
       <ion-toolbar>
         <ion-title>Blank</ion-title>
       </ion-toolbar>
+      <router-link to="/room" class="links">
+        Room Selection
+    </router-link>
     </ion-header>
 
     <ion-content :fullscreen="true">
@@ -26,6 +29,11 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue
 </script>
 
 <style scoped>
+.links {
+  padding: 12px 20px;
+  display: inline-block;
+}
+
 #container {
   text-align: center;
   
