@@ -718,27 +718,52 @@ Fixed path in file to `frontend/` instead of `.`
 **Accepted:** Accepted RoomSelectionView.vue, after some manual changes and some prompts.
 
 **Modified**
--Implemented date filter UI (check-in / check-out) using ion-datetime
--Refactored datepicker to modal-based interaction (hidden until click)
--Fixed Ionic component registration issues (ion-page, ion-select, etc.)
--Debugged reactivity issues (ref vs unwrapped state)
--Replaced unreliable v-model with @ionChange / @ionInput handling
--Implemented persons selection with ion-select
--Added date validation logic (check-out ≥ check-in)
--Added price validation (min ≤ max)
--Implemented reactive validation with computed properties
--Improved UX with error messages instead of auto-correction
--Added popup error handling using ion-alert
--Converted API helper to TypeScript with generics
+- Implemented date filter UI (check-in / check-out) using ion-datetime
+- Refactored datepicker to modal-based interaction (hidden until click)
+- Fixed Ionic component registration issues (ion-page, ion-select, etc.)
+- Debugged reactivity issues (ref vs unwrapped state)
+- Replaced unreliable v-model with @ionChange / @ionInput handling
+- Implemented persons selection with ion-select
+- Added date validation logic (check-out ≥ check-in)
+- Added price validation (min ≤ max)
+- Implemented reactive validation with computed properties
+- Improved UX with error messages instead of auto-correction
+- Added popup error handling using ion-alert
+- Converted API helper to TypeScript with generics
+
+### 2. Split View into components
+
+**Task:** Split RoomSelectionView.vue into components
+
+**Prompt:**
+> Can we split RoomSelectionView into components?
+
+**What was generated:**
+- `RoomSelectionView`
+- `DatePickerModal`
+- `FilterBar`
+- `RoomList`
+
+**Accepted:** Accepted components, after some manual changes and some prompts.
+
+**Modified**
+- Split View into components
+- Added addtional validation logic
+- Added pagination
+- Small adjustments that broke during split
 
 ## Summary
 
 | # | Task | Accepted | Modified | Rejected |
 |---|------|----------|----------|----------|
-| 1 | Create Dockerfile for vue.js |  | ✓ (path and port modification, added validation, etc.) | |
+| 1 | Create RoomSelectionView.vue |  | ✓ (added validation, etc.) | |
+| 2 | Split View into components |  | ✓ (added validation, added pagination, small fixes) | |
 
 ---
 
 ## Artefacts Produced by AI
 
-- `./frontend/RoomSelectionView.vue`
+- `./frontend/src/views/RoomSelectionView.vue`
+- `./frontend/src/components/FilterBar.vue`
+- `./frontend/src/components/DatePickerModal.vue`
+- `./frontend/src/components/RoomList.vue`

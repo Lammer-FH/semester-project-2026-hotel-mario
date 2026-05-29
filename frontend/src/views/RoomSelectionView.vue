@@ -1,6 +1,9 @@
 
 <template>
   <ion-page>
+     <router-link to="/home" class="links">
+        Startpage
+    </router-link>
     <ion-header>
     <ion-toolbar>
       <ion-title>Room Selection</ion-title>
@@ -18,7 +21,7 @@
         @apply="applyFilters"
       />
 
-      <RoomList :rooms="rooms" />
+      <RoomList :rooms="paginatedRooms" />
 
       <DatePickerModal
         :today="today"
@@ -32,13 +35,35 @@
         @close="isPickerOpen = false"
       />
 
+      <div class="pagination">
+
+      <ion-button
+        @click="previousPage"
+        :disabled="currentPage === 1"
+      >
+        Previous
+      </ion-button>
+
+      <span>
+        {{ currentPage }} / {{ totalPages }}
+      </span>
+
+      <ion-button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+      >
+        Next
+      </ion-button>
+
+</div>
+
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle} from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton} from '@ionic/vue'
 
 import FilterBar from '@/components/FilterBar.vue'
 import RoomList from '@/components/RoomList.vue'
@@ -59,11 +84,45 @@ onMounted(() => {
 
 
 const rooms = ref([])
+const displayedRooms = ref([])
+const currentPage = ref(1)
+const pageSize = 5
 
 const isPickerOpen = ref(false)
 const activeField = ref(null)
 const tempDate = ref(null)
 const today = new Date().toISOString().split('T')[0]
+
+const filteredRooms = computed(() => {
+  if (filters.value.availableOnly)
+    return rooms.value.filter(room => room.available)
+  else
+    return rooms.value
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredRooms.value.length / pageSize)
+})
+
+const paginatedRooms = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  const end = start + pageSize
+
+  return filteredRooms.value.slice(start, end)
+})
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
 
 function openPicker(field) {
   activeField.value = field
@@ -99,7 +158,10 @@ function applyFilters() {
   if (priceError.value) return
   console.log('Apply filters:', filters.value)
 
-  rooms.value = rooms.value.filter(room => room.available)
+  if (filters.value.availableOnly)
+    displayedRooms.value = rooms.value.filter(room => room.available)
+  else 
+    displayedRooms.value = rooms.value
 }
 // 🔹 Placeholder API call
 async function fetchRooms() {
@@ -133,6 +195,30 @@ async function fetchRooms() {
         available: false,
         //image: 'https://via.placeholder.com/400x200',
         descriptions: "You should rather work, than going on vacation."
+      },
+      {
+        id: 4,
+        name: 'Budget Room2',
+        price: 80,
+        available: false,
+        //image: 'https://via.placeholder.com/400x200',
+        descriptions: "You should rather work, than going on vacation."
+      },
+      {
+        id: 5,
+        name: 'Budget Room3',
+        price: 80,
+        available: false,
+        //image: 'https://via.placeholder.com/400x200',
+        descriptions: "You should rather work, than going on vacation."
+      },
+      {
+        id: 6,
+        name: 'Budget Room3',
+        price: 80,
+        available: false,
+        //image: 'https://via.placeholder.com/400x200',
+        descriptions: "You should rather work, than going on vacation."
       }
     ]
 
@@ -143,10 +229,21 @@ async function fetchRooms() {
         image: `/images/rooms/${room.id}.jpg`
       }))
 
+    displayedRooms.value = rooms.value
+
 
   } catch (error) {
     console.error('Error fetching rooms:', error)
   }
 }
+
+
 </script>
+
+<style scoped>
+.links {
+  padding: 12px 20px;
+  display: inline-block;
+}
+</style>
 
