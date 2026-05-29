@@ -84,7 +84,6 @@ onMounted(() => {
 
 
 const rooms = ref([])
-const displayedRooms = ref([])
 const currentPage = ref(1)
 const pageSize = 5
 
@@ -157,11 +156,6 @@ const priceError = computed(() => {
 function applyFilters() {
   if (priceError.value) return
   console.log('Apply filters:', filters.value)
-
-  if (filters.value.availableOnly)
-    displayedRooms.value = rooms.value.filter(room => room.available)
-  else 
-    displayedRooms.value = rooms.value
 }
 // 🔹 Placeholder API call
 async function fetchRooms() {
@@ -228,8 +222,6 @@ async function fetchRooms() {
         ...room,
         image: `/images/rooms/${room.id}.jpg`
       }))
-
-    displayedRooms.value = rooms.value
 
 
   } catch (error) {
