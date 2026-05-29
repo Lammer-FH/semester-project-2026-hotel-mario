@@ -13,7 +13,7 @@
         <p>{{ room.description }}</p>
 
         <!-- Availability -->
-        <ion-badge :color="room.available ? 'success' : 'danger'">
+        <ion-badge v-if="room.available !== null" :color="room.available ? 'success' : 'danger'">
           {{ room.available ? 'Available' : 'Not Available' }}
         </ion-badge>
       </ion-card-content>
