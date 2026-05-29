@@ -42,6 +42,11 @@ This document provides comprehensive instructions for building, deploying, and r
 - **MySQL** (optional for local development; included in Docker Compose)
   - MySQL 8.0 or higher
 
+- **Node package manager (npm)** 
+  - npm install & ionic quickstart: https://ionicframework.com/docs/vue/quickstart
+
+- **Node.js (v18 or higher recommended)**
+
 ### Supported Platforms
 
 - Linux (Ubuntu, Debian, CentOS, etc.)
@@ -86,6 +91,7 @@ docker compose down
 ```
 
 **Access the application:**
+- Fronted: http://localhost:8081/home
 - API: http://localhost:8080
 - MySQL: localhost:3306
 
@@ -106,6 +112,9 @@ semester-project-2026-hotel-mario/
 │   ├── gradlew                      # Gradle wrapper (Unix)
 │   ├── gradlew.bat                  # Gradle wrapper (Windows)
 │   └── settings.gradle              # Gradle settings
+|── frontend/
+|   |── src/...                      # Vue applcation
+|   |── package.json                 # Vue & Ionic dependencies
 ├── docker-compose.yml               # Docker Compose orchestration
 ├── Dockerfile                       # Multi-stage Docker build
 ├── startup.sh                       # Linux/macOS startup script
@@ -118,7 +127,7 @@ semester-project-2026-hotel-mario/
 
 ## Build Instructions
 
-### Local Build (Without Docker)
+### Local Build SpringBoot (Without Docker)
 
 **Requirements:** JDK 25, Gradle
 
@@ -168,6 +177,18 @@ docker compose build
 
 ---
 
+### Local Build Vue.js (Without Docker)
+
+```bash
+cd frontend
+
+# Start vue.js in development mode
+ionic serve
+```
+**Access Frontend build in Browser via:** `http://localhost:8100` 
+
+---
+
 ## Docker Compose Setup
 
 ### Services
@@ -188,6 +209,11 @@ docker compose build
 - **Port:** 8080 (mapped from container)
 - **Dependencies:** Waits for MySQL to be healthy
 - **JVM Memory:** -Xmx512m -Xms256m
+
+#### 3. Vue.js Application
+- **Image:** Built from Dockerfile-Frontend
+- **Container:** hotelmario-frontend
+- **Port:** 8081 (mapped from container)
 
 ### Network
 
@@ -295,6 +321,7 @@ spring.jpa.properties.hibernate.format_sql=true
 |---------|------|-----------|
 | Spring Boot | 8080 | 8080 (localhost:8080) |
 | MySQL | 3306 | 3306 (localhost:3306) |
+| Vue.js | 8081 | 80 (localhost:80) |
 
 To change mapped ports, edit `docker-compose.yml`:
 
@@ -306,6 +333,9 @@ services:
   spring-boot:
     ports:
       - "8081:8080"  # External:Internal (localhost:8081 -> container:8080)
+  vue-js:
+    ports:
+     - "8081:80" # # External:Internal (localhost:8081 -> container:80)
 ```
 
 ---
@@ -586,8 +616,9 @@ This project is compatible with multiple Java distributions. Here's a comparison
 - **Docker Docs:** https://docs.docker.com/
 - **Gradle Docs:** https://docs.gradle.org/
 - **MySQL Docs:** https://dev.mysql.com/doc/
+- **Ionic Docs:** https://ionicframework.com/docs/
 
 ---
 
-**Last Updated:** 2026-05-23  
+**Last Updated:** 2026-05-26  
 **Version:** 1.0

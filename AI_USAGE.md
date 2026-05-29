@@ -657,6 +657,13 @@ Spezifikation verlangt DoD explizit
 **Claude Code** (Anthropic)
 - Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
 - Interface: Claude Code CLI (interactive agent)
+# Issue #9 & #10 — Set up Vue.js + Frontend build config
+
+## Tool
+
+**Lumo** (Proton)
+- Model: **Lumo(multiple specialized models)** (`version: 2026-05-22`)
+- Interface: Browser
 - Date: 2026-05-25
 
 ---
@@ -709,6 +716,20 @@ Spezifikation verlangt DoD explizit
 **Accepted:** Fully accepted.
 
 ---
+### 1. Create Dockerfile for vue.js
+
+**Task:** Setup a Dockerfile to be used in docker-compose.yml for running vue.js & ionic in a container
+
+**Prompt:**
+> can you help me setup a build script so that vue js with inoic is built in docker?
+
+**What was generated:**
+- `Dockerfile-Frontend`
+
+**Accepted:** Accepted Dockerfile, after some manual changes.
+
+**Modified:** Fixed path in Dockerfile from `/app/www` to `app/dist`.   
+Fixed path in file to `frontend/` instead of `.`
 
 ## Summary
 
@@ -717,6 +738,7 @@ Spezifikation verlangt DoD explizit
 | 1 | Create Dockerfile.debug with JDWP debug port | ✓ | | |
 | 2 | Create docker-compose.debug.yml | ✓ | | |
 | 3 | Append Remote Debugging section to BUILD.md | ✓ | | |
+| 1 | Create Dockerfile for vue.js |  | ✓ (path and port modification) | |
 
 ---
 
@@ -727,3 +749,4 @@ Spezifikation verlangt DoD explizit
 - [`BUILD.md`](BUILD.md) — Remote Debugging section with IDE attach instructions
 
 ---
+- `./Dockerfile-Frontend`
