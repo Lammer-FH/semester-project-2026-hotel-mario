@@ -66,13 +66,23 @@ if !errorlevel! equ 0 (
     exit /b 1
 )
 
+!CONTAINER_CMD! ps | find "hotelmario-frontend" >nul
+if !errorlevel! equ 0 (
+    echo %GREEN%✓ Frontend is running%RESET%
+) else (
+    echo %RED%✗ Frontend failed to start%RESET%
+    pause
+    exit /b 1
+)
+
 echo.
 echo %GREEN%========================================%RESET%
 echo %GREEN%Hotel Mario is up and running!%RESET%
 echo %GREEN%========================================%RESET%
 echo.
-echo Application URL: http://localhost:8080
-echo MySQL Port: 3306
+echo Frontend:    http://localhost:8081
+echo Backend API: http://localhost:8080/api
+echo MySQL Port:  3306
 echo.
 echo View logs:
 echo   !CONTAINER_CMD! compose logs -f

@@ -6,7 +6,7 @@
         <div class = "button-group margin-left-15">
           <ion-button router-link="/home"> Home </ion-button> 
           <ion-button router-link="/about"> About Us </ion-button> 
-          <ion-button router-link="/rooms"> Rooms </ion-button>
+          <ion-button router-link="/room"> Rooms </ion-button>
         </div>
       </ion-toolbar>
     </ion-header>
@@ -18,12 +18,6 @@
             <h1 class="hero">Boutique Hotel Technikum</h1>
 
             <p>Welcome to our Hotel Website!</p>
-
-            <div class ="button-group">
-              <ion-button router-link="/about"> About Us </ion-button> 
-
-              <ion-button router-link="/rooms"> Rooms </ion-button> 
-            </div>
 
             <!-- Slideshow -->
             <div class="slideshow-container">
@@ -66,7 +60,7 @@
             </p>
 
             <div class ="button-group">
-              <ion-button router-link="/abroomsout"> Find the perfect room now! </ion-button> 
+              <ion-button router-link="/room"> Find the perfect room now! </ion-button> 
             </div>
 
           </ion-card>
@@ -99,15 +93,14 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonCard, 
-  IonCardContent, 
-  IonCardHeader, 
-  IonCardSubtitle, 
-  IonCardTitle,
-  IonButton
+  IonCard,
+  IonButton,
+  IonFooter
 } from '@ionic/vue';
 
 import { ref, onMounted, onUnmounted } from 'vue';
+
+defineOptions({ name: 'HotelHome' });
 
 const slideIndex = ref(0);
 

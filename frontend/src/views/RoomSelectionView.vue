@@ -18,6 +18,7 @@
         @updatePersons="(v) => filters.persons = v"
         @updateMin="onMinChange"
         @updateMax="onMaxChange"
+        @updateAvailable="(v) => filters.availableOnly = v"
         @apply="applyFilters"
       />
 
@@ -132,7 +133,7 @@ function openPicker(field) {
 }
 
 function applyDate() {
-  filters.value[activeField.value] = tempDate.value
+  filters.value[activeField.value] = tempDate.value?.split('T')[0] ?? null
   isPickerOpen.value = false
 }
 

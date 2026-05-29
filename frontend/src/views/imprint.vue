@@ -6,7 +6,7 @@
         <div class = "button-group margin-left-15">
           <ion-button router-link="/home"> Home </ion-button> 
           <ion-button router-link="/about"> About Us </ion-button> 
-          <ion-button router-link="/rooms"> Rooms </ion-button>
+          <ion-button router-link="/room"> Rooms </ion-button>
         </div>
       </ion-toolbar>
     </ion-header>
@@ -135,13 +135,11 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonCard, 
-  IonCardContent, 
-  IonCardHeader, 
-  IonCardSubtitle, 
-  IonCardTitle,
+  IonCard,
   IonButton
 } from '@ionic/vue';
+
+defineOptions({ name: 'ImprintPage' });
 </script>
 
 <style scoped>
