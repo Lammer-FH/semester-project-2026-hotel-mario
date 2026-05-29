@@ -1,32 +1,39 @@
 
 <template>
   <ion-page>
-     <router-link to="/home" class="links">
-        Startpage
-    </router-link>
+    <router-link to="/home" class="links">Startpage</router-link>
     <ion-header>
-    <ion-toolbar>
-      <ion-title>Room Selection</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <ion-toolbar>
+        <ion-title>Room Selection</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
     <ion-content>
 
       <FilterBar
-        :filters="filters"
-        :priceError="priceError"
-        @openDate="openPicker"
-        @updatePersons="(v) => filters.persons = v"
-        @updateMin="onMinChange"
-        @updateMax="onMaxChange"
-        @updateAvailable="(v) => filters.availableOnly = v"
+        :filters="filterBarProps"
+        :priceError="filterStore.priceError"
+        @openDate="(f) => filterStore.openPicker(f, today)"
+        @updatePersons="(v) => filterStore.persons = v"
+        @updateMin="(v) => filterStore.minPrice = v ? Number(v) : null"
+        @updateMax="(v) => filterStore.maxPrice = v ? Number(v) : null"
+        @updateAvailable="(v) => filterStore.availableOnly = v"
         @apply="applyFilters"
       />
 
-      <ion-text color="danger" v-if="dateError" class="date-error">
-        {{ dateError }}
+      <ion-text color="danger" v-if="filterStore.dateError" class="date-error">
+        {{ filterStore.dateError }}
       </ion-text>
 
-      <ion-text v-if="filteredRooms.length === 0 && rooms.length > 0" color="medium" class="empty-state">
+      <ion-text color="danger" v-if="roomStore.error" class="date-error">
+        {{ roomStore.error }}
+      </ion-text>
+
+      <ion-text v-if="roomStore.loading" color="medium" class="date-error">
+        Loading rooms...
+      </ion-text>
+
+      <ion-text v-else-if="filteredRooms.length === 0 && roomStore.rooms.length > 0" color="medium" class="empty-state">
         No rooms match your criteria for the selected dates.
       </ion-text>
 
@@ -34,174 +41,85 @@
 
       <DatePickerModal
         :today="today"
-        :isOpen="isPickerOpen"
-        :modelValue="tempDate"
-        :activeField="activeField"
-        :checkIn="filters.checkIn"
-        :checkOut="filters.checkOut"
-        @update:modelValue="(v) => tempDate = v"
-        @apply="applyDate"
-        @close="isPickerOpen = false"
+        :isOpen="filterStore.pickerOpen"
+        :modelValue="filterStore.pickerTemp"
+        :activeField="filterStore.pickerField"
+        :checkIn="filterStore.checkIn"
+        :checkOut="filterStore.checkOut"
+        @update:modelValue="(v) => filterStore.pickerTemp = v"
+        @apply="filterStore.applyPicker"
+        @close="filterStore.closePicker"
       />
 
       <div class="pagination">
-
-      <ion-button
-        @click="previousPage"
-        :disabled="currentPage === 1"
-      >
-        Previous
-      </ion-button>
-
-      <span>
-        {{ currentPage }} / {{ totalPages }}
-      </span>
-
-      <ion-button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        Next
-      </ion-button>
-
-</div>
+        <ion-button @click="previousPage" :disabled="currentPage === 1">Previous</ion-button>
+        <span>{{ currentPage }} / {{ totalPages }}</span>
+        <ion-button @click="nextPage" :disabled="currentPage === totalPages">Next</ion-button>
+      </div>
 
     </ion-content>
   </ion-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText } from '@ionic/vue'
 
 import FilterBar from '@/components/FilterBar.vue'
 import RoomList from '@/components/RoomList.vue'
 import DatePickerModal from '@/components/DatePickerModal.vue'
-import { getRooms, checkRoomAvailability } from '@/services/api'
 
-const filters = ref({
-  persons: 2,
-  checkIn: null,
-  checkOut: null,
-  minPrice: null,
-  maxPrice: null,
-  availableOnly: false,
-})
+import { useRoomStore } from '@/stores/roomStore'
+import { useFilterStore } from '@/stores/filterStore'
 
-onMounted(() => {
-  fetchRooms()
-})
+const roomStore = useRoomStore()
+const filterStore = useFilterStore()
 
-const rooms = ref([])
 const currentPage = ref(1)
 const pageSize = 5
-
-const isPickerOpen = ref(false)
-const activeField = ref(null)
-const tempDate = ref(null)
 const today = new Date().toISOString().split('T')[0]
 
-const dateError = ref('')
+const filterBarProps = computed(() => ({
+  persons: filterStore.persons,
+  checkIn: filterStore.checkIn,
+  checkOut: filterStore.checkOut,
+  minPrice: filterStore.minPrice,
+  maxPrice: filterStore.maxPrice,
+  availableOnly: filterStore.availableOnly,
+}))
 
 const filteredRooms = computed(() => {
-  if (filters.value.availableOnly)
-    return rooms.value.filter(room => room.available === true)
-  return rooms.value
+  if (filterStore.availableOnly)
+    return roomStore.rooms.filter(r => r.available === true)
+  return roomStore.rooms
 })
 
-const totalPages = computed(() => {
-  return Math.max(1, Math.ceil(filteredRooms.value.length / pageSize))
-})
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredRooms.value.length / pageSize)))
 
 const paginatedRooms = computed(() => {
   const start = (currentPage.value - 1) * pageSize
   return filteredRooms.value.slice(start, start + pageSize)
 })
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++
-}
-
-const previousPage = () => {
-  if (currentPage.value > 1) currentPage.value--
-}
-
-function openPicker(field) {
-  activeField.value = field
-  tempDate.value = filters.value[field] ?? today
-  isPickerOpen.value = true
-}
-
-function applyDate() {
-  filters.value[activeField.value] = tempDate.value?.split('T')[0] ?? null
-  isPickerOpen.value = false
-}
-
-function onMinChange(v) {
-  filters.value.minPrice = v ? Number(v) : null
-}
-
-function onMaxChange(v) {
-  filters.value.maxPrice = v ? Number(v) : null
-}
-
-const priceError = computed(() => {
-  const { minPrice, maxPrice } = filters.value
-  if (minPrice != null && maxPrice != null && maxPrice < minPrice) {
-    return 'Max must be ≥ Min'
-  }
-  return ''
-})
+const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
+const previousPage = () => { if (currentPage.value > 1) currentPage.value-- }
 
 async function applyFilters() {
-  if (priceError.value) return
-  dateError.value = ''
+  if (filterStore.priceError) return
+  filterStore.clearDateError()
+  if (!filterStore.datesSelected) return
 
-  const { checkIn, checkOut } = filters.value
-  if (!checkIn || !checkOut) return
-
-  const results = await Promise.all(
-    rooms.value.map(room =>
-      checkRoomAvailability(room.id, checkIn, checkOut).catch(e => e)
-    )
-  )
-
-  const firstError = results.find(r => r instanceof Error)
-  if (firstError) {
-    try {
-      const body = JSON.parse(firstError.message)
-      const field = body.errors?.[0]
-      dateError.value = field
-        ? `${field.field}: ${field.message}`
-        : 'Invalid date range'
-    } catch {
-      dateError.value = 'Invalid date range'
-    }
+  const err = await roomStore.checkAvailability(filterStore.checkIn!, filterStore.checkOut!)
+  if (err) {
+    filterStore.setDateError(err)
     return
   }
-
   currentPage.value = 1
-  rooms.value = rooms.value.map((room, i) => ({
-    ...room,
-    available: results[i].available,
-  }))
 }
 
-async function fetchRooms() {
-  try {
-    const page = await getRooms(0, 20)
-    rooms.value = page.content.map(r => ({
-      id: r.id,
-      name: r.title,
-      price: r.pricePerNight,
-      image: `/images/rooms/${r.id}.jpg`,
-      description: r.extras.map(e => e.name).join(', '),
-      available: null,
-    }))
-  } catch (e) {
-    console.error('Error fetching rooms:', e)
-  }
-}
+onMounted(() => {
+  roomStore.fetchRooms()
+})
 </script>
 
 <style scoped>
