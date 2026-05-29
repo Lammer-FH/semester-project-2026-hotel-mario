@@ -20,7 +20,7 @@ public class BookingController implements BookingApi {
     }
 
     @Override
-    public ResponseEntity<?> createBooking(BookingRequestDto body) {
+    public ResponseEntity<BookingConfirmationDto> createBooking(BookingRequestDto body) {
         return bookingService.create(bookingMapper.toEntity(body))
                 .map(bookingMapper::toDto)
                 .map(dto -> ResponseEntity.status(HttpStatus.CREATED).<BookingConfirmationDto>body(dto))

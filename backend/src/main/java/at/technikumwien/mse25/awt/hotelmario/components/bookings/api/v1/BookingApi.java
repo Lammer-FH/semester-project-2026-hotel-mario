@@ -1,5 +1,6 @@
 package at.technikumwien.mse25.awt.hotelmario.components.bookings.api.v1;
 
+import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.BookingConfirmationDto;
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.BookingRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -11,5 +12,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface BookingApi {
 
     @PostMapping
-    ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequestDto body);
+    ResponseEntity<BookingConfirmationDto> createBooking(@Valid @RequestBody BookingRequestDto body);
 }
