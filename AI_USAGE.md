@@ -650,6 +650,13 @@ Spezifikation verlangt DoD explizit
 
 ---
 
+# Issue #52 — Add Backend Debug Port to Docker Image
+
+## Tool
+
+**Claude Code** (Anthropic)
+- Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
+- Interface: Claude Code CLI (interactive agent)
 # Issue #9 & #10 — Set up Vue.js + Frontend build config
 
 ## Tool
@@ -663,6 +670,52 @@ Spezifikation verlangt DoD explizit
 
 ## Usage Log
 
+### 1. Create Debug Dockerfile with Remote JVM Debug Port
+
+**Task:** Create a `Dockerfile.debug` that exposes port 5005 for remote JVM debugging via JDWP, keeping the same build stage as the production `Dockerfile`.
+
+**Prompt:**
+> create a Dockerfile for debugging purposes, expose a port for remote JVM debugging and enter what you have changed into the AI_USAGE.md file
+
+**What was generated:**
+- `Dockerfile.debug` — identical build stage to `Dockerfile`; runtime stage adds `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005` to the JVM startup arguments and exposes port `5005` alongside `8080`
+
+**Accepted:** Fully accepted.
+
+---
+
+### 2. Create Debug Docker Compose File
+
+**Task:** Create a `docker-compose.debug.yml` that uses `Dockerfile.debug`, maps port 5005 for the JDWP debugger, and keeps the same MySQL setup as the production compose file.
+
+**Prompt:**
+> create a corresponding docker-compose file and append to the AI_USAGE.md file
+
+**What was generated:**
+- `docker-compose.debug.yml` — MySQL service (identical to production) + Spring Boot service built from `Dockerfile.debug`; port `5005` mapped to the host alongside `8080`; separate named volume (`mysql_data_debug`) and network (`hotelmario-debug-network`) to avoid conflicts with the production stack
+
+**Accepted:** Fully accepted.
+
+---
+
+### 3. Append Remote Debugging Section to BUILD.md
+
+**Task:** Document how to start the debug Docker Compose stack and attach a JDWP debugger in the build guide.
+
+**Prompt:**
+> append in the build guide how to run the docker compose for debugging, append what you did in the AI_USAGE.md file
+
+**What was generated:**
+- New `## Remote Debugging` section in `BUILD.md` added to the Table of Contents and inserted after the Docker Compose Setup section; covers:
+  - `docker compose -f docker-compose.debug.yml up -d --build` startup command
+  - IntelliJ IDEA attach instructions (Remote JVM Debug run configuration)
+  - VS Code attach instructions (`launch.json` snippet)
+  - Teardown commands (`down` / `down -v`)
+  - Security note warning against production use of the debug image
+
+**Accepted:** Fully accepted.
+
+---
 ### 1. Create Dockerfile for vue.js
 
 **Task:** Setup a Dockerfile to be used in docker-compose.yml for running vue.js & ionic in a container
@@ -682,10 +735,18 @@ Fixed path in file to `frontend/` instead of `.`
 
 | # | Task | Accepted | Modified | Rejected |
 |---|------|----------|----------|----------|
+| 1 | Create Dockerfile.debug with JDWP debug port | ✓ | | |
+| 2 | Create docker-compose.debug.yml | ✓ | | |
+| 3 | Append Remote Debugging section to BUILD.md | ✓ | | |
 | 1 | Create Dockerfile for vue.js |  | ✓ (path and port modification) | |
 
 ---
 
 ## Artefacts Produced by AI
 
+- [`Dockerfile.debug`](Dockerfile.debug) — debug image with remote JVM debugging on port 5005
+- [`docker-compose.debug.yml`](docker-compose.debug.yml) — compose stack wiring MySQL and the debug Spring Boot image together
+- [`BUILD.md`](BUILD.md) — Remote Debugging section with IDE attach instructions
+
+---
 - `./Dockerfile-Frontend`

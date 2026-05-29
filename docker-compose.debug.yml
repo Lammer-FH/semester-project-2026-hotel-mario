@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hotelmario-mysql-debug
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: hotelmario_db
+      MYSQL_USER: hotelmario
+      MYSQL_PASSWORD: hotelmario_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_debug:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hotelmario-debug-network
+
+  spring-boot:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    container_name: hotelmario-app-debug
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hotelmario_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: hotelmario
+      SPRING_DATASOURCE_PASSWORD: hotelmario_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - hotelmario-debug-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data_debug:
+
+networks:
+  hotelmario-debug-network:
+    driver: bridge
