@@ -35,7 +35,7 @@
 
       <ion-col size="6" class="availability-toggle">
         <ion-label>Show only available Rooms</ion-label>
-        <ion-checkbox v-model="filters.availableOnly" />
+        <ion-checkbox :checked="filters.availableOnly" @ionChange="(e) => $emit('updateAvailable', e.detail.checked)" />
       </ion-col>
     </ion-row>
 
@@ -96,6 +96,7 @@ defineEmits([
   'updatePersons',
   'updateMin',
   'updateMax',
+  'updateAvailable',
   'apply'
 ])
 </script>

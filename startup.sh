@@ -50,13 +50,21 @@ else
     exit 1
 fi
 
+if $CONTAINER_CMD ps | grep -q hotelmario-frontend; then
+    echo -e "${GREEN}✓ Frontend is running${NC}"
+else
+    echo -e "${RED}✗ Frontend failed to start${NC}"
+    exit 1
+fi
+
 echo ""
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Hotel Mario is up and running!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
-echo "Application URL: http://localhost:8080"
-echo "MySQL Port: 3306"
+echo "Frontend:    http://localhost:8081"
+echo "Backend API: http://localhost:8080/api"
+echo "MySQL Port:  3306"
 echo ""
 echo "View logs:"
 echo "  $CONTAINER_CMD compose logs -f"

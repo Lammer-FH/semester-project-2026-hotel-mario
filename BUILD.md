@@ -91,7 +91,7 @@ docker compose down
 ```
 
 **Access the application:**
-- Fronted: http://localhost:8081/home
+- Frontend: http://localhost:8081
 - API: http://localhost:8080
 - MySQL: localhost:3306
 
