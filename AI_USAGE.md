@@ -516,10 +516,10 @@ Global: Definition of Done missing from ALL user stories.
 
 ### 5. Full Clean Architecture Refactoring (Component + Layer Structure)
 
-**Task:** Refactor the entire backend to match the lecturer's Clean Architecture pattern: component packages, versioned API layer, entities, repositories, services, DTOs, mappers.
+**Task:** Refactor the entire backend following Clean Architecture principles: component packages, versioned API layer, entities, repositories, services, DTOs, mappers.
 
 **Prompt:**
-> come up with a plan to refactor accordingly [to the lecturer's guidelines: component packages with v1 versioning, @Entity models named *Entity with Lombok, @Repository JpaRepository, @Service, @RestController + @RequestMapping, DTOs with @Builder @Value @JsonProperty]
+> come up with a plan to refactor accordingly [to the project's architectural guidelines: component packages with v1 versioning, @Entity models named *Entity with Lombok, @Repository JpaRepository, @Service, @RestController + @RequestMapping, DTOs with @Builder @Value @JsonProperty]
 > do it all
 
 **What was generated:**
@@ -588,7 +588,7 @@ Global: Definition of Done missing from ALL user stories.
 
 ### 7. Clean Architecture Verification
 
-**Task:** Verify the refactored codebase against each of the lecturer's Clean Architecture criteria.
+**Task:** Verify the refactored codebase against Clean Architecture principles.
 
 **Prompt:**
 > verify clean architecture
@@ -634,14 +634,7 @@ Global: Definition of Done missing from ALL user stories.
 **Claude Code** (Anthropic)
 - Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
 - Interface: Claude Code CLI (interactive agent)
-# Issue #9 & #10 — Set up Vue.js + Frontend build config
-
-## Tool
-
-**Lumo** (Proton)
-- Model: **Lumo(multiple specialized models)** (`version: 2026-05-22`)
-- Interface: Browser
-- Date: 2026-05-25
+- Date: 2026-05-23
 
 ---
 
@@ -683,30 +676,11 @@ Global: Definition of Done missing from ALL user stories.
 > append in the build guide how to run the docker compose for debugging, append what you did in the AI_USAGE.md file
 
 **What was generated:**
-- New `## Remote Debugging` section in `BUILD.md` added to the Table of Contents and inserted after the Docker Compose Setup section; covers:
-  - `docker compose -f docker-compose.debug.yml up -d --build` startup command
-  - IntelliJ IDEA attach instructions (Remote JVM Debug run configuration)
-  - VS Code attach instructions (`launch.json` snippet)
-  - Teardown commands (`down` / `down -v`)
-  - Security note warning against production use of the debug image
+- New `## Remote Debugging` section in `BUILD.md` covering startup command, IntelliJ IDEA and VS Code attach instructions, teardown, and a security note against production use
 
 **Accepted:** Fully accepted.
 
 ---
-### 1. Create Dockerfile for vue.js
-
-**Task:** Setup a Dockerfile to be used in docker-compose.yml for running vue.js & ionic in a container
-
-**Prompt:**
-> can you help me setup a build script so that vue js with inoic is built in docker?
-
-**What was generated:**
-- `Dockerfile-Frontend`
-
-**Accepted:** Accepted Dockerfile, after some manual changes.
-
-**Modified:** Fixed path in Dockerfile from `/app/www` to `app/dist`.   
-Fixed path in file to `frontend/` instead of `.`
 
 ## Summary
 
@@ -715,29 +689,97 @@ Fixed path in file to `frontend/` instead of `.`
 | 1 | Create Dockerfile.debug with JDWP debug port | ✓ | | |
 | 2 | Create docker-compose.debug.yml | ✓ | | |
 | 3 | Append Remote Debugging section to BUILD.md | ✓ | | |
-| 1 | Create Dockerfile for vue.js |  | ✓ (path and port modification) | |
 
 ---
 
 ## Artefacts Produced by AI
 
-- `./Dockerfile-Frontend`
+- [`Dockerfile.debug`](Dockerfile.debug)
+- [`docker-compose.debug.yml`](docker-compose.debug.yml)
+- [`BUILD.md`](BUILD.md) — Remote Debugging section
 
+---
 
-# Issues #17, #18 #19 — Hotel Room Selection
+# Issue #9 & #10 — Set up Vue.js + Frontend build config
 
 ## Tool
 
-**Copilot** (Microsoftn)
-- Model: **Lumo(multiple specialized models)** (`version: 2026-05-22`)
+**Lumo** (Proton)
+- Model: **Lumo (multiple specialized models)** (`version: 2026-05-22`)
 - Interface: Browser
-- Date: 2026-05-26 - 2026-05-29
-- [`Dockerfile.debug`](Dockerfile.debug) — debug image with remote JVM debugging on port 5005
-- [`docker-compose.debug.yml`](docker-compose.debug.yml) — compose stack wiring MySQL and the debug Spring Boot image together
-- [`BUILD.md`](BUILD.md) — Remote Debugging section with IDE attach instructions
+- Date: 2026-05-25
 
 ---
-- `./Dockerfile-Frontend`
+
+## Usage Log
+
+### 1. Create Dockerfile for Vue.js
+
+**Task:** Set up a Dockerfile to build and serve the Vue.js + Ionic frontend in a container.
+
+**Prompt:**
+> can you help me setup a build script so that vue js with ionic is built in docker?
+
+**What was generated:**
+- `Dockerfile-Frontend`
+
+**Accepted:** After manual corrections.
+
+**Modified:** Fixed output path from `/app/www` to `/app/dist`; corrected build context path to `frontend/`.
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Create Dockerfile for Vue.js | | ✓ (path corrections) | |
+
+---
+
+## Artefacts Produced by AI
+
+- [`Dockerfile-Frontend`](Dockerfile-Frontend)
+
+---
+
+# Issues #17, #18, #19 — Hotel Room Selection Frontend
+
+## Tool
+
+**GitHub Copilot** (Microsoft)
+- Interface: IDE
+- Date: 2026-05-26 – 2026-05-29
+
+---
+
+## Usage Log
+
+### 1. RoomSelectionView — initial structure and components
+
+**Task:** Create the room selection view with filter bar, date picker modal, and room list components.
+
+**What was generated:**
+- `RoomSelectionView.vue`, `FilterBar.vue`, `DatePickerModal.vue`, `RoomList.vue` — initial structure with mocked data
+
+**Modified:** Date validation, pagination, Ionic component fixes, reactivity corrections applied manually.
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Room selection view and components | | ✓ | |
+
+---
+
+## Artefacts Produced by AI
+
+- `frontend/src/views/RoomSelectionView.vue` (initial)
+- `frontend/src/components/FilterBar.vue` (initial)
+- `frontend/src/components/DatePickerModal.vue` (initial)
+- `frontend/src/components/RoomList.vue` (initial)
 
 # Milestone 2 — Backend Implementation (U2/U3): Clean Architecture, Testing, and Fixtures
 
@@ -984,50 +1026,6 @@ Fixed path in file to `frontend/` instead of `.`
 
 ---
 
-# Milestone 2 — Progress Status
-
-*Assessed: 2026-05-23*
-
-## Deliverables
-
-| Deliverable | Status | Notes |
-|---|---|---|
-| U1: Hotel website (landing page, about, imprint) | ❌ Not started | Frontend only — no Vue project exists |
-| U2: Room selection — backend | ✅ Complete | `GET /v1/rooms` (paginated), `GET /v1/rooms/{roomId}`, 5 seeded rooms with extras and icons |
-| U2: Room selection — frontend | ❌ Not started | No components, no Pinia store, no Axios integration |
-| U3: Availability check — backend | ✅ Complete (stub) | `GET /v1/rooms/{roomId}/availability` responds correctly; always returns `available: true` pending real query |
-| U3: Availability check — frontend | ❌ Not started | No date picker, no availability UI |
-| Working backend | ✅ Complete | Spring Boot 4, MySQL, Docker Compose, 35 tests passing |
-| Working frontend | ❌ Not started | `scripts/build-frontend.sh` contains only a placeholder echo |
-| Frontend: Atomic Design structure | ❌ Not started | No Vue project scaffolded |
-| Frontend: Pinia state management | ❌ Not started | — |
-| Frontend: Axios API calls | ❌ Not started | — |
-| Updated REST API docs (`openapi.yaml`) | ✅ Complete | All 4 endpoints defined with full request/response schemas |
-| Updated DB model (`er-diagram.md`) | ✅ Complete | 4 tables: `room`, `extra`, `room_extra`, `booking` |
-| CI pipeline | ✅ Complete | GitHub Actions for backend build and Docker |
-
-## Backend — What Is Built
-
-**Rooms API**
-- `GET /v1/rooms?page=0&size=5` → paginated `RoomPage` with extras (title, description, pricePerNight, imageUrl, extras[name, icon])
-- `GET /v1/rooms/{id}` → single room or 404
-- `GET /v1/rooms/{id}/availability?checkIn=...&checkOut=...` → `{ available: true }` (stub)
-
-**Bookings API**
-- `POST /v1/bookings` → validates input (email match, date order, Bean Validation), persists, returns `BookingConfirmation` with hardcoded hotel details
-
-**Seeded data:** 5 rooms (€89.99–€279.99), 7 extras, 3 bookings
-
-**Architecture:** Clean Architecture — service interfaces, DTO constraint validators, framework-agnostic `PageResult<T>`, component packages, 35 tests
-
-## What Is Still Missing for M2
-
-1. **Vue.js 3 + Ionic project** — needs to be scaffolded (Vite, TypeScript, Ionic)
-2. **U1 pages** — landing page, about, imprint (static content, no backend dependency)
-3. **U2 frontend** — room list with pagination, extras with Bootstrap Icons, `rooms` Pinia store, Axios call to `GET /v1/rooms`
-4. **U3 frontend** — date picker integrated into room cards/detail, availability feedback, Axios call to `GET /v1/rooms/{id}/availability`
-5. **U3 backend** — real overlap query in `RoomServiceImpl.isAvailable()` against `BookingRepository`
-
 ---
 # Assignment Frontend Prototype
 
@@ -1210,3 +1208,71 @@ Fixed path in file to `frontend/` instead of `.`
 - [`frontend/src/views/RoomSelectionView.vue`](frontend/src/views/RoomSelectionView.vue)
 - [`nginx.conf`](nginx.conf)
 - [`.dockerignore`](.dockerignore)
+
+---
+
+# Issue #57 — Introduce Pinia State Management (U2/U3)
+
+## Tool
+
+**Claude Code** (Anthropic)
+- Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
+- Interface: Claude Code VS Code extension (interactive agent)
+- Date: 2026-05-29
+
+---
+
+## Usage Log
+
+### 1. Install Pinia and Create Stores
+
+**Task:** Introduce Pinia state management for the room list and availability filter flow.
+
+**Prompt:**
+> introduce pinia state management in frontend app
+
+**What was generated:**
+- `frontend/src/stores/useRoomStore.ts` — rooms list, selectedRoom, loading/error state; `fetchRooms()` and `checkAvailability()` actions
+- `frontend/src/stores/useFilterStore.ts` — filter form state (checkIn, checkOut, persons, price range, availableOnly), date picker modal state (pickerOpen, pickerField, pickerTemp), computed priceError/datesSelected, picker lifecycle actions
+- `frontend/src/main.ts` updated to register `createPinia()`
+- `RoomSelectionView.vue` refactored to use both stores; local state reduced to pagination only
+
+**Accepted:** Fully accepted after build verification.
+
+**Human reasoning:** Store boundaries were decided by us: data and API access in `useRoomStore`, form and modal state in `useFilterStore`. The picker modal state was moved into `useFilterStore` because modal open/close is driven by the filter form flow. `selectedRoom` was added to `useRoomStore` as the handoff point for the future booking flow (U4). We directed the AI to implement the pattern; store design decisions were ours.
+
+---
+
+### 2. Align File Naming and Add Environment Variable
+
+**Task:** Rename store files to match the `use`-prefix convention and configure the API base URL via `.env`.
+
+**Prompt:**
+> align Pinia store naming and add .env for API URL configuration
+
+**What was generated:**
+- Store files renamed: `roomStore.ts` → `useRoomStore.ts`, `filterStore.ts` → `useFilterStore.ts`
+- `frontend/.env.example` with `VITE_API_URL=/api`
+- `frontend/src/services/api.ts` updated to read `import.meta.env.VITE_API_URL`
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** The use-prefix file naming (e.g. `useRoomStore.ts`) is the standard Pinia convention and matches the naming shown in course materials. The `.env.example` pattern keeps the API base URL configurable per environment without committing secrets.
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Pinia stores for rooms and filters | ✓ | | |
+| 2 | File naming + environment variable config | ✓ | | |
+
+---
+
+## Artefacts Produced by AI
+
+- [`frontend/src/stores/useRoomStore.ts`](frontend/src/stores/useRoomStore.ts)
+- [`frontend/src/stores/useFilterStore.ts`](frontend/src/stores/useFilterStore.ts)
+- [`frontend/src/main.ts`](frontend/src/main.ts) — Pinia registration
+- [`frontend/.env.example`](frontend/.env.example)
