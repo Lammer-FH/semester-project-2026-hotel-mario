@@ -1029,3 +1029,184 @@ Fixed path in file to `frontend/` instead of `.`
 5. **U3 backend** — real overlap query in `RoomServiceImpl.isAvailable()` against `BookingRepository`
 
 ---
+# Assignment Frontend Prototype
+
+## Tool
+
+**ChatGPT**
+- Model: **GPT-5.5**
+- Date: 2026-05-24
+
+---
+
+## Usage Log
+
+### 1. Creation of frontend HTML/CSS/JS files following the paperprototype
+**Task:** Creation of frontend HTML/CSS/JS files following the paperprototype
+
+**Prompt:** Create code for .html files and pages. Only HTML, CSS, and JS should be used for design. Create the individual pages for me. [Paperprototype PDF uploaded]
+
+**What was generated:**
+- Projectstrukture overview:
+  - hotel-booking-app/
+    - index.html
+    - rooms.html
+    - room-details.html
+    - booking.html
+    - review.html
+    - confirmation.html
+    - about.html
+    - imprint.html
+    - css/
+      - style.css
+    - js/
+      - app.js
+    - images/
+      - room1.jpg
+      - room2.jpg
+      - room3.jpg
+      - hotel.jpg
+- style.css Stylesheet with styling for all HTML files
+- app.js JavaScript code for booking.html page: checking if all fields are filled (not containing check if content is correct format)
+- index.html
+- rooms.html
+- room-details.html
+- booking.html
+- review.html
+- confirmation.html
+- about.html
+
+**Modified:** All generated html pages needed to be modified, because pages are not equivalent in content, layout, fields to the requirement given, the paperprototype. Therefore manual overhaul of all pages fixing inconsistent layout, missing content, incorrect content, missing fields. In total were the generated pages useful because of the generated basic structure. style.css modified to create consistency between pages and a better looking layout. Alled html and js code for slideshows on index.html, about.html, room-details.html, confirmation.html. No images were generated, therefore I created five placeholder images myself (size: 1920x1080) and a smaller image (44x44) as icon placeholder for the room extras. Imprint page not generated. Inconsistent appearance of the footer on the pages; settle with one footer design and applied this design to all other pages.
+
+
+### 2. Creation of imprint HTML page following the paperprototype
+
+**Task:** Create the legal notice page. Supplement any missing information with relevant and appropriate data, as in the following example.
+
+**Prompt:** Create the legal notice page. Supplement any missing information with relevant and appropriate data, as in the following example. [attached the example imprint page for a sole proprietorship company not registered in the commercial register from the WKO page]
+
+**What was generated:**
+- imprint.html
+
+**Modified:** The basic structure of the imprint.html was acceptable. The contents of the page were generated in german, therefore manually translated into english. The data of the imprint were not these from the paperprototype, therefore manually replaced with the correct imprint data from the paperprototype. 
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Creation of frontend HTML/CSS/JS files following the paperprototype | | ✓ | |
+| 2 | Creation of imprint HTML page following the paperprototype | | ✓ | |
+
+---
+
+
+# U2 / U3 — Room Availability Backend & Frontend (#17 #20 #21 #22 #23 #24 #25)
+
+## Tool
+
+**Claude Code** (Anthropic)
+- Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
+- Interface: Claude Code VS Code extension (interactive agent)
+- Date: 2026-05-29
+
+---
+
+## Usage Log
+
+### 1. Room Availability Repository (#20)
+
+**Task:** Create a dedicated JPA repository for the availability use case with a JPQL overlap-detection query.
+
+**Prompt:**
+> create a use case specific controller, service and repository
+
+**What was generated:**
+- `RoomAvailabilityRepository` extending `JpaRepository<RoomEntity, Long>` with a custom `isAvailableForPeriod` JPQL query using `NOT EXISTS` to detect booking overlaps (`checkIn < :checkOut AND checkOut > :checkIn`)
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** We directed the AI to create a fully separate `RoomAvailability*` layer rather than extending the existing `RoomRepository`, keeping availability logic isolated per clean architecture. The overlap condition (`checkIn < checkOut AND checkOut > checkIn`) was verified manually against edge cases before accepting.
+
+---
+
+### 2. Room Availability Service (#21)
+
+**Task:** Implement service that returns `Optional<Boolean>` to distinguish room-not-found (404) from unavailable (false).
+
+**Prompt:**
+> is #21 fulfilled?
+
+**What was generated:**
+- `RoomAvailabilityService` interface and `RoomAvailabilityServiceImpl` using `Optional<Boolean>` — `Optional.empty()` signals 404, `Optional.of(false)` signals booked
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** Using `Optional<Boolean>` as the return type was a deliberate design choice to encode two distinct failure modes without throwing exceptions. The AI proposed this pattern; we confirmed it was the right abstraction before accepting.
+
+---
+
+### 3. Room Availability Controller (#22)
+
+**Task:** Implement REST controller for `GET /v1/rooms/{roomId}/availability` with date range validation returning 400.
+
+**Prompt:**
+> add validation for date range input errors
+
+**What was generated:**
+- `RoomAvailabilityController` implementing `RoomAvailabilityApi`
+- `InvalidDateRangeException` in `common/exception/` with field name and message
+- Handler in `GlobalExceptionHandler` returning 400 with `ValidationErrorResponseDto`
+- Validation in controller: `checkIn` must be today or later, `checkOut` must be after `checkIn`
+- Controller slice tests (5 cases) and E2E tests (3 cases) added to `EndToEndTest`
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** Availability concern was completely separated from `RoomService` and `RoomController` by human decision — the AI implemented the separation as directed. The `InvalidDateRangeException` pattern was chosen to reuse the existing `GlobalExceptionHandler` infrastructure rather than validating inside each controller.
+
+---
+
+### 4. Real API Calls — Room List and Availability (#17 #23 #24 #25)
+
+**Task:** Replace mock data in `RoomSelectionView` with real backend calls; fix nginx reverse proxy.
+
+**Prompt:**
+> now add the fetch calls to the backend, see docker-compose.yml for hostname / api lives under "/api"
+
+**What was generated:**
+- `api.ts` — typed DTOs (`RoomDto`, `RoomPageDto`, `AvailabilityResponseDto`) and functions `getRooms()`, `checkRoomAvailability()`
+- `RoomSelectionView.vue` — `fetchRooms()` calls real API on mount; `applyFilters()` checks availability for all rooms in parallel; surfaces backend 400 errors with field-level message; shows empty-state when no rooms match
+- `RoomList.vue` — availability badge hidden until dates are checked (`available !== null`)
+- `.dockerignore` — excludes `node_modules` from build context
+- `nginx.conf` — `/api/` proxy block to `http://spring-boot:8080`; trailing slash bug fixed after discovering Spring Boot context path is `/api`
+
+**Accepted:** Fully accepted after manual testing confirmed rooms load and availability badges appear correctly.
+
+**Human reasoning:** The nginx `proxy_pass` trailing slash bug (stripping `/api/` before forwarding, causing 404 on all backend calls) was identified by running a live curl test — not by code review. The AI diagnosed the root cause (`server.servlet.contextPath=/api` in `application.properties`) and applied the one-character fix. We verified with a follow-up curl before accepting.
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Room availability repository (#20) | ✓ | | |
+| 2 | Room availability service (#21) | ✓ | | |
+| 3 | Room availability controller + validation (#22 #25) | ✓ | | |
+| 4 | Real API calls + nginx fix (#17 #23 #24) | ✓ | | |
+
+---
+
+## Artefacts Produced by AI
+
+- [`backend/.../rooms/repository/RoomAvailabilityRepository.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/components/rooms/repository/RoomAvailabilityRepository.java)
+- [`backend/.../rooms/service/RoomAvailabilityService.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/components/rooms/service/RoomAvailabilityService.java)
+- [`backend/.../rooms/service/RoomAvailabilityServiceImpl.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/components/rooms/service/RoomAvailabilityServiceImpl.java)
+- [`backend/.../rooms/api/v1/RoomAvailabilityApi.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/components/rooms/api/v1/RoomAvailabilityApi.java)
+- [`backend/.../rooms/api/v1/RoomAvailabilityController.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/components/rooms/api/v1/RoomAvailabilityController.java)
+- [`backend/.../common/exception/InvalidDateRangeException.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/common/exception/InvalidDateRangeException.java)
+- [`frontend/src/services/api.ts`](frontend/src/services/api.ts)
+- [`frontend/src/views/RoomSelectionView.vue`](frontend/src/views/RoomSelectionView.vue)
+- [`nginx.conf`](nginx.conf)
+- [`.dockerignore`](.dockerignore)
