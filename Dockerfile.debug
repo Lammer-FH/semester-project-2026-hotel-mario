@@ -1,0 +1,21 @@
+# Build stage
+FROM gradle:9.5.1-jdk25-corretto as builder
+
+WORKDIR /app
+COPY backend/ .
+
+RUN gradle build -x test --no-daemon
+
+# Runtime stage
+FROM eclipse-temurin:25-jdk-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+EXPOSE 8080
+EXPOSE 5005
+
+ENTRYPOINT ["java", \
+  "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", \
+  "-jar", "app.jar"]

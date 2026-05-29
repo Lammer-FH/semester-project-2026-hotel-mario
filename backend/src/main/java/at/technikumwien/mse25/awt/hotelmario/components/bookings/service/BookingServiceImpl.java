@@ -6,6 +6,7 @@ import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomServic
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -19,6 +20,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public Optional<BookingEntity> create(BookingEntity booking) {
         return roomService.findById(booking.getRoom().getId()).map(room -> {
             booking.setRoom(room);
