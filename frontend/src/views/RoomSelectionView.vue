@@ -69,8 +69,8 @@ import FilterBar from '@/components/FilterBar.vue'
 import RoomList from '@/components/RoomList.vue'
 import DatePickerModal from '@/components/DatePickerModal.vue'
 
-import { useRoomStore } from '@/stores/roomStore'
-import { useFilterStore } from '@/stores/filterStore'
+import { useRoomStore } from '@/stores/useRoomStore'
+import { useFilterStore } from '@/stores/useFilterStore'
 
 const roomStore = useRoomStore()
 const filterStore = useFilterStore()
