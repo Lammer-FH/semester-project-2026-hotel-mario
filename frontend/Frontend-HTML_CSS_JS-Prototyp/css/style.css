@@ -1,5 +1,3 @@
-* {
-
 .datalinespacing p {
     margin-bottom: 5px;
     margin-top: 5px;
@@ -77,10 +75,6 @@ footer {
 
 .btn {
 	margin-right: 15px;
-}
-
-.table-fullwidth {
-	style="width:100%";
 }
 
 .table-fullwidth th{

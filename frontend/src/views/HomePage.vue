@@ -19,6 +19,8 @@
       <div id="container">
         <strong>Ready to create an app?</strong>
         <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+        <p><router-link to="/home">Home</router-link></p>
+        <p><router-link to="/index">index</router-link></p>
       </div>
     </ion-content>
   </ion-page>
