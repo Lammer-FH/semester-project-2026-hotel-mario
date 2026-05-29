@@ -116,7 +116,7 @@
             <router-link to="/home" class="btn">
               Home
             </router-link>
-            
+
             <router-link to="/about" class="btn">
               About Us
             </router-link>
@@ -253,14 +253,14 @@ img {
   height: 15px;
   width: 15px;
   margin: 10px 2px;
-  background-color: #bbb;
+  background-color: #717171;
   border-radius: 50%;
   display: inline-block;
 }
 
 .active,
 .dot:hover {
-  background-color: #717171;
+  background-color: #bbb;
 }
 
 .fade {
