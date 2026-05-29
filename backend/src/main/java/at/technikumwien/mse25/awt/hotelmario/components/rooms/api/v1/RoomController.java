@@ -1,13 +1,11 @@
 package at.technikumwien.mse25.awt.hotelmario.components.rooms.api.v1;
 
 import at.technikumwien.mse25.awt.hotelmario.common.PageResult;
-import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.AvailabilityResponseDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomPageDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.mapper.v1.RoomMapper;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.model.RoomEntity;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomService;
-import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,16 +38,5 @@ public class RoomController implements RoomApi {
                 .map(roomMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @Override
-    public ResponseEntity<AvailabilityResponseDto> checkAvailability(
-            Long roomId, LocalDate checkIn, LocalDate checkOut) {
-        return ResponseEntity.ok(AvailabilityResponseDto.builder()
-                .roomId(roomId)
-                .checkIn(checkIn)
-                .checkOut(checkOut)
-                .available(roomService.isAvailable(roomId, checkIn, checkOut))
-                .build());
     }
 }

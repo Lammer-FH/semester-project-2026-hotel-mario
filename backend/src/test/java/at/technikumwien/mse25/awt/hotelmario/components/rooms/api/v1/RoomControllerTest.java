@@ -1,14 +1,12 @@
 package at.technikumwien.mse25.awt.hotelmario.components.rooms.api.v1;
 
 import at.technikumwien.mse25.awt.hotelmario.common.PageResult;
-import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.AvailabilityResponseDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.ExtraDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.mapper.v1.RoomMapper;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.model.RoomEntity;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.service.RoomService;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -91,37 +89,6 @@ class RoomControllerTest {
 
         mockMvc.perform(get("/v1/rooms/99"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void checkAvailability_available_returnsTrue() throws Exception {
-        LocalDate checkIn = LocalDate.of(2026, 6, 1);
-        LocalDate checkOut = LocalDate.of(2026, 6, 5);
-
-        when(roomService.isAvailable(1L, checkIn, checkOut)).thenReturn(true);
-
-        mockMvc.perform(get("/v1/rooms/1/availability")
-                .param("checkIn", "2026-06-01")
-                .param("checkOut", "2026-06-05"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.roomId").value(1))
-                .andExpect(jsonPath("$.checkIn").value("2026-06-01"))
-                .andExpect(jsonPath("$.checkOut").value("2026-06-05"))
-                .andExpect(jsonPath("$.available").value(true));
-    }
-
-    @Test
-    void checkAvailability_notAvailable_returnsFalse() throws Exception {
-        LocalDate checkIn = LocalDate.of(2026, 6, 1);
-        LocalDate checkOut = LocalDate.of(2026, 6, 5);
-
-        when(roomService.isAvailable(1L, checkIn, checkOut)).thenReturn(false);
-
-        mockMvc.perform(get("/v1/rooms/1/availability")
-                .param("checkIn", "2026-06-01")
-                .param("checkOut", "2026-06-05"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.available").value(false));
     }
 
     private RoomDto sampleRoomDto(Long id) {

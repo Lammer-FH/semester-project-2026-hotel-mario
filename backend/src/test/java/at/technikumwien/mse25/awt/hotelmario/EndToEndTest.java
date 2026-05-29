@@ -93,16 +93,35 @@ class EndToEndTest {
                 .andExpect(status().isNotFound());
     }
 
-    // --- Availability ---
+    // --- Single-room availability ---
 
     @Test
-    void availability_seededRoom_returnsAvailable() throws Exception {
+    void availability_freeDates_returnsAvailableTrue() throws Exception {
+        // Room 1 has no booking in Sep 2026
         mockMvc.perform(get("/v1/rooms/1/availability")
                 .param("checkIn",  "2026-09-01")
                 .param("checkOut", "2026-09-07"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.roomId").value(1))
                 .andExpect(jsonPath("$.available").value(true));
+    }
+
+    @Test
+    void availability_overlappingBooking_returnsAvailableFalse() throws Exception {
+        // Room 3 (Deluxe) is booked 2026-06-05 to 2026-06-10
+        mockMvc.perform(get("/v1/rooms/3/availability")
+                .param("checkIn",  "2026-06-07")
+                .param("checkOut", "2026-06-09"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.available").value(false));
+    }
+
+    @Test
+    void availability_unknownRoom_returns404() throws Exception {
+        mockMvc.perform(get("/v1/rooms/999/availability")
+                .param("checkIn",  "2026-09-01")
+                .param("checkOut", "2026-09-07"))
+                .andExpect(status().isNotFound());
     }
 
     // --- Create booking end-to-end ---
