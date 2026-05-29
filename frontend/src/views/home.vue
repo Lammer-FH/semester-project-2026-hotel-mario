@@ -17,7 +17,31 @@
           <ion-card class="info-box">
             <h1 class="hero">Boutique Hotel Technikum</h1>
 
-            <p>Welcome to our Hotel Website!</p>
+            <p class="intro">
+              Welcome to the Boutique Hotel Technikum — a charming retreat in the heart of Vienna's
+              20th district. We offer five individually designed rooms ranging from comfortable
+              doubles to our flagship Executive Suite, all within walking distance of the U4
+              Friedensbrücke station.
+            </p>
+
+            <div class="highlights">
+              <div class="highlight">
+                <ion-icon name="location" />
+                <span>Höchstädtplatz 6, 1200 Vienna</span>
+              </div>
+              <div class="highlight">
+                <ion-icon name="bed" />
+                <span>5 individually designed rooms</span>
+              </div>
+              <div class="highlight">
+                <ion-icon name="wifi" />
+                <span>Free Wi-Fi in all rooms</span>
+              </div>
+              <div class="highlight">
+                <ion-icon name="restaurant" />
+                <span>Continental breakfast available</span>
+              </div>
+            </div>
 
             <!-- Slideshow -->
             <div class="slideshow-container">
@@ -95,7 +119,8 @@ import {
   IonToolbar,
   IonCard,
   IonButton,
-  IonFooter
+  IonFooter,
+  IonIcon
 } from '@ionic/vue';
 
 import { ref, onMounted, onUnmounted } from 'vue';
@@ -149,4 +174,29 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.intro {
+  font-size: 1em;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.highlight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95em;
+}
+
+.highlight ion-icon {
+  font-size: 1.2em;
+  color: var(--ion-color-primary);
+  flex-shrink: 0;
+}
 </style>

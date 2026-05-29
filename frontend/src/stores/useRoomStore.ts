@@ -2,12 +2,18 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getRooms, checkRoomAvailability } from '@/services/api'
 
+export interface RoomExtra {
+  name: string
+  icon: string
+}
+
 export interface Room {
   id: number
   name: string
   price: number
   image: string
   description: string
+  extras: RoomExtra[]
   available: boolean | null
 }
 
@@ -27,7 +33,8 @@ export const useRoomStore = defineStore('rooms', () => {
         name: r.title,
         price: r.pricePerNight,
         image: `/images/rooms/${r.id}.jpg`,
-        description: r.extras.map(e => e.name).join(', '),
+        description: r.description,
+        extras: r.extras.map(e => ({ name: e.name, icon: e.icon })),
         available: null,
       }))
     } catch {
@@ -63,7 +70,7 @@ export const useRoomStore = defineStore('rooms', () => {
   }
 
   function resetAvailability() {
-    rooms.value = rooms.value.map(r => ({ ...r, available: null }))
+    rooms.value = rooms.value.map(r => ({ ...r, available: null as boolean | null }))
   }
 
   function selectRoom(room: Room) {

@@ -3,11 +3,13 @@ const BASE = import.meta.env.VITE_API_URL as string
 export interface ExtraDto {
   id: number
   name: string
+  icon: string
 }
 
 export interface RoomDto {
   id: number
   title: string
+  description: string
   pricePerNight: number
   extras: ExtraDto[]
 }
