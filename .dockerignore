@@ -1,0 +1,4 @@
+frontend/node_modules
+backend/build
+backend/.gradle
+**/.DS_Store

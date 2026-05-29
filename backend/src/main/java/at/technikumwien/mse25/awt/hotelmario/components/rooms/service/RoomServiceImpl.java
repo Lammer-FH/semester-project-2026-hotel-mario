@@ -3,7 +3,6 @@ package at.technikumwien.mse25.awt.hotelmario.components.rooms.service;
 import at.technikumwien.mse25.awt.hotelmario.common.PageResult;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.model.RoomEntity;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.repository.RoomRepository;
-import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,10 +28,5 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Optional<RoomEntity> findById(Long id) {
         return roomRepository.findById(id);
-    }
-
-    @Override
-    public boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
-        return true;
     }
 }

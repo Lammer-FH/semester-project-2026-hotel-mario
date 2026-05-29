@@ -21,7 +21,15 @@
         @apply="applyFilters"
       />
 
-      <RoomList :rooms="paginatedRooms" />
+      <ion-text color="danger" v-if="dateError" class="date-error">
+        {{ dateError }}
+      </ion-text>
+
+      <ion-text v-if="filteredRooms.length === 0 && rooms.length > 0" color="medium" class="empty-state">
+        No rooms match your criteria for the selected dates.
+      </ion-text>
+
+      <RoomList v-else :rooms="paginatedRooms" />
 
       <DatePickerModal
         :today="today"
@@ -63,11 +71,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton} from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText } from '@ionic/vue'
 
 import FilterBar from '@/components/FilterBar.vue'
 import RoomList from '@/components/RoomList.vue'
 import DatePickerModal from '@/components/DatePickerModal.vue'
+import { getRooms, checkRoomAvailability } from '@/services/api'
 
 const filters = ref({
   persons: 2,
@@ -82,7 +91,6 @@ onMounted(() => {
   fetchRooms()
 })
 
-
 const rooms = ref([])
 const currentPage = ref(1)
 const pageSize = 5
@@ -92,43 +100,34 @@ const activeField = ref(null)
 const tempDate = ref(null)
 const today = new Date().toISOString().split('T')[0]
 
+const dateError = ref('')
+
 const filteredRooms = computed(() => {
   if (filters.value.availableOnly)
-    return rooms.value.filter(room => room.available)
-  else
-    return rooms.value
+    return rooms.value.filter(room => room.available === true)
+  return rooms.value
 })
 
 const totalPages = computed(() => {
-  return Math.ceil(filteredRooms.value.length / pageSize)
+  return Math.max(1, Math.ceil(filteredRooms.value.length / pageSize))
 })
 
 const paginatedRooms = computed(() => {
   const start = (currentPage.value - 1) * pageSize
-  const end = start + pageSize
-
-  return filteredRooms.value.slice(start, end)
+  return filteredRooms.value.slice(start, start + pageSize)
 })
 
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-  }
+  if (currentPage.value < totalPages.value) currentPage.value++
 }
 
 const previousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
-  }
+  if (currentPage.value > 1) currentPage.value--
 }
-
 
 function openPicker(field) {
   activeField.value = field
-  tempDate.value =
-    filters.value[field] ??
-    new Date().toISOString().split('T')[0]
-
+  tempDate.value = filters.value[field] ?? today
   isPickerOpen.value = true
 }
 
@@ -153,83 +152,55 @@ const priceError = computed(() => {
   return ''
 })
 
-function applyFilters() {
+async function applyFilters() {
   if (priceError.value) return
-  console.log('Apply filters:', filters.value)
+  dateError.value = ''
+
+  const { checkIn, checkOut } = filters.value
+  if (!checkIn || !checkOut) return
+
+  const results = await Promise.all(
+    rooms.value.map(room =>
+      checkRoomAvailability(room.id, checkIn, checkOut).catch(e => e)
+    )
+  )
+
+  const firstError = results.find(r => r instanceof Error)
+  if (firstError) {
+    try {
+      const body = JSON.parse(firstError.message)
+      const field = body.errors?.[0]
+      dateError.value = field
+        ? `${field.field}: ${field.message}`
+        : 'Invalid date range'
+    } catch {
+      dateError.value = 'Invalid date range'
+    }
+    return
+  }
+
+  currentPage.value = 1
+  rooms.value = rooms.value.map((room, i) => ({
+    ...room,
+    available: results[i].available,
+  }))
 }
-// 🔹 Placeholder API call
+
 async function fetchRooms() {
   try {
-    // TODO: Replace with real API call
-    // Example:
-    // const res = await fetch('/api/rooms?filters=...');
-    // const data = await res.json();
-
-    const data = [
-      {
-        id: 1,
-        name: 'Luxury Suite XXL',
-        price: 300,
-        available: true,
-        //image: 'https://via.placeholder.com/400x200',
-        descriptions: "Spacious suite with king-size bed, ocean view, and private balcony."
-      },
-      {
-        id: 2,
-        name: 'Deluxe Suite',
-        price: 180,
-        available: true,
-        //image: 'https://via.placeholder.com/400x200',
-        descriptions: "Just Deluxe."
-      },
-      {
-        id: 3,
-        name: 'Budget Room',
-        price: 80,
-        available: false,
-        //image: 'https://via.placeholder.com/400x200',
-        descriptions: "You should rather work, than going on vacation."
-      },
-      {
-        id: 4,
-        name: 'Budget Room2',
-        price: 80,
-        available: false,
-        //image: 'https://via.placeholder.com/400x200',
-        descriptions: "You should rather work, than going on vacation."
-      },
-      {
-        id: 5,
-        name: 'Budget Room3',
-        price: 80,
-        available: false,
-        //image: 'https://via.placeholder.com/400x200',
-        descriptions: "You should rather work, than going on vacation."
-      },
-      {
-        id: 6,
-        name: 'Budget Room3',
-        price: 80,
-        available: false,
-        //image: 'https://via.placeholder.com/400x200',
-        descriptions: "You should rather work, than going on vacation."
-      }
-    ]
-
-    rooms.value = data
-
-    rooms.value = data.map(room => ({
-        ...room,
-        image: `/images/rooms/${room.id}.jpg`
-      }))
-
-
-  } catch (error) {
-    console.error('Error fetching rooms:', error)
+    const page = await getRooms(0, 20)
+    rooms.value = page.content.map(r => ({
+      id: r.id,
+      name: r.title,
+      price: r.pricePerNight,
+      image: `/images/rooms/${r.id}.jpg`,
+      description: r.extras.map(e => e.name).join(', '),
+      available: null,
+    }))
+  } catch (e) {
+    console.error('Error fetching rooms:', e)
   }
 }
-
-
 </script>
 
 <style scoped>
@@ -237,5 +208,15 @@ async function fetchRooms() {
   padding: 12px 20px;
   display: inline-block;
 }
-</style>
 
+.date-error {
+  display: block;
+  padding: 4px 16px;
+}
+
+.empty-state {
+  display: block;
+  padding: 24px 16px;
+  text-align: center;
+}
+</style>
