@@ -689,3 +689,56 @@ Fixed path in file to `frontend/` instead of `.`
 ## Artefacts Produced by AI
 
 - `./Dockerfile-Frontend`
+
+
+# Issues #17, #18 #19 — Hotel Room Selection
+
+## Tool
+
+**Copilot** (Microsoftn)
+- Model: **Lumo(multiple specialized models)** (`version: 2026-05-22`)
+- Interface: Browser
+- Date: 2026-05-26 - 2026-05-29
+
+---
+
+## Usage Log
+
+### 1. Create RoomSelectionView.vue
+
+**Task:** Create a RoomSelectionView.vue with mocked API calls to start development.
+
+**Prompt:**
+> Can you code a view for this image? At the top there is a booking selection, in the second half of the screen there is a scrollable overview of rooms inlcuding images. For needed api calls code a placeholder including a comment that this should be an api call
+- Attachment: Paperprotoype
+
+**What was generated:**
+- `RoomSelectionView`
+
+**Accepted:** Accepted RoomSelectionView.vue, after some manual changes and some prompts.
+
+**Modified**
+-Implemented date filter UI (check-in / check-out) using ion-datetime
+-Refactored datepicker to modal-based interaction (hidden until click)
+-Fixed Ionic component registration issues (ion-page, ion-select, etc.)
+-Debugged reactivity issues (ref vs unwrapped state)
+-Replaced unreliable v-model with @ionChange / @ionInput handling
+-Implemented persons selection with ion-select
+-Added date validation logic (check-out ≥ check-in)
+-Added price validation (min ≤ max)
+-Implemented reactive validation with computed properties
+-Improved UX with error messages instead of auto-correction
+-Added popup error handling using ion-alert
+-Converted API helper to TypeScript with generics
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Create Dockerfile for vue.js |  | ✓ (path and port modification, added validation, etc.) | |
+
+---
+
+## Artefacts Produced by AI
+
+- `./frontend/RoomSelectionView.vue`
