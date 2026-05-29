@@ -2,11 +2,11 @@
   <ion-page class="background">
     <ion-header :translucent="true">
       <ion-toolbar>
-        <div class="nav">
-          <ion-title>Boutique Hotel Technikum</ion-title>
-          <router-link to="/">Home</router-link>
-          <router-link to="/about">About Us</router-link>
-          <router-link to="/rooms">Rooms</router-link>
+        <ion-title>Boutique Hotel Technikum</ion-title>
+        <div class = "button-group margin-left-15">
+          <ion-button router-link="/home"> Home </ion-button> 
+          <ion-button router-link="/about"> About Us </ion-button> 
+          <ion-button router-link="/rooms"> Rooms </ion-button>
         </div>
       </ion-toolbar>
     </ion-header>
@@ -16,7 +16,7 @@
 
         <div class="container">
 
-          <div class="info-box">
+          <ion-card class="info-box">
 
             <h1>About Us</h1>
             <h2>Boutique Hotel Technikum</h2>
@@ -97,7 +97,7 @@
             <p>
               Take the U4 to Friedensbrücke, then walk 5 minutes north. By car, use the A22 and exit at Floridsdorf.
             </p>
-          </div>
+          </ion-card>
         </div>
       </div>
     </ion-content>
@@ -106,18 +106,10 @@
       <ion-toolbar>
         <div class="footer-content"> 
           <p>© 2026 Boutique Hotel Technikum</p>
-          <div>
-            <router-link to="/home" class="btn">
-              Home
-            </router-link>
-
-            <router-link to="/about" class="btn">
-              About Us
-            </router-link>
-
-            <router-link to="/imprint" class="btn">
-              Imprint
-            </router-link>
+          <div class="button-group">
+            <ion-button router-link="/home"> Home </ion-button> 
+            <ion-button router-link="/about"> About Us </ion-button> 
+            <ion-button router-link="/imprint"> Imprint </ion-button>
           </div>
         </div>
       </ion-toolbar>
@@ -134,7 +126,13 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonCard, 
+  IonCardContent, 
+  IonCardHeader, 
+  IonCardSubtitle, 
+  IonCardTitle,
+  IonButton
 } from '@ionic/vue';
 
 import { ref, onMounted, onUnmounted } from 'vue';

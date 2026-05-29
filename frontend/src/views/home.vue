@@ -2,11 +2,11 @@
   <ion-page class="background">
     <ion-header class="content-background">
       <ion-toolbar>
-        <div class="nav">
-          <ion-title>Boutique Hotel Technikum</ion-title>
-          <router-link to="/">Home</router-link>
-          <router-link to="/about">About Us</router-link>
-          <router-link to="/rooms">Rooms</router-link>
+        <ion-title>Boutique Hotel Technikum</ion-title>
+        <div class = "button-group margin-left-15">
+          <ion-button router-link="/home"> Home </ion-button> 
+          <ion-button router-link="/about"> About Us </ion-button> 
+          <ion-button router-link="/rooms"> Rooms </ion-button>
         </div>
       </ion-toolbar>
     </ion-header>
@@ -14,22 +14,15 @@
     <ion-content :fullscreen="true">
       <div class="page-wrapper">
 
-        <!-- Hero -->
-        <section class="hero">
-          <div class="info-box">
-
-            <h1>Boutique Hotel Technikum</h1>
+          <ion-card class="info-box">
+            <h1 class="hero">Boutique Hotel Technikum</h1>
 
             <p>Welcome to our Hotel Website!</p>
 
-            <div class="button-group">
-              <router-link to="/about" class="btn">
-                About Us
-              </router-link>
+            <div class ="button-group">
+              <ion-button router-link="/about"> About Us </ion-button> 
 
-              <router-link to="/rooms" class="btn">
-                Rooms
-              </router-link>
+              <ion-button router-link="/rooms"> Rooms </ion-button> 
             </div>
 
             <!-- Slideshow -->
@@ -72,12 +65,12 @@
               Book now to get the room you deserve.
             </p>
 
-            <router-link to="/rooms" class="btn">
-              Find the perfect room now!
-            </router-link>
+            <div class ="button-group">
+              <ion-button router-link="/abroomsout"> Find the perfect room now! </ion-button> 
+            </div>
 
-          </div>
-        </section>
+          </ion-card>
+        
       </div>
     </ion-content>
 
@@ -85,18 +78,10 @@
       <ion-toolbar>
         <div class="footer-content"> 
           <p>© 2026 Boutique Hotel Technikum</p>
-          <div>
-            <router-link to="/home" class="btn">
-              Home
-            </router-link>
-
-            <router-link to="/about" class="btn">
-              About Us
-            </router-link>
-
-            <router-link to="/imprint" class="btn">
-              Imprint
-            </router-link>
+          <div class="button-group">
+            <ion-button router-link="/home"> Home </ion-button> 
+            <ion-button router-link="/about"> About Us </ion-button> 
+            <ion-button router-link="/imprint"> Imprint </ion-button>
           </div>
         </div>
       </ion-toolbar>
@@ -113,7 +98,13 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonCard, 
+  IonCardContent, 
+  IonCardHeader, 
+  IonCardSubtitle, 
+  IonCardTitle,
+  IonButton
 } from '@ionic/vue';
 
 import { ref, onMounted, onUnmounted } from 'vue';
