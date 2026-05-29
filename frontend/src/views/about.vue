@@ -99,11 +99,13 @@
             </p>
           </div>
         </div>
-
-        <!-- Footer -->
-        <footer>
+      </div>
+    </ion-content>
+    
+    <ion-footer class="content-background">
+      <ion-toolbar>
+        <div class="footer-content"> 
           <p>© 2026 Boutique Hotel Technikum</p>
-
           <div>
             <router-link to="/home" class="btn">
               Home
@@ -117,10 +119,9 @@
               Imprint
             </router-link>
           </div>
-        </footer>
-
-      </div>
-    </ion-content>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 

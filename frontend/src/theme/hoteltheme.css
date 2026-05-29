@@ -75,7 +75,6 @@ img {
   font-weight: bold;
   font-size: 18px;
   transition: 0.6s ease;
-  user-select: none;
 }
 
 .next {
@@ -123,13 +122,10 @@ img {
   animation-duration: 1.5s;
 }
 
-footer {
-  background: rgb(41, 36, 36);
+.footer-content {
   color: white;
-  padding: 30px;
+  padding: 15px;
   text-align: center;
-  margin-top: 60px;
-  border-radius: 16px;
 }
 
 @keyframes fade {
