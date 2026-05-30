@@ -81,7 +81,7 @@ const roomStore = useRoomStore()
 const filterStore = useFilterStore()
 
 const currentPage = ref(1)
-const pageSize = 5
+const pageSize = 3
 const today = new Date().toISOString().split('T')[0]
 
 const filterBarProps = computed(() => ({
