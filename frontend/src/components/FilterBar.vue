@@ -1,67 +1,60 @@
 <template>
-  <ion-grid>
+  <ion-grid class="filter-grid">
     <ion-row>
-      <!-- Dates -->
-      <ion-col size="6">
+      <ion-col size="6" size-md="2">
         <ion-item button @click="$emit('openDate', 'checkIn')">
-          <ion-label>
-            {{ filters.checkIn || 'Check-in' }}
-          </ion-label>
+          <ion-label>{{ filters.checkIn || 'Check-in' }}</ion-label>
         </ion-item>
       </ion-col>
 
-      <ion-col size="6">
+      <ion-col size="6" size-md="2">
         <ion-item button @click="$emit('openDate', 'checkOut')">
-          <ion-label>
-            {{ filters.checkOut || 'Check-out' }}
-          </ion-label>
+          <ion-label>{{ filters.checkOut || 'Check-out' }}</ion-label>
         </ion-item>
       </ion-col>
-    </ion-row>
 
-    <!-- Persons -->
-    <ion-row>
-      <ion-col size="6">
+      <ion-col size="6" size-md="2">
         <ion-select
           :value="filters.persons"
           label="Persons"
           @ionChange="(e) => $emit('updatePersons', e.detail.value)"
         >
-          <ion-select-option v-for="n in 4" :key="n" :value="n">
-            {{ n }}
-          </ion-select-option>
+          <ion-select-option v-for="n in 4" :key="n" :value="n">{{ n }}</ion-select-option>
         </ion-select>
       </ion-col>
 
-      <ion-col size="6" class="availability-toggle">
-        <ion-label>Show only available Rooms</ion-label>
-        <ion-checkbox :checked="filters.availableOnly" @ionChange="(e) => $emit('updateAvailable', e.detail.checked)" />
-      </ion-col>
-    </ion-row>
-
-    <!-- Price -->
-    <ion-row>
-      <ion-col size="6">
+      <ion-col size="6" size-md="2">
         <ion-input
           :value="filters.minPrice"
           type="number"
+          min="0"
           placeholder="Min €"
           @ionInput="(e) => $emit('updateMin', e.detail.value)"
         />
       </ion-col>
 
-      <ion-col size="6">
+      <ion-col size="6" size-md="2">
         <ion-input
           :value="filters.maxPrice"
           type="number"
+          min="0"
           placeholder="Max €"
           @ionInput="(e) => $emit('updateMax', e.detail.value)"
         />
       </ion-col>
+
+      <ion-col size="6" size-md="2" class="availability-toggle">
+        <ion-checkbox
+          :checked="filters.availableOnly"
+          :disabled="!filters.checkIn || !filters.checkOut"
+          @ionChange="(e) => $emit('updateAvailable', e.detail.checked)"
+        >
+          Available only
+        </ion-checkbox>
+      </ion-col>
     </ion-row>
 
-    <!-- Error -->
-    <ion-text color="danger" v-if="priceError">
+    <ion-text color="danger" v-if="priceError" class="price-error">
       {{ priceError }}
     </ion-text>
 
@@ -105,6 +98,10 @@ defineEmits([
 .availability-toggle {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+}
+
+.price-error {
+  display: block;
+  padding: 4px 8px;
 }
 </style>
