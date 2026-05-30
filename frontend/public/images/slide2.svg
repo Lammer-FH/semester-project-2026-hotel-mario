@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d47a1"/>
+      <stop offset="40%" stop-color="#e91e63" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#ff9800" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="building" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#37474f"/>
+      <stop offset="100%" stop-color="#263238"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#455a64"/>
+      <stop offset="100%" stop-color="#263238"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="800" height="450" fill="url(#dawn)"/>
+
+  <!-- Moon -->
+  <circle cx="680" cy="70" r="35" fill="#fff9c4" opacity="0.9"/>
+  <circle cx="695" cy="60" r="30" fill="#0d47a1" opacity="0.7"/>
+
+  <!-- Stars -->
+  <circle cx="100" cy="40" r="2" fill="white" opacity="0.8"/>
+  <circle cx="200" cy="25" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="350" cy="55" r="2" fill="white" opacity="0.6"/>
+  <circle cx="450" cy="30" r="1.5" fill="white" opacity="0.8"/>
+  <circle cx="550" cy="50" r="2" fill="white" opacity="0.7"/>
+
+  <!-- Background buildings (Vienna skyline) -->
+  <rect x="0" y="200" width="120" height="250" fill="#1a237e" opacity="0.6"/>
+  <rect x="110" y="170" width="80" height="280" fill="#1a237e" opacity="0.5"/>
+  <rect x="620" y="180" width="100" height="270" fill="#1a237e" opacity="0.6"/>
+  <rect x="710" y="160" width="90" height="290" fill="#1a237e" opacity="0.5"/>
+
+  <!-- Main hotel building facade -->
+  <rect x="150" y="110" width="500" height="340" fill="url(#building)" rx="4"/>
+
+  <!-- Hotel entrance arch -->
+  <path d="M320 450 L320 350 Q400 290 480 350 L480 450 Z" fill="#1b5e20" opacity="0.7"/>
+  <rect x="370" y="390" width="60" height="60" fill="#4e342e"/>
+
+  <!-- Hotel windows - floor 1 -->
+  <rect x="180" y="140" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.85"/>
+  <rect x="260" y="140" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.7"/>
+  <rect x="480" y="140" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.9"/>
+  <rect x="560" y="140" width="60" height="50" fill="#fff176" rx="3" opacity="0.6"/>
+  <!-- floor 2 -->
+  <rect x="180" y="210" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.6"/>
+  <rect x="260" y="210" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.85"/>
+  <rect x="480" y="210" width="60" height="50" fill="#fff176" rx="3" opacity="0.75"/>
+  <rect x="560" y="210" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.9"/>
+  <!-- floor 3 -->
+  <rect x="180" y="280" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.8"/>
+  <rect x="260" y="280" width="60" height="50" fill="#fff176" rx="3" opacity="0.5"/>
+  <rect x="480" y="280" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.7"/>
+  <rect x="560" y="280" width="60" height="50" fill="#fff9c4" rx="3" opacity="0.6"/>
+
+  <!-- Window glow halos -->
+  <rect x="175" y="135" width="70" height="60" fill="#fff9c4" rx="5" opacity="0.08"/>
+  <rect x="475" y="135" width="70" height="60" fill="#fff9c4" rx="5" opacity="0.08"/>
+
+  <!-- Hotel sign -->
+  <rect x="270" y="115" width="260" height="35" fill="#b71c1c" rx="4"/>
+  <text x="400" y="138" font-family="Georgia, serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold" letter-spacing="2">HOTEL TECHNIKUM</text>
+
+  <!-- Ground / street -->
+  <rect x="0" y="410" width="800" height="40" fill="url(#ground)"/>
+  <!-- Street lights -->
+  <rect x="130" y="340" width="6" height="80" fill="#78909c"/>
+  <ellipse cx="133" cy="338" rx="14" ry="6" fill="#fff9c4" opacity="0.9"/>
+  <ellipse cx="133" cy="342" rx="20" ry="10" fill="#fff59d" opacity="0.15"/>
+  <rect x="660" y="340" width="6" height="80" fill="#78909c"/>
+  <ellipse cx="663" cy="338" rx="14" ry="6" fill="#fff9c4" opacity="0.9"/>
+
+  <!-- Text overlay -->
+  <rect x="0" y="380" width="800" height="70" fill="rgba(0,0,0,0.5)"/>
+  <text x="400" y="413" font-family="Georgia, serif" font-size="22" fill="white" text-anchor="middle" font-weight="bold">Vienna City Centre</text>
+  <text x="400" y="438" font-family="Arial, sans-serif" font-size="14" fill="#e0e0e0" text-anchor="middle">Höchstädtplatz 6 · 1200 Vienna · Easy access via U4</text>
+</svg>

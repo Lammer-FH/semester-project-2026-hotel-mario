@@ -131,16 +131,16 @@ const slideIndex = ref(0);
 
 const slides = [
   {
-    image: '/images/img_placeholder1.jpg',
-    caption: 'Caption Text'
+    image: '/images/slide1.svg',
+    caption: 'Elegantly furnished rooms with modern amenities'
   },
   {
-    image: '/images/img_placeholder2.jpg',
-    caption: 'Caption Two'
+    image: '/images/slide2.svg',
+    caption: 'Located at Höchstädtplatz 6 · 1200 Vienna'
   },
   {
-    image: '/images/img_placeholder3.jpg',
-    caption: 'Caption Three'
+    image: '/images/slide3.svg',
+    caption: 'Continental breakfast available daily'
   }
 ];
 
