@@ -59,7 +59,7 @@
         :checkIn="filterStore.checkIn"
         :checkOut="filterStore.checkOut"
         @update:modelValue="(v) => filterStore.pickerTemp = v"
-        @apply="filterStore.applyPicker"
+        @apply="onPickerApply"
         @close="filterStore.closePicker"
       />
     </ion-content>
@@ -123,6 +123,11 @@ async function applyFilters() {
     return
   }
   currentPage.value = 1
+}
+
+async function onPickerApply() {
+  filterStore.applyPicker()
+  await applyFilters()
 }
 
 onMounted(() => {
