@@ -37,13 +37,13 @@ public class DataSeeder implements ApplicationRunner {
             return;
         }
 
-        ExtraEntity wifi        = extra("Wi-Fi",           "wifi",            "Free high-speed wireless internet");
-        ExtraEntity breakfast   = extra("Breakfast",        "cup-hot",         "Continental breakfast included");
-        ExtraEntity parking     = extra("Parking",          "p-square",        "Underground parking spot");
-        ExtraEntity ac          = extra("Air Conditioning", "thermometer-sun", "Individual climate control");
-        ExtraEntity safe        = extra("Safe",             "lock",            "In-room digital safe");
-        ExtraEntity panorama    = extra("Panorama View",    "binoculars",      "Panoramic view over Vienna's rooftops");
-        ExtraEntity lounge      = extra("Lounge Access",    "door-open",       "Access to the executive lounge");
+        ExtraEntity wifi        = extra("Wi-Fi",           "wifi",          "Free high-speed wireless internet");
+        ExtraEntity breakfast   = extra("Breakfast",        "cafe",          "Continental breakfast included");
+        ExtraEntity parking     = extra("Parking",          "car",           "Underground parking spot");
+        ExtraEntity ac          = extra("Air Conditioning", "thermometer",   "Individual climate control");
+        ExtraEntity safe        = extra("Safe",             "lock-closed",   "In-room digital safe");
+        ExtraEntity panorama    = extra("Panorama View",    "eye",           "Panoramic view over Vienna's rooftops");
+        ExtraEntity lounge      = extra("Lounge Access",    "people",        "Access to the executive lounge");
 
         extraRepository.saveAll(List.of(wifi, breakfast, parking, ac, safe, panorama, lounge));
 

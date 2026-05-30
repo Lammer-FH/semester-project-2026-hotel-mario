@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <!-- Background -->
+  <rect width="800" height="450" fill="#1a237e"/>
+  <rect width="800" height="450" fill="#283593" opacity="0.5"/>
+
+  <!-- Window light from left -->
+  <rect x="0" y="0" width="300" height="450" fill="#e3f2fd" opacity="0.08"/>
+
+  <!-- Table surface -->
+  <ellipse cx="400" cy="360" rx="300" ry="65" fill="#6d4c41"/>
+  <ellipse cx="400" cy="345" rx="290" ry="58" fill="#8d6e63"/>
+  <!-- White tablecloth -->
+  <ellipse cx="400" cy="335" rx="270" ry="52" fill="#fafafa"/>
+
+  <!-- Coffee cup -->
+  <rect x="185" y="295" width="55" height="45" fill="white" rx="5"/>
+  <rect x="180" y="336" width="65" height="9" fill="#e0e0e0" rx="3"/>
+  <!-- Handle -->
+  <rect x="238" y="308" width="14" height="20" fill="none" stroke="#bdbdbd" stroke-width="3" rx="5"/>
+  <!-- Coffee surface -->
+  <ellipse cx="212" cy="298" rx="22" ry="7" fill="#5d4037"/>
+  <!-- Steam lines -->
+  <path d="M202 288 Q206 276 202 264" stroke="#cfd8dc" stroke-width="2" fill="none"/>
+  <path d="M212 285 Q216 272 212 259" stroke="#cfd8dc" stroke-width="2" fill="none"/>
+  <path d="M222 288 Q226 276 222 264" stroke="#cfd8dc" stroke-width="2" fill="none"/>
+
+  <!-- Plate -->
+  <ellipse cx="400" cy="328" rx="75" ry="24" fill="#f0f0f0"/>
+  <ellipse cx="400" cy="326" rx="65" ry="20" fill="#fafafa"/>
+
+  <!-- Croissant on plate -->
+  <path d="M358 322 Q374 298 400 312 Q426 298 442 322 Q426 338 400 330 Q374 338 358 322 Z" fill="#f9a825"/>
+  <path d="M362 320 Q378 304 400 314 Q422 304 438 320" stroke="#e65100" stroke-width="2" fill="none" opacity="0.7"/>
+
+  <!-- Jam jar -->
+  <rect x="470" y="295" width="38" height="42" fill="#e53935" rx="6"/>
+  <rect x="468" y="290" width="42" height="10" fill="#b71c1c" rx="4"/>
+  <text x="489" y="322" font-family="Arial" font-size="10" fill="white" text-anchor="middle">JAM</text>
+
+  <!-- Orange juice glass -->
+  <polygon points="555,290 595,290 585,345 565,345" fill="#fb8c00" opacity="0.9"/>
+  <rect x="553" y="286" width="44" height="9" fill="#ffa726" rx="2"/>
+  <!-- Straw -->
+  <rect x="580" y="265" width="4" height="60" fill="white" rx="2"/>
+  <!-- Straw top cap -->
+  <rect x="578" y="263" width="8" height="5" fill="#ef9a9a" rx="2"/>
+
+  <!-- Flower vase -->
+  <rect x="388" y="272" width="24" height="55" fill="#80cbc4" rx="8"/>
+  <rect x="382" y="322" width="36" height="9" fill="#4db6ac" rx="4"/>
+  <!-- Flowers -->
+  <circle cx="394" cy="264" r="13" fill="#f48fb1"/>
+  <circle cx="410" cy="260" r="11" fill="#ce93d8"/>
+  <circle cx="400" cy="255" r="12" fill="#ff8a65"/>
+  <!-- Flower centers -->
+  <circle cx="394" cy="264" r="5" fill="#fff9c4"/>
+  <circle cx="410" cy="260" r="4" fill="#fff9c4"/>
+  <circle cx="400" cy="255" r="5" fill="#fff9c4"/>
+
+  <!-- Bread roll basket -->
+  <ellipse cx="570" cy="318" rx="48" ry="16" fill="#d7ccc8"/>
+  <rect x="524" y="302" width="92" height="22" fill="#bcaaa4" rx="9"/>
+  <ellipse cx="547" cy="300" rx="18" ry="11" fill="#d4a574"/>
+  <ellipse cx="572" cy="296" rx="18" ry="11" fill="#c8975a"/>
+  <ellipse cx="597" cy="300" rx="16" ry="10" fill="#d4a574"/>
+
+  <!-- Butter dish -->
+  <rect x="285" y="310" width="55" height="24" fill="#fff8e1" rx="5"/>
+  <rect x="300" y="303" width="30" height="10" fill="#fff9c4" rx="3"/>
+  <text x="312" y="327" font-family="Arial" font-size="9" fill="#8d6e63" text-anchor="middle">BUTTER</text>
+
+  <!-- Text overlay -->
+  <rect x="0" y="380" width="800" height="70" fill="#000000" opacity="0.55"/>
+  <text x="400" y="413" font-family="Georgia, serif" font-size="22" fill="white" text-anchor="middle" font-weight="bold">Start Your Day Right</text>
+  <text x="400" y="440" font-family="Arial, sans-serif" font-size="14" fill="#e0e0e0" text-anchor="middle">Continental breakfast available with selected rooms</text>
+</svg>

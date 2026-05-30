@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a237e"/>
+      <stop offset="100%" stop-color="#5c6bc0"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eceff1"/>
+      <stop offset="100%" stop-color="#cfd8dc"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8d6e63"/>
+      <stop offset="100%" stop-color="#5d4037"/>
+    </linearGradient>
+    <linearGradient id="bed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e0e0e0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky / window view -->
+  <rect width="800" height="450" fill="url(#sky)"/>
+
+  <!-- Room back wall -->
+  <rect x="0" y="120" width="800" height="330" fill="url(#wall)"/>
+
+  <!-- Floor -->
+  <rect x="0" y="340" width="800" height="110" fill="url(#floor)"/>
+
+  <!-- Window -->
+  <rect x="60" y="140" width="220" height="180" fill="#90caf9" rx="4"/>
+  <rect x="60" y="140" width="220" height="180" fill="none" stroke="#78909c" stroke-width="6" rx="4"/>
+  <line x1="170" y1="140" x2="170" y2="320" stroke="#78909c" stroke-width="4"/>
+  <line x1="60" y1="228" x2="280" y2="228" stroke="#78909c" stroke-width="4"/>
+  <!-- Stars in window -->
+  <circle cx="100" cy="175" r="2" fill="white" opacity="0.8"/>
+  <circle cx="140" cy="160" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="200" cy="180" r="2" fill="white" opacity="0.9"/>
+  <circle cx="240" cy="165" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="120" cy="195" r="1" fill="white" opacity="0.8"/>
+
+  <!-- Curtains -->
+  <path d="M50 130 Q60 200 70 340 L50 340 Z" fill="#7986cb" opacity="0.9"/>
+  <path d="M290 130 Q280 200 270 340 L290 340 Z" fill="#7986cb" opacity="0.9"/>
+
+  <!-- Bed frame -->
+  <rect x="310" y="240" width="440" height="140" fill="#4e342e" rx="8"/>
+  <!-- Mattress -->
+  <rect x="315" y="220" width="430" height="140" fill="url(#bed)" rx="6"/>
+  <!-- Pillows -->
+  <rect x="330" y="230" width="130" height="60" fill="white" rx="10"/>
+  <rect x="475" y="230" width="130" height="60" fill="white" rx="10"/>
+  <!-- Blanket -->
+  <rect x="315" y="290" width="430" height="70" fill="#5c6bc0" rx="4" opacity="0.9"/>
+  <!-- Headboard -->
+  <rect x="310" y="185" width="440" height="70" fill="#3e2723" rx="8"/>
+
+  <!-- Nightstand left -->
+  <rect x="220" y="290" width="80" height="80" fill="#5d4037" rx="4"/>
+  <rect x="230" y="305" width="60" height="8" fill="#4e342e" rx="2"/>
+  <!-- Lamp on nightstand -->
+  <rect x="250" y="265" width="6" height="30" fill="#78909c"/>
+  <ellipse cx="253" cy="265" rx="25" ry="12" fill="#fff9c4" opacity="0.9"/>
+
+  <!-- Bedside lamp glow -->
+  <ellipse cx="253" cy="270" rx="40" ry="20" fill="#fff59d" opacity="0.2"/>
+
+  <!-- Text overlay -->
+  <rect x="0" y="380" width="800" height="70" fill="rgba(0,0,0,0.45)"/>
+  <text x="400" y="413" font-family="Georgia, serif" font-size="22" fill="white" text-anchor="middle" font-weight="bold">Boutique Hotel Technikum</text>
+  <text x="400" y="438" font-family="Arial, sans-serif" font-size="14" fill="#e0e0e0" text-anchor="middle">Elegantly furnished rooms in the heart of Vienna</text>
+</svg>
