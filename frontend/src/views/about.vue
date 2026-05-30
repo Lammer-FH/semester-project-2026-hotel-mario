@@ -138,22 +138,10 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const slideIndex = ref(0);
 
 const slides = [
-  {
-    image: '/images/img_placeholder1.jpg',
-    caption: 'Caption Text'
-  },
-  {
-    image: '/images/img_placeholder2.jpg',
-    caption: 'Caption Two'
-  },
-  {
-    image: '/images/img_placeholder3.jpg',
-    caption: 'Caption Three'
-  },
-  {
-    image: '/images/img_placeholder4.jpg',
-    caption: 'Caption Four'
-  }
+  { image: '/images/slide1.svg',   caption: 'Boutique Hotel Technikum' },
+  { image: '/images/rooms/1.jpg',  caption: 'Elegantly furnished rooms with modern amenities' },
+  { image: '/images/slide2.svg',   caption: 'Höchstädtplatz 6 · 1200 Vienna · U4 Friedensbrücke' },
+  { image: '/images/slide3.svg',   caption: 'Continental breakfast available daily' },
 ];
 
 function plusSlides(n: number) {
