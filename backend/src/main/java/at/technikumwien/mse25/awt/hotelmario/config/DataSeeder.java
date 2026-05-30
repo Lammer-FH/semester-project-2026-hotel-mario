@@ -92,15 +92,37 @@ public class DataSeeder implements ApplicationRunner {
         roomRepository.saveAll(List.of(standard, superior, deluxe, junior, executive, standard2, superior2));
 
         bookingRepository.saveAll(List.of(
-                booking(standard,  "Anna",  "Berger",   "anna.berger@example.at",
-                        LocalDate.of(2026, 4, 10), LocalDate.of(2026, 4, 14), false,
-                        OffsetDateTime.parse("2026-03-01T09:15:00+01:00")),
-                booking(deluxe,   "Thomas", "Gruber",  "t.gruber@example.at",
+                // June — two bookings overlap Jun 5-6 (standard + deluxe both unavailable)
+                booking(standard,  "Anna",   "Berger",    "anna.berger@example.at",
+                        LocalDate.of(2026, 6, 2),  LocalDate.of(2026, 6, 6),  false,
+                        OffsetDateTime.parse("2026-05-01T09:15:00+02:00")),
+                booking(deluxe,    "Thomas", "Gruber",    "t.gruber@example.at",
                         LocalDate.of(2026, 6, 5),  LocalDate.of(2026, 6, 10), true,
                         OffsetDateTime.parse("2026-04-20T14:30:00+02:00")),
-                booking(executive, "Julia", "Hofmann", "julia.hofmann@example.at",
+                booking(superior,  "Max",    "Müller",    "max.mueller@example.at",
+                        LocalDate.of(2026, 6, 18), LocalDate.of(2026, 6, 22), true,
+                        OffsetDateTime.parse("2026-05-10T11:00:00+02:00")),
+                // July
+                booking(junior,    "Sarah",  "Weber",     "s.weber@example.at",
+                        LocalDate.of(2026, 7, 5),  LocalDate.of(2026, 7, 10), false,
+                        OffsetDateTime.parse("2026-05-15T14:00:00+02:00")),
+                booking(executive, "Julia",  "Hofmann",   "julia.hofmann@example.at",
                         LocalDate.of(2026, 7, 15), LocalDate.of(2026, 7, 20), true,
-                        OffsetDateTime.parse("2026-05-03T11:00:00+02:00"))
+                        OffsetDateTime.parse("2026-05-03T11:00:00+02:00")),
+                booking(standard2, "Klaus",  "Fischer",   "k.fischer@example.at",
+                        LocalDate.of(2026, 7, 22), LocalDate.of(2026, 7, 26), false,
+                        OffsetDateTime.parse("2026-06-01T10:00:00+02:00")),
+                // August
+                booking(superior2, "Maria",  "Schneider", "m.schneider@example.at",
+                        LocalDate.of(2026, 8, 8),  LocalDate.of(2026, 8, 14), true,
+                        OffsetDateTime.parse("2026-06-15T09:00:00+02:00")),
+                booking(deluxe,    "Peter",  "Huber",     "p.huber@example.at",
+                        LocalDate.of(2026, 8, 20), LocalDate.of(2026, 8, 25), false,
+                        OffsetDateTime.parse("2026-07-01T16:00:00+02:00")),
+                // September
+                booking(executive, "Anna",   "Bauer",     "a.bauer@example.at",
+                        LocalDate.of(2026, 9, 1),  LocalDate.of(2026, 9, 5),  true,
+                        OffsetDateTime.parse("2026-07-20T12:00:00+02:00"))
         ));
     }
 
