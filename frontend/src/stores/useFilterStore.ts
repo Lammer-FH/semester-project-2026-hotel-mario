@@ -17,6 +17,8 @@ export const useFilterStore = defineStore('filters', () => {
   const pickerTemp = ref<string | null>(null)
 
   const priceError = computed(() => {
+    if (minPrice.value != null && minPrice.value < 0) return 'Price must be ≥ 0'
+    if (maxPrice.value != null && maxPrice.value < 0) return 'Price must be ≥ 0'
     if (minPrice.value != null && maxPrice.value != null && maxPrice.value < minPrice.value) {
       return 'Max must be ≥ Min'
     }

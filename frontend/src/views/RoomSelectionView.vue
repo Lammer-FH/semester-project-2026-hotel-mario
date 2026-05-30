@@ -1,43 +1,55 @@
 
 <template>
   <ion-page>
-    <router-link to="/home" class="links">Startpage</router-link>
     <ion-header>
       <ion-toolbar>
         <ion-title>Room Selection</ion-title>
+        <div class="button-group" slot="end">
+          <ion-button router-link="/home">Home</ion-button>
+          <ion-button router-link="/about">About Us</ion-button>
+        </div>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
+      <div class="page-container">
 
-      <FilterBar
-        :filters="filterBarProps"
-        :priceError="filterStore.priceError"
-        @openDate="(f) => filterStore.openPicker(f, today)"
-        @updatePersons="(v) => filterStore.persons = v"
-        @updateMin="(v) => filterStore.minPrice = v ? Number(v) : null"
-        @updateMax="(v) => filterStore.maxPrice = v ? Number(v) : null"
-        @updateAvailable="(v) => filterStore.availableOnly = v"
-        @apply="applyFilters"
-      />
+        <FilterBar
+          :filters="filterBarProps"
+          :priceError="filterStore.priceError"
+          @openDate="(f) => filterStore.openPicker(f, today)"
+          @updatePersons="(v) => filterStore.persons = v"
+          @updateMin="(v) => filterStore.minPrice = v ? Number(v) : null"
+          @updateMax="(v) => filterStore.maxPrice = v ? Number(v) : null"
+          @updateAvailable="(v) => filterStore.availableOnly = v"
+          @apply="applyFilters"
+        />
 
-      <ion-text color="danger" v-if="filterStore.dateError" class="date-error">
-        {{ filterStore.dateError }}
-      </ion-text>
+        <ion-text color="danger" v-if="filterStore.dateError" class="status-text">
+          {{ filterStore.dateError }}
+        </ion-text>
 
-      <ion-text color="danger" v-if="roomStore.error" class="date-error">
-        {{ roomStore.error }}
-      </ion-text>
+        <ion-text color="danger" v-if="roomStore.error" class="status-text">
+          {{ roomStore.error }}
+        </ion-text>
 
-      <ion-text v-if="roomStore.loading" color="medium" class="date-error">
-        Loading rooms...
-      </ion-text>
+        <ion-text v-if="roomStore.loading" color="medium" class="status-text">
+          Loading rooms...
+        </ion-text>
 
-      <ion-text v-else-if="filteredRooms.length === 0 && roomStore.rooms.length > 0" color="medium" class="empty-state">
-        No rooms match your criteria for the selected dates.
-      </ion-text>
+        <ion-text v-else-if="filteredRooms.length === 0 && roomStore.rooms.length > 0" color="medium" class="empty-state">
+          No rooms match your criteria for the selected dates.
+        </ion-text>
 
-      <RoomList v-else :rooms="paginatedRooms" />
+        <RoomList v-else :rooms="paginatedRooms" />
+
+        <div class="pagination">
+          <ion-button @click="previousPage" :disabled="currentPage === 1">Previous</ion-button>
+          <span>{{ currentPage }} / {{ totalPages }}</span>
+          <ion-button @click="nextPage" :disabled="currentPage === totalPages">Next</ion-button>
+        </div>
+
+      </div>
 
       <DatePickerModal
         :today="today"
@@ -50,20 +62,13 @@
         @apply="filterStore.applyPicker"
         @close="filterStore.closePicker"
       />
-
-      <div class="pagination">
-        <ion-button @click="previousPage" :disabled="currentPage === 1">Previous</ion-button>
-        <span>{{ currentPage }} / {{ totalPages }}</span>
-        <ion-button @click="nextPage" :disabled="currentPage === totalPages">Next</ion-button>
-      </div>
-
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText } from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons } from '@ionic/vue'
 
 import FilterBar from '@/components/FilterBar.vue'
 import RoomList from '@/components/RoomList.vue'
@@ -89,9 +94,12 @@ const filterBarProps = computed(() => ({
 }))
 
 const filteredRooms = computed(() => {
-  if (filterStore.availableOnly)
-    return roomStore.rooms.filter(r => r.available === true)
-  return roomStore.rooms
+  return roomStore.rooms.filter(r => {
+    if (filterStore.availableOnly && r.available !== true) return false
+    if (filterStore.minPrice != null && r.price < filterStore.minPrice) return false
+    if (filterStore.maxPrice != null && r.price > filterStore.maxPrice) return false
+    return true
+  })
 })
 
 const totalPages = computed(() => Math.max(1, Math.ceil(filteredRooms.value.length / pageSize)))
@@ -123,12 +131,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.links {
-  padding: 12px 20px;
-  display: inline-block;
+.page-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 0;
 }
 
-.date-error {
+.button-group {
+  display: flex;
+}
+
+.status-text {
   display: block;
   padding: 4px 16px;
 }
@@ -137,5 +150,13 @@ onMounted(() => {
   display: block;
   padding: 24px 16px;
   text-align: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
 }
 </style>
