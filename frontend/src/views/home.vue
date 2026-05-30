@@ -131,7 +131,7 @@ const slideIndex = ref(0);
 
 const slides = [
   {
-    image: '/images/slide1.svg',
+    image: '/images/rooms/1.jpg',
     caption: 'Elegantly furnished rooms with modern amenities'
   },
   {
