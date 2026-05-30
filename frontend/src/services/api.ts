@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL as string
+const BASE: string = import.meta.env.VITE_API_URL ?? '/api'
 
 export interface ExtraDto {
   id: number
