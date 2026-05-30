@@ -70,9 +70,9 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons } from '@ionic/vue'
 
-import FilterBar from '@/components/FilterBar.vue'
-import RoomList from '@/components/RoomList.vue'
-import DatePickerModal from '@/components/DatePickerModal.vue'
+import FilterBar from '@/components/organisms/FilterBar.vue'
+import RoomList from '@/components/organisms/RoomList.vue'
+import DatePickerModal from '@/components/molecules/DatePickerModal.vue'
 
 import { useRoomStore } from '@/stores/useRoomStore'
 import { useFilterStore } from '@/stores/useFilterStore'
