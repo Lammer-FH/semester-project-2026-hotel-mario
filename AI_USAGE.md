@@ -88,21 +88,26 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 **Outcome:** Used as basis for the refactoring plan.  
 **Human decision:** We scoped the review to structural issues only ("ignore missing business logic") to keep the output actionable.
 
-### 2. Package Reorganization + Clean Architecture Implementation
-**Generated:** Full component package structure (`components/{rooms,bookings}/{api,service,repository,model}`), versioned DTOs, mappers, controllers, `GlobalExceptionHandler`, `WebConfig`, `OpenApiConfig`.  
+### 2. Package Reorganization — Phase 1
+**Generated:** Generated controller implementations, CORS filter, and unused configuration classes deleted; application code moved out of `io.swagger.*` into the correct namespace; `WebConfig`, `OpenApiConfig` created; `@ComponentScan` removed.  
 **Outcome:** Accepted. `NotUndefinedValidator` exception handling changed from `e.printStackTrace()` to `throw new RuntimeException` by us before accepting.  
-**Human decision:** Two-step approach — plan reviewed and confirmed before "do it all" was issued.
+**Human decision:** We scoped this first pass to namespace and structural cleanup only — no entities or persistence yet — to keep the change set reviewable.
 
-### 3. Controller Stub Data + POST Logic
+### 3. Full Clean Architecture Refactoring (Component + Layer Structure)
+**Generated:** JPA and Lombok dependencies added; all entity classes (`RoomEntity`, `ExtraEntity`, `BookingEntity`); repository interfaces; service interfaces and implementations; versioned DTOs (`RoomDto`, `RoomPageDto`, `ExtraDto`, `BookingRequestDto`, `BookingConfirmationDto`, etc.); mapper classes; versioned controllers; `GlobalExceptionHandler` in `common/`.  
+**Outcome:** Accepted after `BUILD SUCCESSFUL`. Spring Boot 4 `@WebMvcTest` package move corrected autonomously by AI during implementation.  
+**Human decision:** Two-step approach — "come up with a plan" reviewed and confirmed before "do it all" was issued. The architecture plan specified component packages with `v1` versioning, `*Entity` naming, Lombok, and `@Builder`/`@Value` DTOs — all defined by us before any code was written.
+
+### 5. Controller Stub Data + POST Logic
 **Generated:** `GET` endpoints returning spec-matching example data; `POST /bookings` with `@Valid`, cross-field validation, `201` response.  
 **Outcome:** Accepted.  
 **Human decision:** "No service or persistence yet" was deliberate — validate HTTP semantics in isolation before touching the database layer.
 
-### 4. Controller Tests
+### 6. Controller Tests
 **Generated:** `RoomsControllerTest` (6 cases), `BookingsControllerTest` (7 cases) using `@WebMvcTest`, dynamic dates.  
 **Outcome:** Accepted after all 13 tests passed.
 
-### 5. Clean Architecture Verification
+### 7. Clean Architecture Verification
 **Generated:** Review table identifying 5 remaining violations (dead code, wildcard return type, cross-component dependency, hotel data in mapper).  
 **Outcome:** Documented as known technical debt; not all fixed immediately.  
 **Human decision:** Conscious prioritisation — violations that did not block the PR were deferred.
@@ -127,6 +132,20 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 
 **Generated:** HTML/CSS/JS prototype (index, rooms, room-details, booking, review, confirmation, about pages).  
 **Outcome:** Modified — all pages manually overhauled for content accuracy, layout consistency, missing fields. Imprint page generated separately with WKO example; translated to English and corrected.
+
+---
+
+## Milestone 2 — RoomSelectionView Frontend — 2026-05-23 | Claude Sonnet 4.6
+
+### 1. Create RoomSelectionView.vue
+**Generated:** `RoomSelectionView.vue` from paper prototype — booking filter at top, scrollable room list below, mock API placeholders.  
+**Outcome:** Modified — date picker refactored to modal-based interaction; Ionic component registration fixed; reactivity corrected (ref unwrapping, `@ionChange`/`@ionInput` replacing `v-model`); date and price validation added with computed error messages.  
+**Human decision:** Starting from a paper prototype attachment gave AI enough visual context to scaffold the layout. All validation logic and the modal interaction pattern were added manually after reviewing the generated output.
+
+### 2. Split View into Components
+**Generated:** `RoomSelectionView.vue`, `DatePickerModal.vue`, `FilterBar.vue`, `RoomList.vue` — view split into separate component files.  
+**Outcome:** Modified — additional validation logic added; pagination implemented; minor breakages from the split fixed manually.  
+**Human decision:** Component split was our decision once the monolithic view was working. We directed the split and repaired the integration points.
 
 ---
 
