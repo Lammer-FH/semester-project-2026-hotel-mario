@@ -29,7 +29,7 @@ First iteration added a `GET /hotel` endpoint with hotel data embedded on every 
 
 ---
 
-## Backlog — 2026-05-08 | Claude Sonnet 4.6 + GPT-5.5
+## Backlog — 2026-05-08 | Claude Sonnet 4.6 + GitHub Copilot (GPT-5.5, VS Code)
 
 ### 1. Generate Backlog Items
 **Generated:** GitHub Issues 3–7 as user story drafts.  
@@ -43,9 +43,9 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 
 ---
 
-## Issue #11 — CI Configuration — 2026-05-08 + 2026-05-23 | GPT-5.5 + Claude Sonnet 4.6
+## Issue #11 — CI Configuration — 2026-05-08 + 2026-05-23 | GitHub Copilot (GPT-5.5, VS Code) + Claude Sonnet 4.6
 
-### 1. Initial CI Script (GPT-5.5)
+### 1. Initial CI Script (GitHub Copilot, GPT-5.5)
 **Generated:** `.github/workflows/ci.yml` skeleton.  
 **Outcome:** Modified — Node dependency commented out (frontend not yet implemented); PR trigger added.
 
@@ -123,7 +123,7 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 
 ---
 
-## Frontend Prototype — 2026-05-24 | GPT-5.5
+## Frontend Prototype — 2026-05-24 | GitHub Copilot (GPT-5.5, VS Code)
 
 **Generated:** HTML/CSS/JS prototype (index, rooms, room-details, booking, review, confirmation, about pages).  
 **Outcome:** Modified — all pages manually overhauled for content accuracy, layout consistency, missing fields. Imprint page generated separately with WKO example; translated to English and corrected.
