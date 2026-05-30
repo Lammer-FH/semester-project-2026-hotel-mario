@@ -93,21 +93,21 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 **Outcome:** Accepted. `NotUndefinedValidator` exception handling changed from `e.printStackTrace()` to `throw new RuntimeException` by us before accepting.  
 **Human decision:** We scoped this first pass to namespace and structural cleanup only — no entities or persistence yet — to keep the change set reviewable.
 
-### 3. Full Clean Architecture Refactoring (Component + Layer Structure)
-**Generated:** JPA and Lombok dependencies added; all entity classes (`RoomEntity`, `ExtraEntity`, `BookingEntity`); repository interfaces; service interfaces and implementations; versioned DTOs (`RoomDto`, `RoomPageDto`, `ExtraDto`, `BookingRequestDto`, `BookingConfirmationDto`, etc.); mapper classes; versioned controllers; `GlobalExceptionHandler` in `common/`.  
-**Outcome:** Accepted after `BUILD SUCCESSFUL`. Spring Boot 4 `@WebMvcTest` package move corrected autonomously by AI during implementation.  
-**Human decision:** Two-step approach — "come up with a plan" reviewed and confirmed before "do it all" was issued. The architecture plan specified component packages with `v1` versioning, `*Entity` naming, Lombok, and `@Builder`/`@Value` DTOs — all defined by us before any code was written.
-
-### 5. Controller Stub Data + POST Logic
+### 3. Controller Stub Data + POST Logic
 **Generated:** `GET` endpoints returning spec-matching example data; `POST /bookings` with `@Valid`, cross-field validation, `201` response.  
 **Outcome:** Accepted.  
 **Human decision:** "No service or persistence yet" was deliberate — validate HTTP semantics in isolation before touching the database layer.
 
-### 6. Controller Tests
+### 4. Full Clean Architecture Refactoring (Component + Layer Structure)
+**Generated:** JPA and Lombok dependencies added; all entity classes (`RoomEntity`, `ExtraEntity`, `BookingEntity`); repository interfaces; service interfaces and implementations; versioned DTOs (`RoomDto`, `RoomPageDto`, `ExtraDto`, `BookingRequestDto`, `BookingConfirmationDto`, etc.); mapper classes; versioned controllers; `GlobalExceptionHandler` in `common/`.  
+**Outcome:** Accepted after `BUILD SUCCESSFUL`. Spring Boot 4 `@WebMvcTest` package move corrected autonomously by AI during implementation.  
+**Human decision:** Two-step approach — "come up with a plan" reviewed and confirmed before "do it all" was issued. The architecture plan specified component packages with `v1` versioning, `*Entity` naming, Lombok, and `@Builder`/`@Value` DTOs — all defined by us before any code was written.
+
+### 5. Controller Tests
 **Generated:** `RoomsControllerTest` (6 cases), `BookingsControllerTest` (7 cases) using `@WebMvcTest`, dynamic dates.  
 **Outcome:** Accepted after all 13 tests passed.
 
-### 7. Clean Architecture Verification
+### 6. Clean Architecture Verification
 **Generated:** Review table identifying 5 remaining violations (dead code, wildcard return type, cross-component dependency, hotel data in mapper).  
 **Outcome:** Documented as known technical debt; not all fixed immediately.  
 **Human decision:** Conscious prioritisation — violations that did not block the PR were deferred.
@@ -118,20 +118,6 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 
 **Generated:** `Dockerfile-Frontend`.  
 **Outcome:** Modified — output path corrected from `/app/www` to `/app/dist`; build context path fixed.
-
----
-
-## Issues #17–#19 — Room Selection Frontend — 2026-05-26–29 | GitHub Copilot
-
-**Generated:** Initial structure for `RoomSelectionView.vue`, `FilterBar.vue`, `DatePickerModal.vue`, `RoomList.vue` with mocked data.  
-**Outcome:** Modified — date validation, pagination, Ionic component fixes, reactivity corrections applied manually.
-
----
-
-## Frontend Prototype — 2026-05-24 | GitHub Copilot (GPT-5.5, VS Code)
-
-**Generated:** HTML/CSS/JS prototype (index, rooms, room-details, booking, review, confirmation, about pages).  
-**Outcome:** Modified — all pages manually overhauled for content accuracy, layout consistency, missing fields. Imprint page generated separately with WKO example; translated to English and corrected.
 
 ---
 
@@ -146,6 +132,20 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 **Generated:** `RoomSelectionView.vue`, `DatePickerModal.vue`, `FilterBar.vue`, `RoomList.vue` — view split into separate component files.  
 **Outcome:** Modified — additional validation logic added; pagination implemented; minor breakages from the split fixed manually.  
 **Human decision:** Component split was our decision once the monolithic view was working. We directed the split and repaired the integration points.
+
+---
+
+## Frontend Prototype — 2026-05-24 | GitHub Copilot (GPT-5.5, VS Code)
+
+**Generated:** HTML/CSS/JS prototype (index, rooms, room-details, booking, review, confirmation, about pages).  
+**Outcome:** Modified — all pages manually overhauled for content accuracy, layout consistency, missing fields. Imprint page generated separately with WKO example; translated to English and corrected.
+
+---
+
+## Issues #17–#19 — Room Selection Frontend — 2026-05-26–29 | GitHub Copilot
+
+**Generated:** Initial structure for `RoomSelectionView.vue`, `FilterBar.vue`, `DatePickerModal.vue`, `RoomList.vue` with mocked data.  
+**Outcome:** Modified — date validation, pagination, Ionic component fixes, reactivity corrections applied manually.
 
 ---
 
