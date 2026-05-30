@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons } from '@ionic/vue'
 
 import FilterBar from '@/components/FilterBar.vue'
@@ -111,6 +111,10 @@ const paginatedRooms = computed(() => {
 
 const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
 const previousPage = () => { if (currentPage.value > 1) currentPage.value-- }
+
+watch(totalPages, (newTotal) => {
+  if (currentPage.value > newTotal) currentPage.value = 1
+})
 
 async function applyFilters() {
   if (filterStore.priceError) return
