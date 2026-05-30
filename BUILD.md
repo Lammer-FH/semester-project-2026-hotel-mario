@@ -101,7 +101,7 @@ docker compose down
 
 ```
 semester-project-2026-hotel-mario/
-├── backend/                          # Spring Boot 3 application
+├── backend/                          # Spring Boot 4 application
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/
