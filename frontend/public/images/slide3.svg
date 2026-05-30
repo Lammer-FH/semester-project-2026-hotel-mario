@@ -1,87 +1,76 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a237e"/>
-      <stop offset="100%" stop-color="#283593"/>
-    </linearGradient>
-    <linearGradient id="table" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#a1887f"/>
-      <stop offset="100%" stop-color="#6d4c41"/>
-    </linearGradient>
-    <linearGradient id="cup" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#e0e0e0"/>
-    </linearGradient>
-  </defs>
-
   <!-- Background -->
-  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="#1a237e"/>
+  <rect width="800" height="450" fill="#283593" opacity="0.5"/>
 
-  <!-- Large window / view -->
-  <rect x="0" y="0" width="800" height="320" fill="#e3f2fd" opacity="0.15"/>
+  <!-- Window light from left -->
+  <rect x="0" y="0" width="300" height="450" fill="#e3f2fd" opacity="0.08"/>
 
-  <!-- Morning light rays -->
-  <polygon points="400,0 200,320 600,320" fill="#fff9c4" opacity="0.05"/>
-  <polygon points="600,0 350,320 800,320" fill="#fff9c4" opacity="0.04"/>
-
-  <!-- Breakfast table -->
-  <ellipse cx="400" cy="360" rx="280" ry="60" fill="url(#table)"/>
-  <ellipse cx="400" cy="345" rx="280" ry="55" fill="#8d6e63"/>
-
+  <!-- Table surface -->
+  <ellipse cx="400" cy="360" rx="300" ry="65" fill="#6d4c41"/>
+  <ellipse cx="400" cy="345" rx="290" ry="58" fill="#8d6e63"/>
   <!-- White tablecloth -->
-  <ellipse cx="400" cy="338" rx="260" ry="48" fill="white" opacity="0.95"/>
+  <ellipse cx="400" cy="335" rx="270" ry="52" fill="#fafafa"/>
 
-  <!-- Coffee cup left -->
-  <rect x="195" y="300" width="50" height="42" fill="url(#cup)" rx="4"/>
-  <rect x="190" y="338" width="60" height="8" fill="#e0e0e0" rx="2"/>
-  <rect x="243" y="312" width="12" height="16" fill="transparent" stroke="#bdbdbd" stroke-width="3" rx="4" fill="none"/>
-  <!-- Coffee in cup -->
-  <ellipse cx="220" cy="304" rx="20" ry="6" fill="#6d4c41"/>
-  <!-- Steam -->
-  <path d="M210 295 Q214 285 210 275" stroke="#bdbdbd" stroke-width="2" fill="none" opacity="0.7"/>
-  <path d="M220 292 Q224 280 220 268" stroke="#bdbdbd" stroke-width="2" fill="none" opacity="0.7"/>
-  <path d="M230 295 Q234 285 230 275" stroke="#bdbdbd" stroke-width="2" fill="none" opacity="0.7"/>
+  <!-- Coffee cup -->
+  <rect x="185" y="295" width="55" height="45" fill="white" rx="5"/>
+  <rect x="180" y="336" width="65" height="9" fill="#e0e0e0" rx="3"/>
+  <!-- Handle -->
+  <rect x="238" y="308" width="14" height="20" fill="none" stroke="#bdbdbd" stroke-width="3" rx="5"/>
+  <!-- Coffee surface -->
+  <ellipse cx="212" cy="298" rx="22" ry="7" fill="#5d4037"/>
+  <!-- Steam lines -->
+  <path d="M202 288 Q206 276 202 264" stroke="#cfd8dc" stroke-width="2" fill="none"/>
+  <path d="M212 285 Q216 272 212 259" stroke="#cfd8dc" stroke-width="2" fill="none"/>
+  <path d="M222 288 Q226 276 222 264" stroke="#cfd8dc" stroke-width="2" fill="none"/>
 
-  <!-- Plate with croissant -->
-  <ellipse cx="400" cy="330" rx="70" ry="22" fill="#f5f5f5"/>
-  <!-- Croissant -->
-  <path d="M360 325 Q375 305 400 318 Q425 305 440 325 Q425 340 400 332 Q375 340 360 325 Z" fill="#f9a825"/>
-  <path d="M363 323 Q380 310 400 320 Q420 310 437 323" stroke="#e65100" stroke-width="2" fill="none" opacity="0.6"/>
+  <!-- Plate -->
+  <ellipse cx="400" cy="328" rx="75" ry="24" fill="#f0f0f0"/>
+  <ellipse cx="400" cy="326" rx="65" ry="20" fill="#fafafa"/>
+
+  <!-- Croissant on plate -->
+  <path d="M358 322 Q374 298 400 312 Q426 298 442 322 Q426 338 400 330 Q374 338 358 322 Z" fill="#f9a825"/>
+  <path d="M362 320 Q378 304 400 314 Q422 304 438 320" stroke="#e65100" stroke-width="2" fill="none" opacity="0.7"/>
+
+  <!-- Jam jar -->
+  <rect x="470" y="295" width="38" height="42" fill="#e53935" rx="6"/>
+  <rect x="468" y="290" width="42" height="10" fill="#b71c1c" rx="4"/>
+  <text x="489" y="322" font-family="Arial" font-size="10" fill="white" text-anchor="middle">JAM</text>
 
   <!-- Orange juice glass -->
-  <polygon points="560,295 600,295 590,345 570,345" fill="#ff9800" opacity="0.85"/>
-  <rect x="558" y="291" width="44" height="8" fill="#ffb300" rx="2"/>
+  <polygon points="555,290 595,290 585,345 565,345" fill="#fb8c00" opacity="0.9"/>
+  <rect x="553" y="286" width="44" height="9" fill="#ffa726" rx="2"/>
   <!-- Straw -->
-  <rect x="583" y="270" width="4" height="50" fill="white" rx="2"/>
+  <rect x="580" y="265" width="4" height="60" fill="white" rx="2"/>
+  <!-- Straw top cap -->
+  <rect x="578" y="263" width="8" height="5" fill="#ef9a9a" rx="2"/>
 
-  <!-- Flower vase center -->
-  <rect x="390" y="280" width="20" height="50" fill="#80cbc4" rx="6"/>
-  <rect x="385" y="326" width="30" height="8" fill="#4db6ac" rx="3"/>
+  <!-- Flower vase -->
+  <rect x="388" y="272" width="24" height="55" fill="#80cbc4" rx="8"/>
+  <rect x="382" y="322" width="36" height="9" fill="#4db6ac" rx="4"/>
   <!-- Flowers -->
-  <circle cx="392" cy="270" r="12" fill="#f48fb1"/>
-  <circle cx="408" cy="268" r="10" fill="#ce93d8"/>
-  <circle cx="400" cy="262" r="11" fill="#ff8a65"/>
-  <circle cx="392" cy="270" r="5" fill="#fff9c4"/>
-  <circle cx="408" cy="268" r="4" fill="#fff9c4"/>
-  <circle cx="400" cy="262" r="5" fill="#fff9c4"/>
+  <circle cx="394" cy="264" r="13" fill="#f48fb1"/>
+  <circle cx="410" cy="260" r="11" fill="#ce93d8"/>
+  <circle cx="400" cy="255" r="12" fill="#ff8a65"/>
+  <!-- Flower centers -->
+  <circle cx="394" cy="264" r="5" fill="#fff9c4"/>
+  <circle cx="410" cy="260" r="4" fill="#fff9c4"/>
+  <circle cx="400" cy="255" r="5" fill="#fff9c4"/>
 
-  <!-- Bread basket right -->
-  <ellipse cx="570" cy="320" rx="45" ry="15" fill="#d7ccc8"/>
-  <rect x="528" y="305" width="84" height="20" fill="#bcaaa4" rx="8"/>
-  <!-- Bread rolls in basket -->
-  <ellipse cx="548" cy="303" rx="16" ry="10" fill="#d4a574"/>
-  <ellipse cx="572" cy="300" rx="16" ry="10" fill="#c8975a"/>
-  <ellipse cx="595" cy="303" rx="14" ry="9" fill="#d4a574"/>
+  <!-- Bread roll basket -->
+  <ellipse cx="570" cy="318" rx="48" ry="16" fill="#d7ccc8"/>
+  <rect x="524" y="302" width="92" height="22" fill="#bcaaa4" rx="9"/>
+  <ellipse cx="547" cy="300" rx="18" ry="11" fill="#d4a574"/>
+  <ellipse cx="572" cy="296" rx="18" ry="11" fill="#c8975a"/>
+  <ellipse cx="597" cy="300" rx="16" ry="10" fill="#d4a574"/>
 
-  <!-- Newspaper -->
-  <rect x="150" y="298" width="90" height="65" fill="white" rx="3" transform="rotate(-8 195 330)"/>
-  <rect x="155" y="304" width="80" height="8" fill="#1a237e" rx="1" transform="rotate(-8 195 308)"/>
-  <rect x="155" y="316" width="35" height="3" fill="#bdbdbd" rx="1" transform="rotate(-8 172 317)"/>
-  <rect x="155" y="322" width="38" height="3" fill="#bdbdbd" rx="1" transform="rotate(-8 174 323)"/>
-  <rect x="155" y="328" width="30" height="3" fill="#bdbdbd" rx="1" transform="rotate(-8 170 329)"/>
+  <!-- Butter dish -->
+  <rect x="285" y="310" width="55" height="24" fill="#fff8e1" rx="5"/>
+  <rect x="300" y="303" width="30" height="10" fill="#fff9c4" rx="3"/>
+  <text x="312" y="327" font-family="Arial" font-size="9" fill="#8d6e63" text-anchor="middle">BUTTER</text>
 
   <!-- Text overlay -->
-  <rect x="0" y="380" width="800" height="70" fill="rgba(0,0,0,0.5)"/>
+  <rect x="0" y="380" width="800" height="70" fill="#000000" opacity="0.55"/>
   <text x="400" y="413" font-family="Georgia, serif" font-size="22" fill="white" text-anchor="middle" font-weight="bold">Start Your Day Right</text>
-  <text x="400" y="438" font-family="Arial, sans-serif" font-size="14" fill="#e0e0e0" text-anchor="middle">Continental breakfast included with selected rooms</text>
+  <text x="400" y="440" font-family="Arial, sans-serif" font-size="14" fill="#e0e0e0" text-anchor="middle">Continental breakfast available with selected rooms</text>
 </svg>
