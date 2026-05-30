@@ -77,7 +77,19 @@ public class DataSeeder implements ApplicationRunner {
                 new BigDecimal("279.99"),
                 List.of(wifi, breakfast, ac, safe, panorama, lounge));
 
-        roomRepository.saveAll(List.of(standard, superior, deluxe, junior, executive));
+        RoomEntity standard2 = room("Standard Double Room",
+                "A comfortable room with a double bed and garden view, includes breakfast for a relaxed morning start.",
+                "/images/rooms/standard.jpg",
+                new BigDecimal("99.99"),
+                List.of(wifi, breakfast));
+
+        RoomEntity superior2 = room("Superior Double Room",
+                "A superior room with premium bedding, individual climate control, and an in-room safe for added security.",
+                "/images/rooms/superior.jpg",
+                new BigDecimal("139.99"),
+                List.of(wifi, breakfast, ac, safe));
+
+        roomRepository.saveAll(List.of(standard, superior, deluxe, junior, executive, standard2, superior2));
 
         bookingRepository.saveAll(List.of(
                 booking(standard,  "Anna",  "Berger",   "anna.berger@example.at",
