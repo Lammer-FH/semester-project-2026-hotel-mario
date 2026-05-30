@@ -95,7 +95,7 @@ const filterBarProps = computed(() => ({
 
 const filteredRooms = computed(() => {
   return roomStore.rooms.filter(r => {
-    if (filterStore.availableOnly && r.available !== true) return false
+    if (filterStore.availableOnly && filterStore.datesSelected && r.available !== true) return false
     if (filterStore.minPrice != null && r.price < filterStore.minPrice) return false
     if (filterStore.maxPrice != null && r.price > filterStore.maxPrice) return false
     return true

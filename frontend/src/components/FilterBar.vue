@@ -44,7 +44,11 @@
       </ion-col>
 
       <ion-col size="6" size-md="2" class="availability-toggle">
-        <ion-checkbox :checked="filters.availableOnly" @ionChange="(e) => $emit('updateAvailable', e.detail.checked)">
+        <ion-checkbox
+          :checked="filters.availableOnly"
+          :disabled="!filters.checkIn || !filters.checkOut"
+          @ionChange="(e) => $emit('updateAvailable', e.detail.checked)"
+        >
           Available only
         </ion-checkbox>
       </ion-col>
