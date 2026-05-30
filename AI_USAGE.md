@@ -1276,3 +1276,219 @@ Global: Definition of Done missing from ALL user stories.
 - [`frontend/src/stores/useFilterStore.ts`](frontend/src/stores/useFilterStore.ts)
 - [`frontend/src/main.ts`](frontend/src/main.ts) — Pinia registration
 - [`frontend/.env.example`](frontend/.env.example)
+
+---
+
+# Milestone 2 — Frontend Polish, Atomic Design, Configuration & Seed Data
+
+## Tool
+
+**Claude Code** (Anthropic)
+- Model: **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
+- Interface: Claude Code VS Code extension (interactive agent)
+- Date: 2026-05-30
+
+---
+
+## Usage Log
+
+### 1. Ionicons Registration (#59)
+
+**Task:** Register ionicons via `addIcons` so icon names resolve correctly in a Vite-bundled Ionic app.
+
+**Prompt:**
+> ionicons are missing
+
+**What was generated:**
+- `frontend/src/main.ts` — `addIcons({ wifi, cafe, car, thermometer, 'lock-closed': lockClosed, eye, people, location, bed, restaurant })` registered before app mount
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** Ionic's tree-shaken Vite build requires icons to be explicitly registered at runtime. We identified the missing `addIcons` call as the root cause and directed the AI to register the specific icon set used by the application rather than importing the full icon bundle.
+
+---
+
+### 2. Room Selection Desktop Layout
+
+**Task:** Improve the visual layout of the room selection page on desktop — compact filter row, horizontal room cards, max-width container, navigation in the header.
+
+**Prompt:**
+> improve layout on desktop for room selection
+
+**What was generated:**
+- `FilterBar.vue` — responsive `ion-col` sizing (`size=6`, `size-md=2`) to collapse all filter controls into a single row on desktop
+- `RoomList.vue` — horizontal card layout on desktop (image left at 280px, content right) using `flex-direction: row` at ≥768px
+- `RoomSelectionView.vue` — `max-width: 1100px` page container, Home/About Us navigation buttons moved into the `ion-toolbar`, stray `router-link` removed
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** The design decision to use a horizontal card on desktop (image left, details right) is a standard hotel booking UI pattern. We directed the AI to implement it while keeping the mobile layout unchanged. Navigation button placement in the toolbar was our explicit requirement to match the pattern already established in `home.vue`.
+
+---
+
+### 3. Price Filter Wiring and Validation
+
+**Task:** Connect the min/max price filter inputs to the room list, and add validation for negative price values.
+
+**Prompt:**
+> room selection min and max pricing filter allows negative values, also is not working
+
+**What was generated:**
+- `RoomSelectionView.vue` — `filteredRooms` computed extended to apply `minPrice` and `maxPrice` range filtering
+- `useFilterStore.ts` — `priceError` computed extended to reject negative values
+- `FilterBar.vue` — `min="0"` attribute added to both price inputs
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** We connected the price filter to the computed room list and added validation in the store so that the error state is managed centrally rather than in the view. The `min="0"` HTML attribute was added as a first-line browser-level guard in addition to the store validation.
+
+---
+
+### 4. Availability Filter Behaviour
+
+**Task:** Ensure the "Available only" filter and the availability check only apply when dates have been entered; auto-trigger the availability check when the date picker is confirmed.
+
+**Prompts:**
+> change on date only gets reflected when apply filters is pressed, just execute on change
+> available only filters when availability is unknown/null, this is wrong, should only be able to filter when dates are entered
+
+**What was generated:**
+- `RoomSelectionView.vue` — `onPickerApply()` wrapper that calls `applyPicker()` then immediately `applyFilters()`, so confirming a date triggers the availability check automatically
+- `RoomSelectionView.vue` — `filteredRooms` guard: available-only filter only applies when `filterStore.datesSelected` is true
+- `FilterBar.vue` — `:disabled="!filters.checkIn || !filters.checkOut"` on the availability checkbox
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** Both behaviours were deliberate UX decisions: the filter should be reactive to date changes without requiring a separate button press, and filtering by availability when no availability data exists would produce misleading results. We directed the AI to implement these constraints at both the UI level (disabled checkbox) and the logic level (computed guard).
+
+---
+
+### 5. Pagination Robustness
+
+**Task:** Reset the current page to 1 when filters reduce the list below the current page boundary.
+
+**Prompt:**
+> pagination needs to refresh when list changes and i.e. gets shorter a page 2 of 1 bug is possible
+
+**What was generated:**
+- `RoomSelectionView.vue` — `watch(totalPages, (newTotal) => { if (currentPage.value > newTotal) currentPage.value = 1 })`
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** We identified that any reactive change to the filter state could reduce `totalPages` below `currentPage`, resulting in an empty page being shown. The watcher is the correct Vue 3 mechanism for this cross-computed side effect. We directed the AI to implement exactly this pattern.
+
+---
+
+### 6. Atomic Design Component Hierarchy
+
+**Task:** Refactor the flat `components/` folder into an Atomic Design hierarchy (atoms / molecules / organisms).
+
+**Prompt:**
+> refactor as suggested [Atomic Design structure]
+
+**What was generated:**
+- `atoms/ExtraChip.vue` — icon + label chip with typed props (`name: string`, `icon: string`)
+- `atoms/AvailabilityBadge.vue` — availability badge with typed prop (`available: boolean | null`)
+- `molecules/RoomCard.vue` — single room card composing both atoms; typed prop (`room: Room`)
+- `molecules/DatePickerModal.vue` — moved from flat `components/`
+- `organisms/RoomList.vue` — simplified to a `v-for` over `<RoomCard>`; typed prop (`rooms: Room[]`)
+- `organisms/FilterBar.vue` — moved from flat `components/`
+- Import paths updated in `RoomSelectionView.vue`; old flat files removed
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** The component classification was decided by us before the AI wrote any code: atoms are the smallest self-contained units (chip, badge), molecules compose atoms into a card, organisms compose molecules into full sections. We confirmed the hierarchy in discussion before directing the AI to implement it. Typed props using the existing `Room` interface from `useRoomStore` were a deliberate quality requirement.
+
+---
+
+### 7. Environment Variable Configuration
+
+**Task:** Add default values for environment variables in both frontend and backend; make all environment-specific settings configurable without code changes.
+
+**Prompt:**
+> add env variable default value to frontend, make env variable for api prefix also available in backend and set a default value
+
+**What was generated:**
+- `frontend/src/services/api.ts` — `import.meta.env.VITE_API_URL ?? '/api'` fallback
+- `backend/src/main/resources/application.properties` — `${DB_URL:...}`, `${DB_USERNAME:...}`, `${DB_PASSWORD:...}`, `${DB_DDL_AUTO:update}`, `${API_PREFIX:/api}`
+- `backend/.env.example` — created with all five variables documented
+- `frontend/.env.example` — updated with description comment
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** We identified that the application should run without any environment configuration for local development, while still supporting production overrides via environment variables. The `${VAR:default}` Spring syntax and Vite's `??` fallback both achieve this without requiring separate config files for each environment.
+
+---
+
+### 8. Seed Data and Demo Documentation
+
+**Task:** Expand the room and booking seed data to support a realistic availability demo; add a pageSize correction and a dedicated demo reference document.
+
+**Prompts:**
+> add more seed data to bookings for the next few months but leave enough space for actual available room bookings to be demonstrated
+> differentiate pricing and amenities, but keep the current types and list multiple times
+> add a Demo.md file for this information of seed data
+
+**What was generated:**
+- `DataSeeder.java` — 7 rooms (added two variants of Standard Double and Superior Double with different extras and pricing); 9 bookings spread across Jun–Sep 2026 with deliberate gaps
+- `frontend/public/images/rooms/6.jpg` and `7.jpg` — room images for the two new rooms
+- `DEMO.md` — full room table, booking schedule, and suggested date ranges for the availability demo
+- `RoomSelectionView.vue` — `pageSize` restored to 5 (matching the U2 Definition of Done: "five hotel rooms are shown on page one")
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** The seeding strategy — same room types with different extras and pricing — was our explicit requirement. We wanted to demonstrate a realistic hotel offering without inventing new room categories. The specific date ranges in `DEMO.md` were chosen to ensure at least one "all rooms available" window (Aug 1–7) alongside periods with multiple unavailable rooms, giving a reviewer clear test scenarios. The `pageSize` decision was driven directly by the U2 Definition of Done.
+
+---
+
+### 9. BUILD.md Update
+
+**Task:** Update the build documentation to reflect the current project structure, environment variables, and new seed data.
+
+**Prompt:**
+> reflect build.md for current project state
+
+**What was generated:**
+- Project structure section updated to show Atomic Design folders and all new files
+- Configuration section replaced with an env var table (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DDL_AUTO`, `API_PREFIX`, `VITE_API_URL`) with defaults
+- Frontend local dev section updated with `.env` copy step and corrected dev server port
+- New Seed Data section with MySQL reset instructions and link to `DEMO.md`
+- Version bumped to 1.1, date updated
+
+**Accepted:** Fully accepted.
+
+**Human reasoning:** Documentation accuracy is a project requirement. We directed the AI to update only the sections that had diverged from the current implementation rather than rewriting the document from scratch, preserving the existing content that remained correct.
+
+---
+
+## Summary
+
+| # | Task | Accepted | Modified | Rejected |
+|---|------|----------|----------|----------|
+| 1 | Ionicons registration | ✓ | | |
+| 2 | Room selection desktop layout | ✓ | | |
+| 3 | Price filter wiring and validation | ✓ | | |
+| 4 | Availability filter behaviour | ✓ | | |
+| 5 | Pagination robustness | ✓ | | |
+| 6 | Atomic Design component hierarchy | ✓ | | |
+| 7 | Environment variable configuration | ✓ | | |
+| 8 | Seed data and demo documentation | ✓ | | |
+| 9 | BUILD.md update | ✓ | | |
+
+---
+
+## Artefacts Produced by AI
+
+- [`frontend/src/main.ts`](frontend/src/main.ts) — ionicons registration
+- [`frontend/src/components/atoms/ExtraChip.vue`](frontend/src/components/atoms/ExtraChip.vue)
+- [`frontend/src/components/atoms/AvailabilityBadge.vue`](frontend/src/components/atoms/AvailabilityBadge.vue)
+- [`frontend/src/components/molecules/RoomCard.vue`](frontend/src/components/molecules/RoomCard.vue)
+- [`frontend/src/components/molecules/DatePickerModal.vue`](frontend/src/components/molecules/DatePickerModal.vue)
+- [`frontend/src/components/organisms/RoomList.vue`](frontend/src/components/organisms/RoomList.vue)
+- [`frontend/src/components/organisms/FilterBar.vue`](frontend/src/components/organisms/FilterBar.vue)
+- [`frontend/src/views/RoomSelectionView.vue`](frontend/src/views/RoomSelectionView.vue) — layout, filter wiring, pagination, auto-trigger
+- [`backend/src/main/resources/application.properties`](backend/src/main/resources/application.properties) — env var placeholders
+- [`backend/.env.example`](backend/.env.example)
+- [`backend/src/main/java/.../config/DataSeeder.java`](backend/src/main/java/at/technikumwien/mse25/awt/hotelmario/config/DataSeeder.java) — expanded seed data
+- [`DEMO.md`](DEMO.md)
+- [`BUILD.md`](BUILD.md) — updated
