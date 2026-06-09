@@ -75,8 +75,6 @@ const confirmBooking = () => {
     ...bookingStore.$state,
   });
 
-  bookingStore.reset();
-
-  router.push({ name: 'Home' }); // or success page
+  router.push({ name: 'BookingDetails' }); // or success page
 };
 </script>

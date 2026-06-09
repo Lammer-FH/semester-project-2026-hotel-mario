@@ -30,6 +30,13 @@ export interface BookingResponseDto{
 export interface HotelDto{
   name: string,
   address: AddressDto
+  contact: ContactDto,
+  directions: string
+}
+
+export interface ContactDto{
+  phone: string,
+  email: string
 }
 
 export interface AddressDto{
@@ -130,6 +137,25 @@ export function getRoom(roomId: number): Promise<RoomDto>
   return request(`/v1/rooms/${roomId}`)
 }
 
-export function bookRoom(bookingDto: BookingDto){
+export function bookRoom(bookingDto: BookingDto): Promise<BookingResponseDto>{
   return postRequest(`/v1/bookings`, bookingDto)
 }
+
+/*
+function deserializeBookRoom(response: string){
+  const dto: BookingResponseDto = BookingResponseDto {
+                id = String(response.id),
+                roomId = Number(response.roomId),
+                firstName = response.firstName,
+                lastName = response.lastName,
+                email = response.email,
+                emailConfirmation = response.emailConfirmation,
+                checkIn = response.checkIn,
+                checkOut = response.checkOut,
+                breakfast = response.breakfast,
+
+                address = AddressDto(
+
+                )
+}
+*/

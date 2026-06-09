@@ -6,6 +6,7 @@ import imprint from '../views/imprint.vue'
 import about from '../views/about.vue'
 import BookingView from '@/views/BookingView.vue';
 import BookingReviewView from '@/views/BookingReviewView.vue';
+import BookingDetailsView from '@/views/BookingDetailsView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,7 +42,12 @@ const routes: Array<RouteRecordRaw> = [
   path: '/booking/:roomId/review',
   name: 'BookingReview',
   component: BookingReviewView,
-}
+  },
+  {
+  path: '/booking/details',
+  name: 'BookingDetails',
+  component: BookingDetailsView,
+  }
 ]
 
 const router = createRouter({
