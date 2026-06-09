@@ -1,10 +1,18 @@
 
 .background {
-  color: #000000;
+  color: var(--ion-text-color);
 }
 
 .content-background {
   background: rgb(41, 36, 36);
+}
+
+/* Pierce the ion-toolbar shadow DOM so the header/footer stay dark with white
+   text in both light and dark mode. */
+.content-background ion-toolbar {
+  --background: rgb(41, 36, 36);
+  --color: #ffffff;
+  --border-color: rgb(41, 36, 36);
 }
 
 .page-wrapper {
@@ -27,7 +35,6 @@
   margin-top: 30px;
   border-radius: 16px;
   box-shadow: 0 5px 20px rgba(31, 30, 29, 0.1);
-  color: #ffffff;
 }
 
 .btn {
@@ -117,7 +124,7 @@ img {
 }
 
 .footer-content {
-  color: white;
+  color: var(--ion-toolbar-color, #ffffff);
   padding: 15px;
 }
 
