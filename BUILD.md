@@ -104,21 +104,40 @@ semester-project-2026-hotel-mario/
 ├── backend/                          # Spring Boot 4 application
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── java/                # Application source code
+│   │   │   ├── java/
+│   │   │   │   └── .../hotelmario/
+│   │   │   │       ├── components/
+│   │   │   │       │   ├── rooms/    # api, service, repository, model
+│   │   │   │       │   └── bookings/ # api, service, repository, model
+│   │   │   │       ├── common/       # shared DTOs, exception handler
+│   │   │   │       └── config/       # DataSeeder, OpenAPI, WebConfig
 │   │   │   └── resources/
-│   │   │       └── application.properties  # Spring Boot configuration
-│   │   └── test/                    # Unit tests
-│   ├── build.gradle                 # Gradle build configuration
-│   ├── gradlew                      # Gradle wrapper (Unix)
-│   ├── gradlew.bat                  # Gradle wrapper (Windows)
-│   └── settings.gradle              # Gradle settings
-|── frontend/
-|   |── src/...                      # Vue applcation
-|   |── package.json                 # Vue & Ionic dependencies
+│   │   │       └── application.properties
+│   │   └── test/
+│   ├── .env.example                  # Backend environment variable reference
+│   ├── build.gradle
+│   ├── gradlew / gradlew.bat
+│   └── settings.gradle
+├── frontend/                         # Ionic + Vue 3 SPA
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── atoms/                # ExtraChip, AvailabilityBadge
+│   │   │   ├── molecules/            # RoomCard, DatePickerModal
+│   │   │   └── organisms/            # RoomList, FilterBar
+│   │   ├── views/                    # home, about, imprint, RoomSelectionView
+│   │   ├── stores/                   # useRoomStore, useFilterStore (Pinia)
+│   │   ├── services/                 # api.ts (fetch-based API client)
+│   │   └── router/
+│   ├── public/images/                # Room images (rooms/1-7.jpg) + slideshow SVGs
+│   ├── .env.example                  # Frontend environment variable reference
+│   └── package.json
 ├── docker-compose.yml               # Docker Compose orchestration
-├── Dockerfile                       # Multi-stage Docker build
+├── docker-compose.debug.yml         # Debug stack (JDWP port 5005)
+├── Dockerfile                       # Backend multi-stage Docker build
+├── Dockerfile-Frontend              # Frontend multi-stage Docker build
 ├── startup.sh                       # Linux/macOS startup script
 ├── startup.bat                      # Windows startup script
+├── DEMO.md                          # Seed data reference and demo scenarios
 ├── BUILD.md                         # This file
 └── README.md                        # Project overview
 ```
@@ -182,10 +201,23 @@ docker compose build
 ```bash
 cd frontend
 
-# Start vue.js in development mode
-ionic serve
+# Copy and configure environment
+cp .env.example .env
+# Edit .env and set VITE_API_URL=http://localhost:8080/api if backend runs locally
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
 ```
-**Access Frontend build in Browser via:** `http://localhost:8100` 
+
+**Access frontend in browser:** `http://localhost:5173`
+
+To build a production bundle:
+```bash
+npm run build
+```
 
 ---
 
@@ -280,7 +312,34 @@ docker compose -f docker-compose.debug.yml down -v
 
 ### Environment Variables
 
-#### Spring Boot Container
+All environment-specific values are configurable via environment variables. Each has a safe default for local development.
+
+#### Backend
+
+| Variable | Default | Description |
+|---|---|---|
+| `DB_URL` | `jdbc:mysql://localhost:3306/hotelmario_db?...` | MySQL JDBC connection string |
+| `DB_USERNAME` | `hotelmario` | Database user |
+| `DB_PASSWORD` | `hotelmario_password` | Database password |
+| `DB_DDL_AUTO` | `update` | Hibernate DDL mode — use `validate` in production |
+| `API_PREFIX` | `/api` | Backend context path |
+
+Copy `backend/.env.example` to `backend/.env` and adjust values for local development.
+
+#### Frontend
+
+| Variable | Default | Description |
+|---|---|---|
+| `VITE_API_URL` | `/api` | Base URL for API calls |
+
+Copy `frontend/.env.example` to `frontend/.env`. When running the frontend dev server directly against a local backend, set:
+```
+VITE_API_URL=http://localhost:8080/api
+```
+
+#### Docker Compose environment (spring-boot service)
+
+Spring Boot automatically maps `SPRING_DATASOURCE_URL` → `spring.datasource.url` etc. via relaxed binding. The `docker-compose.yml` already sets these to point at the MySQL container:
 
 ```yaml
 SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hotelmario_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
@@ -289,31 +348,6 @@ SPRING_DATASOURCE_PASSWORD: hotelmario_password
 SPRING_JPA_HIBERNATE_DDL_AUTO: update
 JAVA_OPTS: -Xmx512m -Xms256m
 ```
-
-- **DATASOURCE_URL:** MySQL connection string (uses Docker DNS `mysql:3306`)
-- **HIBERNATE_DDL_AUTO:** `update` (auto-creates/updates tables), change to `validate` for production
-
-### Application Properties
-
-**File:** `backend/src/main/resources/application.properties`
-
-```properties
-spring.application.name=hotelmario
-
-# Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/hotelmario_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=hotelmario
-spring.datasource.password=hotelmario_password
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-# JPA/Hibernate Configuration
-spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.format_sql=true
-```
-
-**To modify:** Edit the file and rebuild the Docker image.
 
 ### Ports
 
@@ -421,6 +455,31 @@ cd backend
 1. Install "Extension Pack for Java"
 2. Install "Gradle for Java"
 3. Open workspace in `backend/` folder
+
+---
+
+## Seed Data
+
+The application seeds 7 rooms, 7 extras, and 9 bookings on first startup. The seeder only runs when the database is empty (`roomRepository.count() == 0`).
+
+To reset and re-seed (e.g. after changing `DataSeeder.java`):
+
+```bash
+# Connect to the MySQL container
+docker compose exec mysql mysql -u hotelmario -photelmario_password hotelmario_db
+
+# Clear all data (order respects foreign keys)
+DELETE FROM booking;
+DELETE FROM room_extra;
+DELETE FROM room;
+DELETE FROM extra;
+EXIT;
+
+# Restart the backend — seeder runs automatically
+docker compose restart spring-boot
+```
+
+See [DEMO.md](DEMO.md) for the full list of seeded rooms, extras, and suggested date ranges for the availability demo.
 
 ---
 
@@ -628,5 +687,5 @@ This project is compatible with multiple Java distributions. Here's a comparison
 
 ---
 
-**Last Updated:** 2026-05-26  
-**Version:** 1.0
+**Last Updated:** 2026-05-30  
+**Version:** 1.1

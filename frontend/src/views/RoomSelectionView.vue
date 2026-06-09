@@ -67,12 +67,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons } from '@ionic/vue'
 
-import FilterBar from '@/components/FilterBar.vue'
-import RoomList from '@/components/RoomList.vue'
-import DatePickerModal from '@/components/DatePickerModal.vue'
+import FilterBar from '@/components/organisms/FilterBar.vue'
+import RoomList from '@/components/organisms/RoomList.vue'
+import DatePickerModal from '@/components/molecules/DatePickerModal.vue'
 
 import { useRoomStore } from '@/stores/useRoomStore'
 import { useFilterStore } from '@/stores/useFilterStore'
@@ -81,7 +81,7 @@ const roomStore = useRoomStore()
 const filterStore = useFilterStore()
 
 const currentPage = ref(1)
-const pageSize = 3
+const pageSize = 5
 const today = new Date().toISOString().split('T')[0]
 
 const filterBarProps = computed(() => ({
@@ -111,6 +111,10 @@ const paginatedRooms = computed(() => {
 
 const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
 const previousPage = () => { if (currentPage.value > 1) currentPage.value-- }
+
+watch(totalPages, (newTotal) => {
+  if (currentPage.value > newTotal) currentPage.value = 1
+})
 
 async function applyFilters() {
   if (filterStore.priceError) return
