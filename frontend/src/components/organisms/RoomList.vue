@@ -1,6 +1,6 @@
 <template>
   <div class="room-list">
-    <RoomCard v-for="room in rooms" :key="room.id" :room="room" />
+    <RoomCard v-for="room in rooms" :key="room.id" :room="room" @select="onSelect"/>
   </div>
 </template>
 
@@ -9,6 +9,14 @@ import RoomCard from '@/components/molecules/RoomCard.vue'
 import type { Room } from '@/stores/useRoomStore'
 
 defineProps<{ rooms: Room[] }>()
+
+const emit = defineEmits<{
+  (e: 'select', room: Room): void;
+}>();
+
+const onSelect = (room: Room) => {
+  emit('select', room);
+};
 </script>
 
 <style scoped>

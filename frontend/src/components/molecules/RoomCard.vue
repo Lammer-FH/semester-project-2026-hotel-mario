@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="room-card">
+  <ion-card class="room-card" @click="handleClick">
     <div class="card-inner">
       <img :src="room.image" :alt="room.name" class="room-image">
       <div class="card-body">
@@ -28,12 +28,22 @@
 </template>
 
 <script setup lang="ts">
-import { IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent } from '@ionic/vue'
+import { IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, alertController } from '@ionic/vue'
 import ExtraChip from '@/components/atoms/ExtraChip.vue'
 import AvailabilityBadge from '@/components/atoms/AvailabilityBadge.vue'
 import type { Room } from '@/stores/useRoomStore'
 
-defineProps<{ room: Room }>()
+const props = defineProps<{
+  room: Room;
+}>();
+
+const emit = defineEmits<{
+  (e: 'select', room: Room): void;
+}>();
+
+const handleClick = () => {
+  emit('select', props.room);
+};
 </script>
 
 <style scoped>

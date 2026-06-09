@@ -4,6 +4,7 @@ import home from '../views/home.vue'
 import RoomSelectionView from '@/views/RoomSelectionView.vue';
 import imprint from '../views/imprint.vue'
 import about from '../views/about.vue'
+import BookingView from '@/views/BookingView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/about',
     name: 'about',
     component: about
+  },
+  {
+    path: '/booking/:roomId',
+    name: 'Booking',
+    component: BookingView
   }
 ]
 

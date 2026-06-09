@@ -41,7 +41,7 @@
           No rooms match your criteria for the selected dates.
         </ion-text>
 
-        <RoomList v-else :rooms="paginatedRooms" />
+        <RoomList v-else :rooms="paginatedRooms" @select="handleRoomSelect" />
 
         <div class="pagination">
           <ion-button @click="previousPage" :disabled="currentPage === 1">Previous</ion-button>
@@ -68,15 +68,17 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons } from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons, alertController } from '@ionic/vue'
 
 import FilterBar from '@/components/organisms/FilterBar.vue'
 import RoomList from '@/components/organisms/RoomList.vue'
 import DatePickerModal from '@/components/molecules/DatePickerModal.vue'
 
-import { useRoomStore } from '@/stores/useRoomStore'
+import { Room, useRoomStore } from '@/stores/useRoomStore'
 import { useFilterStore } from '@/stores/useFilterStore'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();  
 const roomStore = useRoomStore()
 const filterStore = useFilterStore()
 
@@ -134,6 +136,63 @@ async function onPickerApply() {
   await applyFilters()
 }
 
+const handleRoomSelect = async (room: Room) => {
+  if (!filterStore.checkIn || !filterStore.checkOut) {
+    const alert = await alertController.create({
+      header: 'Dates not set',
+      message: 'Please set Check-in & Check-out first before booking.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+    return;
+  }
+
+  if (room.available === false) {
+    const alert = await alertController.create({
+      header: 'Unavailable',
+      message: 'Room is not available for the selected dates.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+    return;
+  }
+
+  router.push({
+    name: 'Booking',
+    params: { roomId: room.id},
+    query: {
+    checkIn: filterStore.checkIn,
+    checkOut: filterStore.checkOut,
+  },
+  });
+};
+ /*
+async function handleRoomClick(){
+  const room = props.room
+  if (room.available === null) {
+    const alert = await alertController.create({
+      header: 'Dates not set',
+      message: `Please set Check-in & Check-out first, before trying to book a room.`,
+      buttons: ['OK'],
+    });
+    return alert.present();
+  }
+
+  if (room.available === false) {
+    const alert = await alertController.create({
+      header: 'Unavailable',
+      message: `Room is not availabe for the selected date. Please choose another room or try to book at another date.`,
+      buttons: ['OK'],
+    });
+    return alert.present();
+  }
+
+  router.push({name: 'Booking', params: {roomId: room.id}})
+
+  }
+
+const props = defineProps<{ room: Room }>()
+*/ 
 onMounted(() => {
   roomStore.fetchRooms()
 })
