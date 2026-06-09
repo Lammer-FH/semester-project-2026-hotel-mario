@@ -17,7 +17,7 @@
         <FilterBar
           :filters="filterBarProps"
           :priceError="filterStore.priceError"
-          @openDate="(f) => filterStore.openPicker(f, today)"
+          @openDate="(f) => filterStore.openPicker(f)"
           @updatePersons="(v) => filterStore.persons = v"
           @updateMin="(v) => filterStore.minPrice = v ? Number(v) : null"
           @updateMax="(v) => filterStore.maxPrice = v ? Number(v) : null"
@@ -56,11 +56,9 @@
       <DatePickerModal
         :today="today"
         :isOpen="filterStore.pickerOpen"
-        :modelValue="filterStore.pickerTemp"
-        :activeField="filterStore.pickerField"
         :checkIn="filterStore.checkIn"
         :checkOut="filterStore.checkOut"
-        @update:modelValue="(v) => filterStore.pickerTemp = v"
+        :initialField="filterStore.pickerInitialField"
         @apply="onPickerApply"
         @close="filterStore.closePicker"
       />
@@ -133,8 +131,8 @@ async function applyFilters() {
   currentPage.value = 1
 }
 
-async function onPickerApply() {
-  filterStore.applyPicker()
+async function onPickerApply(checkIn: string, checkOut: string) {
+  filterStore.applyPicker(checkIn, checkOut)
   await applyFilters()
 }
 

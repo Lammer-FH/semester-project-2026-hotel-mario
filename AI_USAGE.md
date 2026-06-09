@@ -301,6 +301,33 @@ Two bugs found in the 400 error path: `postRequest` in `api.ts` passed the raw J
 
 ---
 
+## U2 — Room Selection: Pagination Button Group — 2026-06-09 | Claude Sonnet 4.6
+
+The pagination UI was a single "Next" button; the spec requires a button group (Previous / page counter / Next) styled as a connected control.  
+**Generated:** `RoomSelectionView.vue` pagination section replaced with a `.btn-group` flex container holding two `ion-button fill="outline"` elements (Previous / Next) with a `.page-label` span (current / total) between them. CSS uses `border: 1px solid var(--ion-color-primary)` on the group and removes individual button box-shadows to form a single connected unit.  
+**Outcome:** Accepted.  
+**Human decision:** Spec was used directly as the layout reference.
+
+---
+
+## Frontend — Light Mode Readability Fix — 2026-06-09 | Claude Sonnet 4.6
+
+Landing page content (`.info-box`) was invisible in light mode because `color: #ffffff` was hardcoded. Ion-toolbar text was also white-on-white due to Ionic's shadow DOM eating the inherited color.  
+**Generated:** Removed `color: #ffffff` from `.info-box`; changed `.background` text color to `var(--ion-text-color)`; added shadow DOM overrides for `.content-background ion-toolbar` via `--background`, `--color`, `--border-color` CSS custom properties; changed `.footer-content` to `color: var(--ion-toolbar-color, #ffffff)` for dark mode fallback.  
+**Outcome:** Accepted.  
+**Human decision:** We isolated the Ionic shadow DOM as the reason a plain `color` override was insufficient and used CSS custom properties to pierce it.
+
+---
+
+## U2 — Room Selection: Two-Step Date Range Picker — 2026-06-09 | Claude Sonnet 4.6
+
+The previous date flow opened two separate modals (one for check-in, one for check-out), requiring the user to open, confirm, and close twice. This was identified as poor UX relative to a single combined range-picker interaction.  
+**Generated:** `DatePickerModal.vue` fully rewritten as a two-step modal: step 1 picks check-in (auto-advances to step 2 after 150 ms for visual feedback), step 2 picks check-out with the selected check-in highlighted via `highlightedDates`, a summary bar shows both dates, a single Apply button emits both values. Header toolbar shows Back (step 2) or Close (step 1). `useFilterStore` simplified: removed `pickerField` and `pickerTemp`, added `pickerInitialField`; `openPicker(field)` sets initial step, `applyPicker(checkIn, checkOut)` replaces `setDate`. `RoomSelectionView.vue` bindings and `onPickerApply` updated accordingly. `main.ts` registers `arrowBack` and `close` icons.  
+**Outcome:** Accepted.  
+**Human decision:** We chose to keep both temp dates in the modal's local state (not the store) so partial selection never pollutes the filter until Apply is pressed.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.

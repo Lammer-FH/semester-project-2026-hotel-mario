@@ -7,7 +7,7 @@ import { IonicVue } from '@ionic/vue';
 import { addIcons } from 'ionicons';
 import {
   wifi, cafe, car, thermometer, lockClosed, eye, people,
-  location, bed, restaurant,
+  location, bed, restaurant, arrowBack, close,
 } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
@@ -43,7 +43,7 @@ import './theme/variables.css';
 
 addIcons({
   wifi, cafe, car, thermometer, 'lock-closed': lockClosed, eye, people,
-  location, bed, restaurant,
+  location, bed, restaurant, 'arrow-back': arrowBack, close,
 });
 
 const app = createApp(App)

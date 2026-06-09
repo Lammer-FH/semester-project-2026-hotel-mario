@@ -13,8 +13,7 @@ export const useFilterStore = defineStore('filters', () => {
 
   // Date picker modal state
   const pickerOpen = ref(false)
-  const pickerField = ref<'checkIn' | 'checkOut' | null>(null)
-  const pickerTemp = ref<string | null>(null)
+  const pickerInitialField = ref<'checkIn' | 'checkOut'>('checkIn')
 
   const priceError = computed(() => {
     if (minPrice.value != null && minPrice.value < 0) return 'Price must be ≥ 0'
@@ -27,21 +26,14 @@ export const useFilterStore = defineStore('filters', () => {
 
   const datesSelected = computed(() => !!checkIn.value && !!checkOut.value)
 
-  function setDate(field: 'checkIn' | 'checkOut', value: string | null) {
-    if (field === 'checkIn') checkIn.value = value
-    else checkOut.value = value
-  }
-
-  function openPicker(field: 'checkIn' | 'checkOut', today: string) {
-    pickerField.value = field
-    pickerTemp.value = (field === 'checkIn' ? checkIn.value : checkOut.value) ?? today
+  function openPicker(field: 'checkIn' | 'checkOut' = 'checkIn') {
+    pickerInitialField.value = field
     pickerOpen.value = true
   }
 
-  function applyPicker() {
-    if (pickerField.value) {
-      setDate(pickerField.value, pickerTemp.value?.split('T')[0] ?? null)
-    }
+  function applyPicker(newCheckIn: string, newCheckOut: string) {
+    checkIn.value = newCheckIn
+    checkOut.value = newCheckOut
     pickerOpen.value = false
   }
 
@@ -59,9 +51,9 @@ export const useFilterStore = defineStore('filters', () => {
 
   return {
     checkIn, checkOut, persons, minPrice, maxPrice, availableOnly, dateError,
-    pickerOpen, pickerField, pickerTemp,
+    pickerOpen, pickerInitialField,
     priceError, datesSelected,
-    setDate, openPicker, applyPicker, closePicker,
+    openPicker, applyPicker, closePicker,
     clearDateError, setDateError,
   }
 })
