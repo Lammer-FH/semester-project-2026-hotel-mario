@@ -366,6 +366,15 @@ The previous date flow opened two separate modals (one for check-in, one for che
 
 ---
 
+## U2 — Re-check Availability on Room Selection Mount — 2026-06-09 | Claude Sonnet 4.6
+
+When navigating back to room selection with dates already set in the filter store, availability badges were stale — `onMounted` only fetched rooms without re-checking availability.  
+**Generated:** `onMounted` made `async`; after `await fetchRooms(1)`, checks `filterStore.datesSelected` and calls `checkAvailability` if true, propagating any error to the date error banner.  
+**Outcome:** Accepted.  
+**Human decision:** We identified the stale-badge scenario and directed the fix to use the existing `checkAvailability` path rather than adding new logic.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.
