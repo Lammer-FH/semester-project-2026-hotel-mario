@@ -155,6 +155,7 @@ async function submit() {
   response.value = await bookingStore.sendBooking();
   error.value = bookingStore.error;
   loading.value = false;
+  if (!error.value) bookingStore.reset();
 }
 
 onMounted(submit);
