@@ -40,7 +40,7 @@
           <DetailRow label="Check-out" :value="response.checkOut" />
           <DetailRow label="Breakfast" :value="response.breakfast ? 'Yes' : 'No'" />
 
-          <ion-divider class="ion-margin-vertical" />
+          <hr class="section-divider" />
 
           <ion-card-title>Room</ion-card-title>
 
@@ -66,7 +66,7 @@
             </div>
           </div>
 
-          <ion-divider class="ion-margin-vertical" />
+          <hr class="section-divider" />
 
           <ion-card-title>Hotel</ion-card-title>
           <DetailRow label="Name" :value="response.hotel.name" />
@@ -168,6 +168,12 @@ function print() { window.print() }
   padding: 0 16px 16px;
   gap: 8px;
 }
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--ion-color-light-shade);
+  margin: 12px 0;
+}
 </style>
 
 <!-- Global print styles — not scoped so they reach Ionic shadow DOM -->
@@ -236,8 +242,10 @@ function print() { window.print() }
     page-break-inside: avoid;
   }
 
-  ion-divider {
-    background: #cccccc !important;
+  .section-divider {
+    border: none;
+    border-top: 1px solid #cccccc;
+    margin: 8px 0;
   }
 }
 </style>

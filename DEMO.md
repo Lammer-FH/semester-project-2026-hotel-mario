@@ -7,12 +7,12 @@ This document describes the seed data pre-loaded on first startup and suggests d
 | # | Name | Price | Extras |
 |---|---|---|---|
 | 1 | Standard Double Room | €89.99 | Wi-Fi, Parking |
-| 2 | Superior Double Room | €119.99 | Wi-Fi, Breakfast, Parking |
-| 3 | Deluxe Room | €149.99 | Wi-Fi, Breakfast, AC, Safe |
-| 4 | Junior Suite | €199.99 | Wi-Fi, Breakfast, AC, Safe, Panorama View |
-| 5 | Executive Suite | €279.99 | Wi-Fi, Breakfast, AC, Safe, Panorama View, Lounge Access |
-| 6 | Standard Double Room | €99.99 | Wi-Fi, Breakfast |
-| 7 | Superior Double Room | €139.99 | Wi-Fi, Breakfast, AC, Safe |
+| 2 | Superior Double Room | €119.99 | Wi-Fi, Coffee Machine, Parking |
+| 3 | Deluxe Room | €149.99 | Wi-Fi, Coffee Machine, AC, Safe |
+| 4 | Junior Suite | €199.99 | Wi-Fi, Coffee Machine, AC, Safe, Panorama View |
+| 5 | Executive Suite | €279.99 | Wi-Fi, Coffee Machine, AC, Safe, Panorama View, Lounge Access |
+| 6 | Standard Double Room | €99.99 | Wi-Fi, Coffee Machine |
+| 7 | Superior Double Room | €139.99 | Wi-Fi, Coffee Machine, AC, Safe |
 
 Page 1 shows rooms 1–5, page 2 shows rooms 6–7.
 

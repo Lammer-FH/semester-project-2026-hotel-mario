@@ -12,19 +12,17 @@ export interface BookingDto{
 }
 
 export interface BookingResponseDto{
-  id: number,
-  roomId: number,
+  id: string,
   firstName: string,
   lastName: string,
   email: string,
-  emailConfirmation: string
   checkIn: string,
   checkOut: string,
   breakfast: boolean
+  createdAt: string
 
   room: RoomDto
   hotel: HotelDto
-
 }
 
 export interface HotelDto{

@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/vue'
-import { computed, reactive } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/useRoomStore'
 import RoomCard from '@/components/molecules/RoomCard.vue';

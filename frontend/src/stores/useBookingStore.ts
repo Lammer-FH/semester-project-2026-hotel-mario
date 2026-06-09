@@ -46,7 +46,6 @@ export const useBookingStore = defineStore('booking', {
             results = await bookRoom(dto);
         }
         catch (e: any) {
-            console.log(e)
             this.error = true;
             this.errorMessage = e.message;
             this.errorStatus = e.status ?? 0;
