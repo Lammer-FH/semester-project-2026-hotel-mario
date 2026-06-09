@@ -109,7 +109,7 @@
 <script setup lang="ts">
 // Import CSS
 import '@/theme/hoteltheme.css';
-import Footer from '@/components/molecules/Footer.vue';
+import Footer from '@/components/molecules/SharedFooter.vue';
 
 import {
   IonContent,
