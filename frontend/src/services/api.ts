@@ -58,6 +58,7 @@ export interface RoomDto {
   id: number
   title: string
   description: string
+  imageUrl: string
   pricePerNight: number
   extras: ExtraDto[]
 }
