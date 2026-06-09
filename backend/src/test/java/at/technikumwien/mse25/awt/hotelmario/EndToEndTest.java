@@ -38,11 +38,11 @@ class EndToEndTest {
     // --- Seeded room list ---
 
     @Test
-    void rooms_allFiveSeededRoomsAreReturned() throws Exception {
+    void rooms_allSevenSeededRoomsAreReturned() throws Exception {
         mockMvc.perform(get("/v1/rooms").param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(5))
-                .andExpect(jsonPath("$.content.length()").value(5));
+                .andExpect(jsonPath("$.totalElements").value(7))
+                .andExpect(jsonPath("$.content.length()").value(7));
     }
 
     @Test
@@ -108,10 +108,10 @@ class EndToEndTest {
 
     @Test
     void availability_overlappingBooking_returnsAvailableFalse() throws Exception {
-        // Room 3 (Deluxe) is booked 2026-06-05 to 2026-06-10
+        // Room 3 (Deluxe) is booked 2026-08-20 to 2026-08-25 (Peter Huber, seeded)
         mockMvc.perform(get("/v1/rooms/3/availability")
-                .param("checkIn",  "2026-06-07")
-                .param("checkOut", "2026-06-09"))
+                .param("checkIn",  "2026-08-22")
+                .param("checkOut", "2026-08-24"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(false));
     }

@@ -43,15 +43,15 @@ class RoomAvailabilityControllerTest {
 
     @Test
     void checkRoomAvailability_roomBooked_returnsFalse() throws Exception {
-        LocalDate checkIn = LocalDate.of(2026, 6, 7);
-        LocalDate checkOut = LocalDate.of(2026, 6, 9);
+        LocalDate checkIn = LocalDate.now().plusDays(5);
+        LocalDate checkOut = LocalDate.now().plusDays(7);
 
         when(roomAvailabilityService.checkAvailability(3L, checkIn, checkOut))
                 .thenReturn(Optional.of(false));
 
         mockMvc.perform(get("/v1/rooms/3/availability")
-                .param("checkIn", "2026-06-07")
-                .param("checkOut", "2026-06-09"))
+                .param("checkIn",  checkIn.toString())
+                .param("checkOut", checkOut.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(false));
     }
