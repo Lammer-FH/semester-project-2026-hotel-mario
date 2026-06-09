@@ -160,10 +160,6 @@ const handleRoomSelect = async (room: Room) => {
   router.push({
     name: 'Booking',
     params: { roomId: room.id},
-    query: {
-    checkIn: filterStore.checkIn,
-    checkOut: filterStore.checkOut,
-  },
   });
 };
  /*

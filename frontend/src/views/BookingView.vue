@@ -13,8 +13,6 @@
       />
       <BookingForm
         :room-id="roomId"
-        :check-in="checkIn",
-        :check-out="checkOut"
         @submit="submitBooking"
       />
     </ion-content>
@@ -22,30 +20,27 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonList, IonItem, IonCheckbox, IonLabel, IonInput } from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle} from '@ionic/vue'
 import { computed, reactive } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/useRoomStore'
 import RoomCard from '@/components/molecules/RoomCard.vue';
 import BookingForm from '@/components/molecules/BookingForm.vue';
 import type { LocationQueryValue } from 'vue-router';
+import { useBookingStore } from '@/stores/useBookingStore';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const roomStore = useRoomStore()
 const route = useRoute();
 
-const checkIn = computed(() => toString(route.query.checkIn));
-const checkOut = computed(() => toString(route.query.checkOut));
+const router = useRouter();
 
-const booking = reactive({
-  roomId: Number(route.params.roomId),
-  firstName: '',
-  lastName: '',
-  email: '',
-  emailConfirmation: '',
-  checkIn: checkIn,
-  checkOut: checkOut,
-  breakfast: false,
-});
+const bookingStore = useBookingStore();
+const filterStore = useFilterStore();
+
+bookingStore.roomId = Number(route.params.roomId);
+bookingStore.checkIn = toString(filterStore.checkIn);
+bookingStore.checkOut = toString(filterStore.checkOut);
 
 const roomId = Number(route.params.roomId);
 
@@ -56,17 +51,17 @@ const room = computed(() =>
 );
 
 
-function toString(value: LocationQueryValue | LocationQueryValue[] | null): string {
-  if (Array.isArray(value)) return value[0] ?? '';
+function toString(value: string |  null): string {
   if (typeof value === 'string') return value;
   return '';
 }
 
 const submitBooking = () => {
-  console.log('Booking submitted:', booking);
-  console.log(room);
-  console.log(roomStore.rooms);
-
-  // call API or Pinia action here
+  router.push({
+    name: 'BookingReview',
+    params: {
+      roomId: bookingStore.roomId,
+    },
+  });
 };
 </script>
