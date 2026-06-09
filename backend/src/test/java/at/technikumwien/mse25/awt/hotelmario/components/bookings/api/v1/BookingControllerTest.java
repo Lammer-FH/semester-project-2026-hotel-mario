@@ -1,5 +1,6 @@
 package at.technikumwien.mse25.awt.hotelmario.components.bookings.api.v1;
 
+import at.technikumwien.mse25.awt.hotelmario.common.exception.RoomNotAvailableException;
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.AddressDto;
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.BookingConfirmationDto;
 import at.technikumwien.mse25.awt.hotelmario.components.bookings.api.dtos.v1.ContactDto;
@@ -157,6 +158,23 @@ class BookingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validBody(checkIn, checkOut, "jane@example.com", "jane@example.com")))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void createBooking_roomNotAvailable_returns409() throws Exception {
+        LocalDate checkIn = LocalDate.now().plusDays(1);
+        LocalDate checkOut = LocalDate.now().plusDays(5);
+        BookingEntity entity = new BookingEntity();
+
+        when(bookingMapper.toEntity(any())).thenReturn(entity);
+        when(bookingService.create(entity)).thenThrow(new RoomNotAvailableException(1L));
+
+        mockMvc.perform(post("/v1/bookings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validBody(checkIn, checkOut, "jane@example.com", "jane@example.com")))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.errors[0].field").value("roomId"));
     }
 
     private String validBody(LocalDate checkIn, LocalDate checkOut, String email, String emailConfirmation) {
