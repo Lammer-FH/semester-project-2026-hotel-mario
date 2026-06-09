@@ -274,6 +274,15 @@ The booking endpoint (`POST /api/v1/bookings`) was already scaffolded during Iss
 
 ---
 
+## Issue #39 — Display Critical Booking Errors to User (409 handling) — 2026-06-09 | Claude Sonnet 4.6
+
+409 conflict was not distinguished from other errors: `useBookingStore` had no status code field, and `BookingDetailsView.vue` showed a generic error card with a Back button for all failures.  
+**Generated:** `errorStatus` added to store state, set from `e.status` on catch; view now shows "Room no longer available" title and "Choose another room" button (navigates to room selection) for 409, generic error message and Back button for all other statuses.  
+**Outcome:** Accepted.  
+**Human decision:** We identified the missing 409 branch and directed the fix to use the existing `{ name: 'Room' }` route.
+
+---
+
 ## Issue #39 — Display Critical Booking Errors to User — 2026-06-09 | Claude Sonnet 4.6
 
 Two bugs found in the 400 error path: `postRequest` in `api.ts` passed the raw JSON error body as the error message instead of parsing it; `useBookingStore` stored the full Error object (`e`) in `errorMessage` instead of `e.message`, causing `[object Object]` in the UI.  

@@ -13,6 +13,7 @@ export const useBookingStore = defineStore('booking', {
     breakfast: false,
     error: false,
     errorMessage: '',
+    errorStatus: 0,
   }),
 
   actions: {
@@ -45,6 +46,7 @@ export const useBookingStore = defineStore('booking', {
             console.log(e)
             this.error = true;
             this.errorMessage = e.message;
+            this.errorStatus = e.status ?? 0;
             results = null;
         }
         return results

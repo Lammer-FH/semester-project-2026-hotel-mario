@@ -14,15 +14,15 @@
       <!-- Error message -->
       <ion-card v-else-if="error">
         <ion-card-header>
-          <ion-card-title>Error</ion-card-title>
+          <ion-card-title>{{ bookingStore.errorStatus === 409 ? 'Room no longer available' : 'Booking Error' }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <ion-item lines="none">
-            <ion-label><strong>Booking Error:</strong> {{ bookingStore.errorMessage }}</ion-label>
-            </ion-item>
-          
+          <ion-item lines="none">
+            <ion-label>{{ bookingStore.errorStatus === 409 ? 'This room was booked by someone else. Please choose another room.' : bookingStore.errorMessage }}</ion-label>
+          </ion-item>
         </ion-card-content>
-        <ion-button expand="block" @click="goBack">Back</ion-button>
+        <ion-button v-if="bookingStore.errorStatus === 409" expand="block" @click="goToRoomSelection">Choose another room</ion-button>
+        <ion-button v-else expand="block" @click="goBack">Back</ion-button>
       </ion-card>
 
       <!-- Success response -->
@@ -156,5 +156,6 @@ onMounted(async () => {
 
 const goBack = () => router.back();
 const goHome = () => router.push({ name: 'home' });
+const goToRoomSelection = () => router.push({ name: 'Room' });
 
 </script>
