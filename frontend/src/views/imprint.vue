@@ -1,15 +1,6 @@
 <template>
   <ion-page class="background">
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Boutique Hotel Technikum</ion-title>
-        <div class = "button-group margin-left-15">
-          <ion-button router-link="/home"> Home </ion-button> 
-          <ion-button router-link="/about"> About Us </ion-button> 
-          <ion-button router-link="/room"> Rooms </ion-button>
-        </div>
-      </ion-toolbar>
-    </ion-header>
+    <Header />
 
     <ion-content :fullscreen="true">
       <div class="page-wrapper">
@@ -128,6 +119,7 @@
 <script setup lang="ts">
 // Import CSS
 import '@/theme/hoteltheme.css';
+import Header from '@/components/molecules/SharedHeader.vue';
 
 import {
   IonContent,
