@@ -11,6 +11,8 @@ export const useBookingStore = defineStore('booking', {
     checkIn: '',
     checkOut: '',
     breakfast: false,
+    error: false,
+    errorMessage: '',
   }),
 
   actions: {
@@ -24,7 +26,7 @@ export const useBookingStore = defineStore('booking', {
       this.checkOut = '';
       this.breakfast = false;
     },
-    async sendBooking(): Promise<BookingResponseDto | any> {
+    async sendBooking(): Promise<BookingResponseDto | null> {
         const dto: BookingDto = {
             roomId: this.roomId,
             firstName: this.firstName,
@@ -40,7 +42,10 @@ export const useBookingStore = defineStore('booking', {
             results = await bookRoom(dto);
         }
         catch (e: any) {
-            results = e;
+            console.log(e)
+            this.error = true;
+            this.errorMessage = e;
+            results = null;
         }
         return results
     },

@@ -17,7 +17,10 @@
           <ion-card-title>Error</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          {{ error }}
+            <ion-item lines="none">
+            <ion-label><strong>Booking Error:</strong> {{ bookingStore.errorMessage }}</ion-label>
+            </ion-item>
+          
         </ion-card-content>
         <ion-button expand="block" @click="goBack">Back</ion-button>
       </ion-card>
@@ -143,18 +146,12 @@ const router = useRouter();
 
 const loading = ref(true);
 const response = ref<BookingResponseDto | null>(null);
-const error = ref<string | null>(null);
+const error = ref<boolean>(false);
 
 onMounted(async () => {
   response.value = await bookingStore.sendBooking()
+  error.value = bookingStore.error
   loading.value = false;
-  console.log("Backen retunrned: ", response);
-  /*
-  if (response.value === null)
-  {
-    error.value = "An e"
-  }
-    */
 });
 
 const goBack = () => router.back();
