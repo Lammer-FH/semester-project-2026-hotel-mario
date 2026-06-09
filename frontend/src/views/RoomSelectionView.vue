@@ -166,8 +166,12 @@ const handleRoomSelect = async (room: Room) => {
   router.push({ name: 'Booking', params: { roomId: room.id } })
 }
 
-onMounted(() => {
-  roomStore.fetchRooms(1)
+onMounted(async () => {
+  await roomStore.fetchRooms(1)
+  if (filterStore.datesSelected) {
+    const err = await roomStore.checkAvailability(filterStore.checkIn!, filterStore.checkOut!)
+    if (err) filterStore.setDateError(err)
+  }
 })
 </script>
 
