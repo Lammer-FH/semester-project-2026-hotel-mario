@@ -33,98 +33,47 @@
         </ion-card-header>
         <ion-card-content>
 
-          <!-- Booking Basics -->
           <ion-card-subtitle>Booking Details</ion-card-subtitle>
-
-          <ion-item lines="none">
-            <ion-label><strong>Booking ID:</strong> {{ response.id }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Name:</strong> {{ response.firstName }} {{ response.lastName }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Check-in:</strong> {{ response.checkIn }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Check-out:</strong> {{ response.checkOut }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Breakfast:</strong> {{ response.breakfast ? 'Yes' : 'No' }}</ion-label>
-          </ion-item>
+          <DetailRow label="Booking ID" :value="response.id" />
+          <DetailRow label="Name" :value="`${response.firstName} ${response.lastName}`" />
+          <DetailRow label="Check-in" :value="response.checkIn" />
+          <DetailRow label="Check-out" :value="response.checkOut" />
+          <DetailRow label="Breakfast" :value="response.breakfast ? 'Yes' : 'No'" />
 
           <ion-divider class="ion-margin-vertical" />
 
-          <!-- ROOM DETAILS -->
           <ion-card-title>Room</ion-card-title>
 
           <img
-            v-if="response.room.imageUrl"
-            :src="response.room.imageUrl"
+            :src="`/images/rooms/${response.room.id}.jpg`"
             :alt="response.room.title"
             class="room-image"
           />
 
-          <ion-item lines="none">
-            <ion-label><strong>Title:</strong> {{ response.room.title }}</ion-label>
-          </ion-item>
+          <DetailRow label="Title" :value="response.room.title" />
+          <DetailRow label="Description" :value="response.room.description" />
+          <DetailRow label="Price per night" :value="`€${response.room.pricePerNight}`" />
 
-          <ion-item lines="none">
-            <ion-label><strong>Description:</strong> {{ response.room.description }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Price per night:</strong> €{{ response.room.pricePerNight }}</ion-label>
-          </ion-item>
-
-          <!-- Room Extras -->
           <div class="ion-margin-top">
             <ion-card-subtitle>Extras</ion-card-subtitle>
             <div class="extras-row">
-              <ion-chip
+              <ExtraChip
                 v-for="extra in response.room.extras"
                 :key="extra.id"
-                class="ion-margin-end ion-margin-bottom"
-              >
-                <ion-icon :name="extra.icon" />
-                <ion-label>{{ extra.name }}</ion-label>
-              </ion-chip>
+                :name="extra.name"
+                :icon="extra.icon"
+              />
             </div>
           </div>
 
           <ion-divider class="ion-margin-vertical" />
 
-          <!-- HOTEL DETAILS -->
           <ion-card-title>Hotel</ion-card-title>
-
-          <ion-item lines="none">
-            <ion-label><strong>Name:</strong> {{ response.hotel.name }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label>
-              <strong>Address:</strong>
-              {{ response.hotel.address.street }},
-              {{ response.hotel.address.city }},
-              {{ response.hotel.address.postalCode }},
-              {{ response.hotel.address.country }}
-            </ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Phone:</strong> {{ response.hotel.contact.phone }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Email:</strong> {{ response.hotel.contact.email }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label><strong>Directions:</strong> {{ response.hotel.directions }}</ion-label>
-          </ion-item>
+          <DetailRow label="Name" :value="response.hotel.name" />
+          <DetailRow label="Address" :value="hotelAddress" />
+          <DetailRow label="Phone" :value="response.hotel.contact.phone" />
+          <DetailRow label="Email" :value="response.hotel.contact.email" />
+          <DetailRow label="Directions" :value="response.hotel.directions" />
 
         </ion-card-content>
 
@@ -140,30 +89,32 @@
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader,
-  IonCardContent, IonButton, IonCardTitle, IonSpinner, IonIcon, IonLabel,
-  IonCardSubtitle, IonItem, IonChip } from '@ionic/vue'
-import { computed, onMounted, ref } from 'vue';
-import { useBookingStore } from '@/stores/useBookingStore';
-import { useRouter } from 'vue-router';
-import { BookingResponseDto } from '@/services/api';
+  IonCardContent, IonButton, IonCardTitle, IonSpinner, IonLabel,
+  IonCardSubtitle, IonItem } from '@ionic/vue'
+import { computed, onMounted, ref } from 'vue'
+import { useBookingStore } from '@/stores/useBookingStore'
+import { useRouter } from 'vue-router'
+import { BookingResponseDto } from '@/services/api'
+import DetailRow from '@/components/atoms/DetailRow.vue'
+import ExtraChip from '@/components/atoms/ExtraChip.vue'
 
-const bookingStore = useBookingStore();
-const router = useRouter();
+const bookingStore = useBookingStore()
+const router = useRouter()
 
-const loading = ref(true);
-const response = ref<BookingResponseDto | null>(null);
-const error = ref<boolean>(false);
+const loading = ref(true)
+const response = ref<BookingResponseDto | null>(null)
+const error = ref<boolean>(false)
 
 async function submit() {
-  loading.value = true;
-  error.value = false;
-  response.value = await bookingStore.sendBooking();
-  error.value = bookingStore.error;
-  loading.value = false;
-  if (!error.value) bookingStore.reset();
+  loading.value = true
+  error.value = false
+  response.value = await bookingStore.sendBooking()
+  error.value = bookingStore.error
+  loading.value = false
+  if (!error.value) bookingStore.reset()
 }
 
-onMounted(submit);
+onMounted(submit)
 
 const isRetryable = computed(() => bookingStore.errorStatus === 0 || bookingStore.errorStatus >= 500)
 
@@ -181,13 +132,17 @@ const errorBody = computed(() => {
   return bookingStore.errorMessage
 })
 
-const goBack = () => router.back();
-const goHome = () => router.push({ name: 'home' });
-const goToRoomSelection = () => router.push({ name: 'Room' });
+const hotelAddress = computed(() => {
+  if (!response.value) return ''
+  const a = response.value.hotel.address
+  return `${a.street}, ${a.city}, ${a.postalCode}, ${a.country}`
+})
 
-function print() {
-  window.print();
-}
+const goBack = () => router.back()
+const goHome = () => router.push({ name: 'home' })
+const goToRoomSelection = () => router.push({ name: 'Room' })
+
+function print() { window.print() }
 </script>
 
 <style scoped>
@@ -203,6 +158,8 @@ function print() {
 .extras-row {
   display: flex;
   flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
 
 .action-buttons {
@@ -221,13 +178,11 @@ function print() {
     margin: 15mm 20mm;
   }
 
-  /* Hide chrome */
   .no-print,
   ion-spinner {
     display: none !important;
   }
 
-  /* Unclip Ionic's scroll container */
   ion-app,
   ion-page,
   ion-router-outlet {
@@ -249,7 +204,6 @@ function print() {
     overflow: visible !important;
   }
 
-  /* Card */
   .confirmation-card {
     box-shadow: none !important;
     border: none !important;
@@ -260,7 +214,6 @@ function print() {
     color: #000000 !important;
   }
 
-  /* Items */
   ion-item::part(native) {
     background: transparent !important;
     color: #000000 !important;
@@ -272,20 +225,17 @@ function print() {
     color: #000000 !important;
   }
 
-  /* Extras chips */
-  ion-chip::part(native) {
+  .extra-chip {
     background: #f4f4f4 !important;
     color: #000000 !important;
     border: 1px solid #cccccc !important;
   }
 
-  /* Room image */
   .room-image {
     max-height: 160px;
     page-break-inside: avoid;
   }
 
-  /* Divider */
   ion-divider {
     background: #cccccc !important;
   }

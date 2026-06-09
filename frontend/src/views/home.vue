@@ -44,31 +44,7 @@
 
             <!-- Right column: slideshow -->
             <div class="card-right">
-              <div class="slideshow-container">
-                <div
-                  v-for="(slide, index) in slides"
-                  :key="index"
-                  class="mySlides fade"
-                  v-show="slideIndex === index"
-                >
-                  <div class="numbertext">{{ index + 1 }} / {{ slides.length }}</div>
-                  <img :src="slide.image" :alt="slide.caption" class="slide-img" />
-                  <div class="text">{{ slide.caption }}</div>
-                </div>
-
-                <a class="prev" @click="plusSlides(-1)">❮</a>
-                <a class="next" @click="plusSlides(1)">❯</a>
-              </div>
-
-              <div class="dots">
-                <span
-                  v-for="(slide, index) in slides"
-                  :key="'dot-' + index"
-                  class="dot"
-                  :class="{ active: slideIndex === index }"
-                  @click="currentSlide(index)"
-                />
-              </div>
+              <ImageSlider :slides="slides" :autoplay-ms="10000" />
             </div>
           </div>
         </ion-card>
@@ -80,46 +56,19 @@
 </template>
 
 <script setup lang="ts">
-// Import CSS
-import '@/theme/hoteltheme.css';
-import Header from '@/components/molecules/SharedHeader.vue';
-import Footer from '@/components/molecules/SharedFooter.vue';
+import '@/theme/hoteltheme.css'
+import Header from '@/components/molecules/SharedHeader.vue'
+import Footer from '@/components/molecules/SharedFooter.vue'
+import ImageSlider from '@/components/molecules/ImageSlider.vue'
+import { IonContent, IonPage, IonCard, IonButton, IonIcon } from '@ionic/vue'
 
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonButton,
-  IonFooter,
-  IonIcon
-} from '@ionic/vue';
-
-import { ref, onMounted, onUnmounted } from 'vue';
-
-defineOptions({ name: 'HotelHome' });
-
-const slideIndex = ref(0);
+defineOptions({ name: 'HotelHome' })
 
 const slides = [
   { image: '/images/rooms/1.jpg',  caption: 'Elegantly furnished rooms with modern amenities' },
   { image: '/images/slide2.svg',   caption: 'Höchstädtplatz 6 · 1200 Vienna · U4 Friedensbrücke' },
   { image: '/images/slide3.svg',   caption: 'Continental breakfast available daily' },
-];
-
-function plusSlides(n: number) {
-  slideIndex.value = (slideIndex.value + n + slides.length) % slides.length;
-}
-
-function currentSlide(n: number) {
-  slideIndex.value = n;
-}
-
-let interval: ReturnType<typeof setInterval>;
-onMounted(() => { interval = setInterval(() => plusSlides(1), 10000); });
-onUnmounted(() => { clearInterval(interval); });
+]
 </script>
 
 <style scoped>
@@ -175,25 +124,6 @@ onUnmounted(() => { clearInterval(interval); });
   margin-top: 8px;
 }
 
-.slideshow-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.slide-img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-}
-
-.dots {
-  text-align: center;
-  margin-top: 6px;
-}
-
 /* ── Desktop layout (≥ 768px): side-by-side, no scroll ── */
 @media (min-width: 768px) {
   .home-content::part(scroll) {
@@ -232,10 +162,6 @@ onUnmounted(() => { clearInterval(interval); });
   .card-right {
     flex: 1;
     min-width: 0;
-  }
-
-  .slide-img {
-    height: 300px;
   }
 
   .intro {

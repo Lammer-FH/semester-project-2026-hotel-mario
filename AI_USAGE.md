@@ -328,6 +328,44 @@ The previous date flow opened two separate modals (one for check-in, one for che
 
 ---
 
+## Peer Review Fixes — 2026-06-09 | Claude Sonnet 4.6
+
+### 1. Move PageResult to common/model/
+**Generated:** `PageResult.java` moved from `common/` to `common/model/`; import updated in `RoomController`, `RoomService`, `RoomServiceImpl`, `RoomControllerTest`.  
+**Outcome:** Accepted.  
+**Human decision:** Peer review identified `common/` as the wrong sub-package — model types belong in `common/model/` by convention.
+
+### 2. Real Server-Side Pagination
+**Generated:** `useRoomStore.fetchRooms(page)` now passes a 1-indexed page from the UI, converting to 0-indexed (`page - 1`) when calling `getRooms(page - 1, PAGE_SIZE)`; `totalPages` and `totalElements` stored from the backend `PageResult` response; `PAGE_SIZE = 5` exported as constant; `RoomSelectionView` `nextPage`/`previousPage` are now async — they call `fetchRooms(page)` and re-run `checkAvailability` if dates are set; local `paginatedRooms` computed removed.  
+**Outcome:** Accepted.  
+**Human decision:** Peer review identified that `fetchRooms` was hardcoded to `getRooms(0, 20)`, rendering pagination buttons cosmetic. We confirmed the fix should keep client-side price/availability filtering on the fetched page (not implemented server-side).
+
+---
+
+## Component Refactoring: Atomic Design — 2026-06-09 | Claude Sonnet 4.6
+
+### 1. DetailRow Atom
+**Generated:** `atoms/DetailRow.vue` — `<ion-item lines="none">` with `<strong>{{ label }}:</strong> {{ value }}` layout; typed props `label: string`, `value: string | number`. Applied in `BookingDetailsView.vue` (replacing 11 inline `ion-item` blocks) and `BookingReviewView.vue` (replacing 5 `ion-item` blocks with `<b>` tags).  
+**Outcome:** Accepted.  
+**Human decision:** We identified both views had identical label/value row structure duplicated by hand.
+
+### 2. ImageSlider Molecule
+**Generated:** `molecules/ImageSlider.vue` — slideshow with `slides: { image, caption }[]` prop, `autoplayMs` prop, `prev`/`next` arrow buttons, dot indicators, fade animation, responsive height (220 px mobile / 300 px desktop), counter overlay. Applied in `home.vue` and `about.vue`, replacing ~40 lines of duplicated slideshow template + script logic in each.  
+**Outcome:** Accepted.  
+**Human decision:** Both pages had identical slideshow logic with no shared component. We identified this as the highest-value deduplication target.
+
+### 3. ExtraChip in BookingDetailsView
+**Generated:** `BookingDetailsView.vue` extras section now uses `<ExtraChip v-for="extra in response.room.extras">` instead of inline `ion-chip` elements; imports cleaned up (`IonChip`, `IonIcon` removed).  
+**Outcome:** Accepted.  
+**Human decision:** `ExtraChip` already existed as an atom in `RoomCard` — reusing it in the confirmation view was consistent with the existing component hierarchy.
+
+### 4. Room Image in Booking Confirmation
+**Generated:** `BookingDetailsView.vue` shows `<img :src="\`/images/rooms/${response.room.id}.jpg\`">` after the "Room" section heading.  
+**Outcome:** Modified — initial version used `response.room.imageUrl` (backend value like `/images/rooms/standard.jpg`); corrected to use the same ID-based pattern (`/images/rooms/${id}.jpg`) that `useRoomStore` uses, matching the numbered files in `public/images/rooms/`.  
+**Human decision:** We identified that the backend imageUrl values do not match the actual filenames in the frontend public folder.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.
