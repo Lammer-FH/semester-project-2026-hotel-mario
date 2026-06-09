@@ -2,6 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button default-href="/room" />
+        </ion-buttons>
         <ion-title>Review Booking</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -58,7 +61,7 @@
 
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonButton, IonList, IonItem} from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonButton, IonList, IonItem, IonButtons, IonBackButton } from '@ionic/vue'
 import { useRouter, useRoute } from 'vue-router';
 import { useBookingStore } from '@/stores/useBookingStore';
 const router = useRouter();

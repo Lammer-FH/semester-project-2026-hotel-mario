@@ -26,10 +26,12 @@
       <ion-datetime
         v-else
         presentation="date"
-        :min="tempCheckIn || today"
+        :min="minCheckOut"
         :value="tempCheckOut || undefined"
-        :highlighted-dates="checkInHighlight"
+        :highlighted-dates="rangeHighlights"
         @ionChange="onCheckOutChange"
+        @pointermove="onPointerMove"
+        @pointerleave="hoveredDate = null"
       />
 
       <div class="summary">
@@ -77,27 +79,71 @@ const emit = defineEmits<{
 const step = ref(1)
 const tempCheckIn = ref<string | null>(null)
 const tempCheckOut = ref<string | null>(null)
+const hoveredDate = ref<string | null>(null)
 
 watch(() => props.isOpen, (open) => {
   if (open) {
     tempCheckIn.value = props.checkIn ?? null
     tempCheckOut.value = props.checkOut ?? null
+    hoveredDate.value = null
     step.value = (props.initialField === 'checkOut' && !!props.checkIn) ? 2 : 1
   }
 })
 
-const checkInHighlight = computed(() => {
-  if (!tempCheckIn.value) return []
-  return [{ date: tempCheckIn.value, textColor: '#ffffff', backgroundColor: '#3880ff' }]
+const minCheckOut = computed(() => {
+  if (!tempCheckIn.value) return props.today
+  const d = new Date(tempCheckIn.value + 'T00:00:00')
+  d.setDate(d.getDate() + 1)
+  return d.toISOString().split('T')[0]
 })
+
+// Returns a new function whenever check-in, check-out, or hovered date changes,
+// causing ion-datetime to re-evaluate highlights on every date cell.
+const rangeHighlights = computed(() => {
+  const start = tempCheckIn.value
+  const end = hoveredDate.value || tempCheckOut.value
+
+  return (dateIsoString: string) => {
+    const date = dateIsoString.split('T')[0]
+    if (!start) return undefined
+
+    if (date === start) {
+      return { backgroundColor: '#3880ff', textColor: '#ffffff' }
+    }
+
+    if (!end || end <= start) return undefined
+
+    if (date === end) {
+      return { backgroundColor: '#3880ff', textColor: '#ffffff' }
+    }
+
+    if (date > start && date < end) {
+      return { backgroundColor: 'rgba(56, 128, 255, 0.18)', textColor: '#ffffff' }
+    }
+
+    return undefined
+  }
+})
+
+function onPointerMove(event: PointerEvent) {
+  for (const el of event.composedPath() as Element[]) {
+    if (el instanceof HTMLElement && el.tagName === 'BUTTON') {
+      const { day, month, year } = el.dataset
+      if (day && month && year) {
+        const candidate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+        if (candidate !== hoveredDate.value) hoveredDate.value = candidate
+        return
+      }
+    }
+  }
+  if (hoveredDate.value !== null) hoveredDate.value = null
+}
 
 function onCheckInChange(e: CustomEvent) {
   const val = (e.detail.value as string)?.split('T')[0] ?? null
   if (!val) return
   tempCheckIn.value = val
-  if (tempCheckOut.value && tempCheckOut.value <= val) {
-    tempCheckOut.value = null
-  }
+  if (tempCheckOut.value && tempCheckOut.value <= val) tempCheckOut.value = null
   setTimeout(() => { step.value = 2 }, 150)
 }
 
@@ -112,6 +158,10 @@ function apply() {
 </script>
 
 <style scoped>
+ion-datetime {
+  width: 100%;
+}
+
 .summary {
   padding: 12px 16px 24px;
 }
