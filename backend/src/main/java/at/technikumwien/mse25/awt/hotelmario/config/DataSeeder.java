@@ -38,7 +38,7 @@ public class DataSeeder implements ApplicationRunner {
         }
 
         ExtraEntity wifi        = extra("Wi-Fi",           "wifi",          "Free high-speed wireless internet");
-        ExtraEntity breakfast   = extra("Breakfast",        "cafe",          "Continental breakfast included");
+        ExtraEntity breakfast   = extra("Coffee Machine",    "cafe",          "In-room coffee machine");
         ExtraEntity parking     = extra("Parking",          "car",           "Underground parking spot");
         ExtraEntity ac          = extra("Air Conditioning", "thermometer",   "Individual climate control");
         ExtraEntity safe        = extra("Safe",             "lock-closed",   "In-room digital safe");
@@ -78,7 +78,7 @@ public class DataSeeder implements ApplicationRunner {
                 List.of(wifi, breakfast, ac, safe, panorama, lounge));
 
         RoomEntity standard2 = room("Standard Double Room",
-                "A comfortable room with a double bed and garden view, includes breakfast for a relaxed morning start.",
+                "A comfortable room with a double bed and garden view, featuring an in-room coffee machine for a relaxed morning.",
                 "/images/rooms/standard.jpg",
                 new BigDecimal("99.99"),
                 List.of(wifi, breakfast));
