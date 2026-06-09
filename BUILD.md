@@ -569,6 +569,14 @@ cat Dockerfile
 docker build --verbose -f Dockerfile -t hotelmario:test .
 ```
 
+### Build Issues - Frontend
+
+#### Missing dependencies
+```bash
+# update packages
+npm install
+``
+
 ### Application Issues
 
 #### Application won't start
