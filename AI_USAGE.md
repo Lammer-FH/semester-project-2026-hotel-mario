@@ -255,6 +255,17 @@ Five violations identified and fixed: cross-component `RoomRepository` injection
 
 ---
 
+## U4 — Book a Hotel Room: Backend Completion — 2026-06-09 | Claude Sonnet 4.6
+
+The booking endpoint (`POST /api/v1/bookings`) was already scaffolded during Issue #44 (Clean Architecture Refactoring) — including `BookingRequestDto` with cross-field validators (`@EmailsMatch`, `@CheckOutAfterCheckIn`), `BookingConfirmationDto`, `BookingController`, `BookingServiceImpl`, and `BookingMapper`. The missing piece was that the service never checked availability before persisting, allowing double-bookings.
+
+### 1. Availability Check and 409 Error Handling
+**Generated:** `RoomNotAvailableException` (common/exception); 409 handler added to `GlobalExceptionHandler` returning structured error body `{status, message, errors[{field:"roomId", message}]}`; `BookingServiceImpl` injected with `RoomAvailabilityService` — checks availability before saving, returns empty Optional (→ 404) if room not found, throws `RoomNotAvailableException` (→ 409) if overlapping booking exists; `BookingControllerTest` extended with `createBooking_roomNotAvailable_returns409()` (8 tests total, all passing).  
+**Outcome:** Accepted.  
+**Human decision:** We identified that the existing service implementation would silently create conflicting bookings. AI was directed to reuse the existing `RoomAvailabilityService` rather than adding a direct repository dependency to `BookingServiceImpl`, keeping the component boundary intact.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.
