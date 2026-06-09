@@ -44,9 +44,11 @@
         <RoomList v-else :rooms="paginatedRooms" @select="handleRoomSelect" />
 
         <div class="pagination">
-          <ion-button @click="previousPage" :disabled="currentPage === 1">Previous</ion-button>
-          <span>{{ currentPage }} / {{ totalPages }}</span>
-          <ion-button @click="nextPage" :disabled="currentPage === totalPages">Next</ion-button>
+          <div class="btn-group">
+            <ion-button fill="outline" @click="previousPage" :disabled="currentPage === 1">← Previous</ion-button>
+            <span class="page-label">{{ currentPage }} / {{ totalPages }}</span>
+            <ion-button fill="outline" @click="nextPage" :disabled="currentPage === totalPages">Next →</ion-button>
+          </div>
         </div>
 
       </div>
@@ -220,7 +222,31 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
   padding: 16px;
+}
+
+.btn-group {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--ion-color-primary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.btn-group ion-button {
+  --border-radius: 0;
+  --box-shadow: none;
+  margin: 0;
+}
+
+.page-label {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 0.9em;
+  color: var(--ion-color-primary);
+  border-left: 1px solid var(--ion-color-primary);
+  border-right: 1px solid var(--ion-color-primary);
+  white-space: nowrap;
 }
 </style>
