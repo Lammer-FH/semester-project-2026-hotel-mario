@@ -274,6 +274,15 @@ The booking endpoint (`POST /api/v1/bookings`) was already scaffolded during Iss
 
 ---
 
+## Issue #39 — Display Critical Booking Errors to User — 2026-06-09 | Claude Sonnet 4.6
+
+Two bugs found in the 400 error path: `postRequest` in `api.ts` passed the raw JSON error body as the error message instead of parsing it; `useBookingStore` stored the full Error object (`e`) in `errorMessage` instead of `e.message`, causing `[object Object]` in the UI.  
+**Generated:** `postRequest` now parses the error body as `ValidationErrorResponseDto` and builds a readable `"field: message"` string; `errorMessage` assignment corrected to `e.message`.  
+**Outcome:** Accepted.  
+**Human decision:** We identified both bugs by tracing the call chain. No new display logic needed — the existing error card in `BookingDetailsView.vue` works once `errorMessage` is a plain string.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.

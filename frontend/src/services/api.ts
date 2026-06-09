@@ -106,9 +106,18 @@ async function postRequest<T>(
 
   if (!response.ok) {
     const errorText = await response.text()
-    const error = Object.assign(new Error(errorText || 'Post failed'), { 
+    let errorMessage = errorText || 'Post failed'
+    try {
+      const errorBody = JSON.parse(errorText) as ValidationErrorResponseDto
+      if (errorBody.errors?.length) {
+        errorMessage = errorBody.errors.map(e => `${e.field}: ${e.message}`).join(', ')
+      } else if (errorBody.message) {
+        errorMessage = errorBody.message
+      }
+    } catch { /* not JSON */ }
+    const error = Object.assign(new Error(errorMessage), {
       status: response.status,
-      statusText: response.statusText 
+      statusText: response.statusText,
     })
     throw error
   }

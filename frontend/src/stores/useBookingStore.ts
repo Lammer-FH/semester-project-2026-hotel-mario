@@ -44,7 +44,7 @@ export const useBookingStore = defineStore('booking', {
         catch (e: any) {
             console.log(e)
             this.error = true;
-            this.errorMessage = e;
+            this.errorMessage = e.message;
             results = null;
         }
         return results
