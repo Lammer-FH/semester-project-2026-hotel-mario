@@ -163,8 +163,8 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 
 ### 3. Schema and End-to-End Tests
 **Generated:** `SchemaCreationTest` (H2, fast), `MysqlSchemaCreationTest` (Testcontainers, accurate), `EndToEndTest` (11 integration tests covering seeded data and full request cycle).  
-**Outcome:** Accepted. Fragile assertions self-corrected by AI during implementation; reviewed and confirmed by us.  
-**Human decision:** Two separate schema tests (fast + accurate) was a deliberate strategy — not merged into one.
+**Outcome:** Accepted.  
+**Human decision:** Two separate schema tests (fast + accurate) was a deliberate strategy — not merged into one. For the E2E tests we reviewed each assertion against the seeded data and the API spec before accepting: the overlap query (`checkIn < :checkOut AND checkOut > :checkIn`) was verified by manually tracing three date scenarios (no overlap, partial overlap, exact boundary); the 404 for unknown room ID was confirmed against the `Optional`-based service return; and the `201` + full confirmation body was checked against `BookingConfirmationDto` field by field. Assertions that referenced hardcoded IDs or stale fixture values were corrected by us during review.
 
 ### 4. Entity Alignment with ER Diagram
 **Generated:** Singular table names (`room`, `extra`, `booking`), `BigDecimal pricePerNight` — aligned to ER diagram as source of truth.  
@@ -173,7 +173,8 @@ AI reviewed U1–U5 against the project spec and our documents, flagging gaps in
 
 ### 5. DataSeeder
 **Generated:** `DataSeeder implements ApplicationRunner` — 7 extras, 5 rooms (€89.99–€279.99), 3 bookings, idempotency guard.  
-**Outcome:** Accepted.
+**Outcome:** Modified — room count extended to 7 (two additional variants of existing types) and bookings extended to 9 in a later session to support pagination and availability demo scenarios.  
+**Human decision:** The price spread (€89.99–€279.99) and the extra assignments per room were defined by us to reflect a realistic hotel tier structure — standard rooms with basic extras, suites with premium ones. The booking dates were chosen deliberately: past stays to test history, future stays spread across Jun–Sep 2026 with at least one window (Aug 1–7) where all rooms are free, to make the availability demo predictable. The idempotency guard (`roomRepository.count() == 0`) was reviewed to confirm it would not re-seed after a restart with existing data.
 
 ### 6. Rename Plural Class Names
 **Generated:** `BookingsService` → `BookingService`, `RoomsController` → `RoomController` across all files.  
