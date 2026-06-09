@@ -121,11 +121,11 @@ semester-project-2026-hotel-mario/
 ├── frontend/                         # Ionic + Vue 3 SPA
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── atoms/                # ExtraChip, AvailabilityBadge
-│   │   │   ├── molecules/            # RoomCard, DatePickerModal
+│   │   │   ├── atoms/                # ExtraChip, AvailabilityBadge, DetailRow
+│   │   │   ├── molecules/            # RoomCard, BookingForm, DatePickerModal, ImageSlider, SharedHeader, SharedFooter
 │   │   │   └── organisms/            # RoomList, FilterBar
-│   │   ├── views/                    # home, about, imprint, RoomSelectionView
-│   │   ├── stores/                   # useRoomStore, useFilterStore (Pinia)
+│   │   ├── views/                    # home, about, imprint, RoomSelectionView, BookingView, BookingReviewView, BookingDetailsView
+│   │   ├── stores/                   # useRoomStore, useFilterStore, useBookingStore (Pinia)
 │   │   ├── services/                 # api.ts (fetch-based API client)
 │   │   └── router/
 │   ├── public/images/                # Room images (rooms/1-7.jpg) + slideshow SVGs
@@ -164,7 +164,7 @@ cd backend
 ```
 
 **Generated Artifacts:**
-- JAR file: `backend/build/libs/hotelmario-0.0.1-SNAPSHOT.jar`
+- JAR file: `backend/build/libs/hotelmario-1.0.0.jar`
 
 ### Docker Build
 
@@ -403,6 +403,7 @@ brew install zulu@25
 ```
 
 **MySQL:**
+```bash
 docker run -d --name mysql-local \
   -e MYSQL_ROOT_PASSWORD=rootpassword \
   -e MYSQL_DATABASE=hotelmario_db \
@@ -575,7 +576,7 @@ docker build --verbose -f Dockerfile -t hotelmario:test .
 ```bash
 # update packages
 npm install
-``
+```
 
 ### Application Issues
 
@@ -687,5 +688,5 @@ This project is compatible with multiple Java distributions. Here's a comparison
 
 ---
 
-**Last Updated:** 2026-05-30  
-**Version:** 1.1
+**Last Updated:** 2026-06-09  
+**Version:** 1.2
