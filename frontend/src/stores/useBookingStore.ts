@@ -38,6 +38,9 @@ export const useBookingStore = defineStore('booking', {
             checkOut: this.checkOut,
             breakfast: this.breakfast,
         };
+        this.error = false;
+        this.errorMessage = '';
+        this.errorStatus = 0;
         let results;
         try {
             results = await bookRoom(dto);

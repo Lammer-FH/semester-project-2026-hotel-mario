@@ -274,6 +274,15 @@ The booking endpoint (`POST /api/v1/bookings`) was already scaffolded during Iss
 
 ---
 
+## Issue #39 — Display Critical Booking Errors to User (5xx / timeout + retry) — 2026-06-09 | Claude Sonnet 4.6
+
+5xx responses fell through to the generic error card; no timeout was set on `fetch`; no retry option existed.  
+**Generated:** `postRequest` now wraps `fetch` in an `AbortController` with a 10 s timeout — abort throws with `status: 0`; `sendBooking` resets error state before each attempt; `BookingDetailsView.vue` extracts submission into a reusable `submit()`, adds `isRetryable` computed (`status === 0 || status >= 500`), and shows "Try again" / "Connection failed" / "Server error" variants for retryable failures.  
+**Outcome:** Accepted.  
+**Human decision:** We identified all three missing pieces (timeout, 5xx branch, retry wiring) and scoped the fix to the booking flow only.
+
+---
+
 ## Issue #39 — Display Critical Booking Errors to User (409 handling) — 2026-06-09 | Claude Sonnet 4.6
 
 409 conflict was not distinguished from other errors: `useBookingStore` had no status code field, and `BookingDetailsView.vue` showed a generic error card with a Back button for all failures.  
