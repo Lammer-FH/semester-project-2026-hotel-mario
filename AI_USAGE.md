@@ -391,6 +391,22 @@ When navigating back to room selection with dates already set in the filter stor
 
 ---
 
+## Presentation Deck — 2026-06-09 | Claude Sonnet 4.6
+
+**Generated:** `presentation.pptx` (8 slides) via a Python `python-pptx` script: title slide with tech-stack chips, live demo step guide, AI workflow slide (clean architecture scaffolding from ER diagram + API spec, with `@EmailsMatch` code example), what-surprised-us slide (3 wins / 3 missteps), peer review 2 response slide (component refactoring before/after), architecture overview (backend layers + frontend atomic design), Q&A.  
+**Outcome:** Modified — generated deck used as a starting point; slides were manually reviewed, restructured, and finalized as `AWT Presentation Group AE.pdf`.  
+**Human decision:** We chose the clean-architecture scaffolding as the AI workflow example (over the date picker) because it is a simpler, more universally applicable story. Content, wording, and visual layout were reviewed and adjusted manually before the final version was produced.
+
+---
+
+## BUILD.md Update — 2026-06-09 | Claude Sonnet 4.6
+
+**Generated:** Review identified stale content; updated `BUILD.md`: JAR filename (`0.0.1-SNAPSHOT` → `1.0.0`), component lists in the project structure tree (`DetailRow` in atoms; `ImageSlider`, `BookingForm`, `SharedHeader/Footer` in molecules; `BookingView`, `BookingReviewView`, `BookingDetailsView` in views; `useBookingStore` in stores), two broken code fences (MySQL `docker run` block, `npm install` block), last-updated date.  
+**Outcome:** Accepted.  
+**Human decision:** We directed the review; AI identified and applied all stale entries in one pass.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.
