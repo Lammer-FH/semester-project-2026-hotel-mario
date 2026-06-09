@@ -14,16 +14,6 @@
       </ion-col>
 
       <ion-col size="6" size-md="2">
-        <ion-select
-          :value="filters.persons"
-          label="Persons"
-          @ionChange="(e) => $emit('updatePersons', e.detail.value)"
-        >
-          <ion-select-option v-for="n in 4" :key="n" :value="n">{{ n }}</ion-select-option>
-        </ion-select>
-      </ion-col>
-
-      <ion-col size="6" size-md="2">
         <ion-input
           :value="filters.minPrice"
           type="number"
@@ -71,8 +61,6 @@ import {
   IonCol,
   IonItem,
   IonLabel,
-  IonSelect,
-  IonSelectOption,
   IonInput,
   IonButton,
   IonText,
@@ -86,7 +74,6 @@ defineProps({
 
 defineEmits([
   'openDate',
-  'updatePersons',
   'updateMin',
   'updateMax',
   'updateAvailable',

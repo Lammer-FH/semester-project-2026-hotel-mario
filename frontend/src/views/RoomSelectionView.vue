@@ -18,7 +18,6 @@
           :filters="filterBarProps"
           :priceError="filterStore.priceError"
           @openDate="(f) => filterStore.openPicker(f)"
-          @updatePersons="(v) => filterStore.persons = v"
           @updateMin="(v) => filterStore.minPrice = v ? Number(v) : null"
           @updateMax="(v) => filterStore.maxPrice = v ? Number(v) : null"
           @updateAvailable="(v) => filterStore.availableOnly = v"
@@ -87,7 +86,6 @@ const pageSize = 5
 const today = new Date().toISOString().split('T')[0]
 
 const filterBarProps = computed(() => ({
-  persons: filterStore.persons,
   checkIn: filterStore.checkIn,
   checkOut: filterStore.checkOut,
   minPrice: filterStore.minPrice,

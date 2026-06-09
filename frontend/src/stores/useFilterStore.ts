@@ -5,7 +5,6 @@ export const useFilterStore = defineStore('filters', () => {
   // Filter form state
   const checkIn = ref<string | null>(null)
   const checkOut = ref<string | null>(null)
-  const persons = ref(2)
   const minPrice = ref<number | null>(null)
   const maxPrice = ref<number | null>(null)
   const availableOnly = ref(false)
@@ -50,7 +49,7 @@ export const useFilterStore = defineStore('filters', () => {
   }
 
   return {
-    checkIn, checkOut, persons, minPrice, maxPrice, availableOnly, dateError,
+    checkIn, checkOut, minPrice, maxPrice, availableOnly, dateError,
     pickerOpen, pickerInitialField,
     priceError, datesSelected,
     openPicker, applyPicker, closePicker,
