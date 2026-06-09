@@ -17,6 +17,7 @@
     <ion-content>
       <ion-datetime
         v-if="step === 1"
+        size="cover"
         presentation="date"
         :min="today"
         :value="tempCheckIn || undefined"
@@ -25,6 +26,7 @@
 
       <ion-datetime
         v-else
+        size="cover"
         presentation="date"
         :min="minCheckOut"
         :value="tempCheckOut || undefined"
@@ -158,18 +160,14 @@ function apply() {
 </script>
 
 <style scoped>
-ion-datetime {
-  width: 100%;
-}
-
 .summary {
-  padding: 12px 16px 24px;
+  padding: 8px 16px 12px;
 }
 
 .summary-line {
   display: block;
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-size: 0.9em;
 }
 </style>
