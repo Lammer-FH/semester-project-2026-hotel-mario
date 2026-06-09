@@ -40,13 +40,13 @@
           No rooms match your criteria for the selected dates.
         </ion-text>
 
-        <RoomList v-else :rooms="paginatedRooms" @select="handleRoomSelect" />
+        <RoomList v-else :rooms="filteredRooms" @select="handleRoomSelect" />
 
         <div class="pagination">
           <div class="btn-group">
-            <ion-button fill="outline" @click="previousPage" :disabled="currentPage === 1">← Previous</ion-button>
-            <span class="page-label">{{ currentPage }} / {{ totalPages }}</span>
-            <ion-button fill="outline" @click="nextPage" :disabled="currentPage === totalPages">Next →</ion-button>
+            <ion-button fill="outline" @click="previousPage" :disabled="currentPage === 1 || roomStore.loading">← Previous</ion-button>
+            <span class="page-label">{{ currentPage }} / {{ roomStore.totalPages }}</span>
+            <ion-button fill="outline" @click="nextPage" :disabled="currentPage === roomStore.totalPages || roomStore.loading">Next →</ion-button>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonText, IonButtons, alertController } from '@ionic/vue'
 
 import FilterBar from '@/components/organisms/FilterBar.vue'
@@ -77,12 +77,11 @@ import { Room, useRoomStore } from '@/stores/useRoomStore'
 import { useFilterStore } from '@/stores/useFilterStore'
 import { useRouter } from 'vue-router'
 
-const router = useRouter();  
+const router = useRouter()
 const roomStore = useRoomStore()
 const filterStore = useFilterStore()
 
 const currentPage = ref(1)
-const pageSize = 5
 const today = new Date().toISOString().split('T')[0]
 
 const filterBarProps = computed(() => ({
@@ -93,6 +92,9 @@ const filterBarProps = computed(() => ({
   availableOnly: filterStore.availableOnly,
 }))
 
+// Client-side filter applied to the current page fetched from the backend.
+// Price and availability-only filters are not supported as server-side query params,
+// so they narrow the already-fetched page. totalPages reflects the full backend count.
 const filteredRooms = computed(() => {
   return roomStore.rooms.filter(r => {
     if (filterStore.availableOnly && filterStore.datesSelected && r.available !== true) return false
@@ -102,19 +104,25 @@ const filteredRooms = computed(() => {
   })
 })
 
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredRooms.value.length / pageSize)))
+async function nextPage() {
+  if (currentPage.value < roomStore.totalPages) {
+    currentPage.value++
+    await roomStore.fetchRooms(currentPage.value)
+    if (filterStore.datesSelected) {
+      await roomStore.checkAvailability(filterStore.checkIn!, filterStore.checkOut!)
+    }
+  }
+}
 
-const paginatedRooms = computed(() => {
-  const start = (currentPage.value - 1) * pageSize
-  return filteredRooms.value.slice(start, start + pageSize)
-})
-
-const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
-const previousPage = () => { if (currentPage.value > 1) currentPage.value-- }
-
-watch(totalPages, (newTotal) => {
-  if (currentPage.value > newTotal) currentPage.value = 1
-})
+async function previousPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--
+    await roomStore.fetchRooms(currentPage.value)
+    if (filterStore.datesSelected) {
+      await roomStore.checkAvailability(filterStore.checkIn!, filterStore.checkOut!)
+    }
+  }
+}
 
 async function applyFilters() {
   if (filterStore.priceError) return
@@ -140,9 +148,9 @@ const handleRoomSelect = async (room: Room) => {
       header: 'Dates not set',
       message: 'Please set Check-in & Check-out first before booking.',
       buttons: ['OK'],
-    });
-    await alert.present();
-    return;
+    })
+    await alert.present()
+    return
   }
 
   if (room.available === false) {
@@ -150,45 +158,16 @@ const handleRoomSelect = async (room: Room) => {
       header: 'Unavailable',
       message: 'Room is not available for the selected dates.',
       buttons: ['OK'],
-    });
-    await alert.present();
-    return;
+    })
+    await alert.present()
+    return
   }
 
-  router.push({
-    name: 'Booking',
-    params: { roomId: room.id},
-  });
-};
- /*
-async function handleRoomClick(){
-  const room = props.room
-  if (room.available === null) {
-    const alert = await alertController.create({
-      header: 'Dates not set',
-      message: `Please set Check-in & Check-out first, before trying to book a room.`,
-      buttons: ['OK'],
-    });
-    return alert.present();
-  }
+  router.push({ name: 'Booking', params: { roomId: room.id } })
+}
 
-  if (room.available === false) {
-    const alert = await alertController.create({
-      header: 'Unavailable',
-      message: `Room is not availabe for the selected date. Please choose another room or try to book at another date.`,
-      buttons: ['OK'],
-    });
-    return alert.present();
-  }
-
-  router.push({name: 'Booking', params: {roomId: room.id}})
-
-  }
-
-const props = defineProps<{ room: Room }>()
-*/ 
 onMounted(() => {
-  roomStore.fetchRooms()
+  roomStore.fetchRooms(1)
 })
 </script>
 

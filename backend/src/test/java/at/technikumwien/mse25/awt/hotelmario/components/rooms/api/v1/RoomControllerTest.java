@@ -1,6 +1,6 @@
 package at.technikumwien.mse25.awt.hotelmario.components.rooms.api.v1;
 
-import at.technikumwien.mse25.awt.hotelmario.common.PageResult;
+import at.technikumwien.mse25.awt.hotelmario.common.model.PageResult;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.ExtraDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.dtos.v1.RoomDto;
 import at.technikumwien.mse25.awt.hotelmario.components.rooms.api.mapper.v1.RoomMapper;

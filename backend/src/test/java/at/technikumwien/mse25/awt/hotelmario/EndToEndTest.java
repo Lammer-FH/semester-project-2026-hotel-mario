@@ -84,7 +84,7 @@ class EndToEndTest {
                 .andExpect(jsonPath("$.title").value("Executive Suite"))
                 .andExpect(jsonPath("$.pricePerNight").value(279.99))
                 .andExpect(jsonPath("$.extras[*].name", hasItems(
-                        "Wi-Fi", "Breakfast", "Air Conditioning", "Safe", "Panorama View", "Lounge Access")));
+                        "Wi-Fi", "Coffee Machine", "Air Conditioning", "Safe", "Panorama View", "Lounge Access")));
     }
 
     @Test

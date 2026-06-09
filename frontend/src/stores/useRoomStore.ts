@@ -17,18 +17,22 @@ export interface Room {
   available: boolean | null
 }
 
+export const PAGE_SIZE = 5
+
 export const useRoomStore = defineStore('rooms', () => {
   const rooms = ref<Room[]>([])
   const selectedRoom = ref<Room | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const totalPages = ref(1)
+  const totalElements = ref(0)
 
-  async function fetchRooms() {
+  async function fetchRooms(page = 1) {
     loading.value = true
     error.value = null
     try {
-      const page = await getRooms(0, 20)
-      rooms.value = page.content.map(r => ({
+      const data = await getRooms(page - 1, PAGE_SIZE)
+      rooms.value = data.content.map(r => ({
         id: r.id,
         name: r.title,
         price: r.pricePerNight,
@@ -37,6 +41,8 @@ export const useRoomStore = defineStore('rooms', () => {
         extras: r.extras.map(e => ({ name: e.name, icon: e.icon })),
         available: null,
       }))
+      totalPages.value = data.totalPages
+      totalElements.value = data.totalElements
     } catch {
       error.value = 'Failed to load rooms. Please try again.'
     } finally {
@@ -77,5 +83,5 @@ export const useRoomStore = defineStore('rooms', () => {
     selectedRoom.value = room
   }
 
-  return { rooms, selectedRoom, loading, error, fetchRooms, checkAvailability, resetAvailability, selectRoom }
+  return { rooms, selectedRoom, loading, error, totalPages, totalElements, fetchRooms, checkAvailability, resetAvailability, selectRoom }
 })

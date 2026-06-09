@@ -1,4 +1,4 @@
-package at.technikumwien.mse25.awt.hotelmario.common;
+package at.technikumwien.mse25.awt.hotelmario.common.model;
 
 import java.util.List;
 
