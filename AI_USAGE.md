@@ -274,6 +274,33 @@ The booking endpoint (`POST /api/v1/bookings`) was already scaffolded during Iss
 
 ---
 
+## Issue #39 — Display Critical Booking Errors to User (5xx / timeout + retry) — 2026-06-09 | Claude Sonnet 4.6
+
+5xx responses fell through to the generic error card; no timeout was set on `fetch`; no retry option existed.  
+**Generated:** `postRequest` now wraps `fetch` in an `AbortController` with a 10 s timeout — abort throws with `status: 0`; `sendBooking` resets error state before each attempt; `BookingDetailsView.vue` extracts submission into a reusable `submit()`, adds `isRetryable` computed (`status === 0 || status >= 500`), and shows "Try again" / "Connection failed" / "Server error" variants for retryable failures.  
+**Outcome:** Accepted.  
+**Human decision:** We identified all three missing pieces (timeout, 5xx branch, retry wiring) and scoped the fix to the booking flow only.
+
+---
+
+## Issue #39 — Display Critical Booking Errors to User (409 handling) — 2026-06-09 | Claude Sonnet 4.6
+
+409 conflict was not distinguished from other errors: `useBookingStore` had no status code field, and `BookingDetailsView.vue` showed a generic error card with a Back button for all failures.  
+**Generated:** `errorStatus` added to store state, set from `e.status` on catch; view now shows "Room no longer available" title and "Choose another room" button (navigates to room selection) for 409, generic error message and Back button for all other statuses.  
+**Outcome:** Accepted.  
+**Human decision:** We identified the missing 409 branch and directed the fix to use the existing `{ name: 'Room' }` route.
+
+---
+
+## Issue #39 — Display Critical Booking Errors to User — 2026-06-09 | Claude Sonnet 4.6
+
+Two bugs found in the 400 error path: `postRequest` in `api.ts` passed the raw JSON error body as the error message instead of parsing it; `useBookingStore` stored the full Error object (`e`) in `errorMessage` instead of `e.message`, causing `[object Object]` in the UI.  
+**Generated:** `postRequest` now parses the error body as `ValidationErrorResponseDto` and builds a readable `"field: message"` string; `errorMessage` assignment corrected to `e.message`.  
+**Outcome:** Accepted.  
+**Human decision:** We identified both bugs by tracing the call chain. No new display logic needed — the existing error card in `BookingDetailsView.vue` works once `errorMessage` is a plain string.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.

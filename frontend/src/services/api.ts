@@ -93,22 +93,41 @@ async function request<T>(path: string): Promise<T> {
 }
 
 async function postRequest<T>(
-  path: string, 
+  path: string,
   body: object
 ): Promise<T> {
-  const response = await fetch(`${BASE}${path}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 10_000)
+
+  let response: Response
+  try {
+    response = await fetch(`${BASE}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    })
+  } catch (e: any) {
+    clearTimeout(timeout)
+    const message = e.name === 'AbortError' ? 'Request timed out' : 'Network error'
+    throw Object.assign(new Error(message), { status: 0 })
+  }
+  clearTimeout(timeout)
 
   if (!response.ok) {
     const errorText = await response.text()
-    const error = Object.assign(new Error(errorText || 'Post failed'), { 
+    let errorMessage = errorText || 'Post failed'
+    try {
+      const errorBody = JSON.parse(errorText) as ValidationErrorResponseDto
+      if (errorBody.errors?.length) {
+        errorMessage = errorBody.errors.map(e => `${e.field}: ${e.message}`).join(', ')
+      } else if (errorBody.message) {
+        errorMessage = errorBody.message
+      }
+    } catch { /* not JSON */ }
+    const error = Object.assign(new Error(errorMessage), {
       status: response.status,
-      statusText: response.statusText 
+      statusText: response.statusText,
     })
     throw error
   }

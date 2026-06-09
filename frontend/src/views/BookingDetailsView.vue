@@ -14,15 +14,16 @@
       <!-- Error message -->
       <ion-card v-else-if="error">
         <ion-card-header>
-          <ion-card-title>Error</ion-card-title>
+          <ion-card-title>{{ errorTitle }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <ion-item lines="none">
-            <ion-label><strong>Booking Error:</strong> {{ bookingStore.errorMessage }}</ion-label>
-            </ion-item>
-          
+          <ion-item lines="none">
+            <ion-label>{{ errorBody }}</ion-label>
+          </ion-item>
         </ion-card-content>
-        <ion-button expand="block" @click="goBack">Back</ion-button>
+        <ion-button v-if="bookingStore.errorStatus === 409" expand="block" @click="goToRoomSelection">Choose another room</ion-button>
+        <ion-button v-else-if="isRetryable" expand="block" @click="submit">Try again</ion-button>
+        <ion-button v-else expand="block" @click="goBack">Back</ion-button>
       </ion-card>
 
       <!-- Success response -->
@@ -135,7 +136,7 @@
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardContent, IonButton, IonCardTitle, IonSpinner, IonIcon, IonLabel, IonCardSubtitle, IonItem, IonChip} from '@ionic/vue'
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useBookingStore } from '@/stores/useBookingStore';
 import { useRouter } from 'vue-router';
 import { BookingDto, BookingResponseDto } from '@/services/api';
@@ -148,13 +149,34 @@ const loading = ref(true);
 const response = ref<BookingResponseDto | null>(null);
 const error = ref<boolean>(false);
 
-onMounted(async () => {
-  response.value = await bookingStore.sendBooking()
-  error.value = bookingStore.error
+async function submit() {
+  loading.value = true;
+  error.value = false;
+  response.value = await bookingStore.sendBooking();
+  error.value = bookingStore.error;
   loading.value = false;
-});
+}
+
+onMounted(submit);
+
+const isRetryable = computed(() => bookingStore.errorStatus === 0 || bookingStore.errorStatus >= 500)
+
+const errorTitle = computed(() => {
+  if (bookingStore.errorStatus === 409) return 'Room no longer available'
+  if (bookingStore.errorStatus === 0) return 'Connection failed'
+  if (bookingStore.errorStatus >= 500) return 'Server error'
+  return 'Booking Error'
+})
+
+const errorBody = computed(() => {
+  if (bookingStore.errorStatus === 409) return 'This room was booked by someone else. Please choose another room.'
+  if (bookingStore.errorStatus === 0) return 'Could not reach the server. Please check your connection and try again.'
+  if (bookingStore.errorStatus >= 500) return 'Something went wrong on our end. Please try again.'
+  return bookingStore.errorMessage
+})
 
 const goBack = () => router.back();
 const goHome = () => router.push({ name: 'home' });
+const goToRoomSelection = () => router.push({ name: 'Room' });
 
 </script>

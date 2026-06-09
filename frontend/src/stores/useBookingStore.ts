@@ -13,6 +13,7 @@ export const useBookingStore = defineStore('booking', {
     breakfast: false,
     error: false,
     errorMessage: '',
+    errorStatus: 0,
   }),
 
   actions: {
@@ -37,6 +38,9 @@ export const useBookingStore = defineStore('booking', {
             checkOut: this.checkOut,
             breakfast: this.breakfast,
         };
+        this.error = false;
+        this.errorMessage = '';
+        this.errorStatus = 0;
         let results;
         try {
             results = await bookRoom(dto);
@@ -44,7 +48,8 @@ export const useBookingStore = defineStore('booking', {
         catch (e: any) {
             console.log(e)
             this.error = true;
-            this.errorMessage = e;
+            this.errorMessage = e.message;
+            this.errorStatus = e.status ?? 0;
             results = null;
         }
         return results
