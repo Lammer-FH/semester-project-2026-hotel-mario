@@ -328,6 +328,22 @@ The previous date flow opened two separate modals (one for check-in, one for che
 
 ---
 
+## Peer Review 2 Fixes — 2026-06-09 | Claude Sonnet 4.6
+
+Peer review 2 identified two areas for improvement: component complexity (duplicated template logic across views) and code maintainability (no shared atoms for repeated UI patterns).
+
+**Relevant changes made:**
+- Extracted `DetailRow` atom to replace 16 duplicated `ion-item` label/value blocks across `BookingDetailsView` and `BookingReviewView`
+- Extracted `ImageSlider` molecule to replace ~80 lines of duplicated slideshow logic in `home.vue` and `about.vue`
+- Applied existing `ExtraChip` atom in `BookingDetailsView` for consistency with `RoomCard`
+
+Items identified but not actioned: `HotelConfig` → `HotelDto` cross-layer dependency (known, low priority); `FilterBar` untyped props. Both were scoped out as non-functional and deferred.
+
+**Outcome:** Accepted. TypeScript type check passes with no errors after all changes.  
+**Human decision:** We scoped the changes to high-impact duplications only and explicitly decided not to refactor the cross-layer `HotelConfig` dependency, as it does not affect runtime correctness and was not flagged by the reviewer as a blocking issue.
+
+---
+
 ## Peer Review Fixes — 2026-06-09 | Claude Sonnet 4.6
 
 ### 1. Move PageResult to common/model/
