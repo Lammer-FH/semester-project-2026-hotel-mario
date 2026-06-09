@@ -28,59 +28,99 @@
           <ion-card-title>Booking Confirmed</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <p><b>Booking ID:</b> {{ response.id }}</p>
-            <p><b>Name:</b> {{ response.firstName }} {{ response.lastName }}</p>
-            <p><b>Check-in:</b> {{ response.checkIn }}</p>
-            <p><b>Check-out:</b> {{ response.checkOut }}</p>
-            <p><b>Breakfast:</b> {{ response.breakfast ? 'Yes' : 'No' }}</p>
 
-            <ion-divider class="ion-margin-vertical" />
-            <!-- ROOM -->
-             <ion-card-subtitle>Booking Confirmed</ion-card-subtitle>
-            <h1>Room</h1>
+  <!-- Booking Basics -->
+        <ion-card-subtitle>Booking Details</ion-card-subtitle>
 
-            <p><b>Title:</b> {{ response.room.title }}</p>
-            <p><b>Description:</b> {{ response.room.description }}</p>
-            <p><b>Price per night:</b> €{{ response.room.pricePerNight }}</p>
+        <ion-item lines="none">
+            <ion-label><strong>Booking ID:</strong> {{ response.id }}</ion-label>
+        </ion-item>
 
-            <div class="extras ion-margin-top">
-                <h4>Extras</h4>
+        <ion-item lines="none">
+            <ion-label><strong>Name:</strong> {{ response.firstName }} {{ response.lastName }}</ion-label>
+        </ion-item>
 
-                <ion-chip
+        <ion-item lines="none">
+            <ion-label><strong>Check-in:</strong> {{ response.checkIn }}</ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+            <ion-label><strong>Check-out:</strong> {{ response.checkOut }}</ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+            <ion-label><strong>Breakfast:</strong> {{ response.breakfast ? 'Yes' : 'No' }}</ion-label>
+        </ion-item>
+
+        <ion-divider class="ion-margin-vertical" />
+
+        <!-- ROOM DETAILS -->
+        <ion-card-title>Room</ion-card-title>
+
+        <ion-item lines="none">
+            <ion-label><strong>Title:</strong> {{ response.room.title }}</ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+            <ion-label><strong>Description:</strong> {{ response.room.description }}</ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+            <ion-label><strong>Price per night:</strong> €{{ response.room.pricePerNight }}</ion-label>
+        </ion-item>
+
+        <!-- Room Extras -->
+        <div class="ion-margin-top">
+            <ion-card-subtitle>Extras</ion-card-subtitle>
+            <div class="ion-flex ion-flex-wrap">
+            <ion-chip
                 v-for="extra in response.room.extras"
                 :key="extra.id"
-                >
+                class="ion-margin-end ion-margin-bottom"
+            >
                 <ion-icon :name="extra.icon" />
                 <ion-label>{{ extra.name }}</ion-label>
-                </ion-chip>
+            </ion-chip>
             </div>
+        </div>
 
-            <ion-divider class="ion-margin-vertical" />
+        <ion-divider class="ion-margin-vertical" />
 
+        <!-- HOTEL DETAILS -->
+        <ion-card-title>Hotel</ion-card-title>
 
-            <h1>Hotel</h1>
+        <ion-item lines="none">
+            <ion-label><strong>Name:</strong> {{ response.hotel.name }}</ion-label>
+        </ion-item>
 
-            <p><b>Name:</b> {{ response.hotel.name }}</p>
+        <ion-item lines="none">
+            <ion-label>
+            <strong>Address:</strong>
+            {{ response.hotel.address.street }},
+            {{ response.hotel.address.city }},
+            {{ response.hotel.address.postalCode }},
+            {{ response.hotel.address.country }}
+            </ion-label>
+        </ion-item>
 
-            <p>
-                <b>Address:</b>
-                {{ response.hotel.address.street }},
-                {{ response.hotel.address.city }},
-                {{ response.hotel.address.postalCode }},
-                {{ response.hotel.address.country }}
-            </p>
+        <ion-item lines="none">
+            <ion-label>
+            <strong>Coordinates:</strong>
+            {{ response.hotel.address.latitude }}, {{ response.hotel.address.longitude }}
+            </ion-label>
+        </ion-item>
 
-            <p>
-                <b>Coordinates:</b>
-                {{ response.hotel.address.latitude }},
-                {{ response.hotel.address.longitude }}
-            </p>
+        <ion-item lines="none">
+            <ion-label><strong>Phone:</strong> {{ response.hotel.contact.phone }}</ion-label>
+        </ion-item>
 
-            <p><b>Phone:</b> {{ response.hotel.contact.phone }}</p>
-            <p><b>Email:</b> {{ response.hotel.contact.email }}</p>
+        <ion-item lines="none">
+            <ion-label><strong>Email:</strong> {{ response.hotel.contact.email }}</ion-label>
+        </ion-item>
 
-            <p><b>Directions:</b></p>
-            <p>{{ response.hotel.directions }}</p>
+        <ion-item lines="none">
+            <ion-label><strong>Directions:</strong> {{ response.hotel.directions }}</ion-label>
+        </ion-item>
 
         </ion-card-content>
         <ion-button expand="block" @click="goHome">Home</ion-button>
@@ -91,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardContent, IonButton, IonCardTitle, IonSpinner, IonIcon, IonLabel, IonCardSubtitle} from '@ionic/vue'
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardContent, IonButton, IonCardTitle, IonSpinner, IonIcon, IonLabel, IonCardSubtitle, IonItem, IonChip} from '@ionic/vue'
 import { onMounted, ref } from 'vue';
 import { useBookingStore } from '@/stores/useBookingStore';
 import { useRouter } from 'vue-router';
