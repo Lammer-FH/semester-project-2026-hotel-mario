@@ -266,6 +266,14 @@ The booking endpoint (`POST /api/v1/bookings`) was already scaffolded during Iss
 
 ---
 
+## U5 — Improve Booking Confirmation: Backend Review — 2026-06-09 | Claude Sonnet 4.6
+
+**Task:** Assess whether the backend needed changes to support U5 (extended confirmation with room details, directions, contact options, map coordinates).  
+**Outcome:** No changes required. `BookingConfirmationDto` already includes all fields U5 needs — `room` (title, description, imageUrl, extras), `hotel` (directions, contact, address with latitude/longitude for map integration), and guest data. Latitude/longitude in `AddressDto` were identified as sufficient for a frontend map embed without any backend addition.  
+**Human decision:** We reviewed each U5 requirement against the existing DTO fields before deciding to leave the backend untouched.
+
+---
+
 ## AI_USAGE.md Compaction — 2026-05-30 | Claude Sonnet 4.6
 
 The original `AI_USAGE.md` grew to ~1500 lines across the project. To improve readability without losing content, it was restructured into this compact format.
